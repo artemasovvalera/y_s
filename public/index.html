@@ -1,5 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #E5E7EB;
+  }
+  
+  #root > div {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #F3F4F6;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  @media (max-width: 480px) {
+    #root > div {
+      max-width: 100%;
+      box-shadow: none;
+    }
+  }
+</style>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
