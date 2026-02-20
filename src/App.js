@@ -631,7 +631,7 @@ const getRoutesData = (cityId, lang) => {
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [kuzbassMuseum, krasnayaGorkaMuseum, artMuseum, artCenter];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [kuzbassMuseum, artMuseum, artCenter];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
