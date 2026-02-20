@@ -291,13 +291,10 @@ const TRANSLATIONS = {
         map_btn: "Карта", about: "О месте", to_fav: "В избранное", visited: "Посещено",
         profile: "Ваш профиль", save: "Сохранить", cancel: "Отмена", change_photo: "Изменить фото",
         routes_done: "Маршрутов пройдено", rewards: "Наград получено",
-        new: "Новое", ads: "Реклама", near: "Рядом с вами", empty_list: "Список пуст",
+        new: "Новое", near: "Рядом с вами", empty_list: "Список пуст",
         download: "Скачать",
         audio_error: "Ошибка воспроизведения.",
-        notif_permission_title: "Разрешите уведомления",
-        notif_permission_text: "Мы будем уведомлять вас о:\n• Интересных маршрутах поблизости\n• Новых аудиогидах\n• Обновлениях приложения\n\nЭто поможет не пропустить ничего важного!",
-        notif_allow: "Разрешить",
-        notif_later: "Позже",
+
         city_kemerovo: "Кемерово", city_moscow: "Москва", city_yerevan: "Ереван", city_dusseldorf: "Дюссельдорф", city_arambol: "Арамболь",
 
         "Культурные и исторические маршруты": "Культурные и исторические",
@@ -352,11 +349,7 @@ const TRANSLATIONS = {
         new: "New", near: "Near you", empty_list: "List is empty",
         download: "Download",
         audio_error: "Playback error.",
-        notif_permission_title: "Enable Notifications",
-        notif_permission_text: "We'll notify you about:\n• Nearby routes\n• New audio guides\n• App updates\n\nDon't miss anything important!",
-        notif_allow: "Allow",
-        notif_later: "Later",
-    
+
         city_kemerovo: "Kemerovo", city_moscow: "Moscow", city_yerevan: "Yerevan", city_dusseldorf: "Dusseldorf", city_arambol: "Arambol",
 
         "Культурные и исторические маршруты": "Cultural & Historical",
@@ -410,10 +403,7 @@ const TRANSLATIONS = {
         new: "Neu", near: "In der Nähe", empty_list: "Liste ist leer",
         download: "Herunterladen",
         audio_error: "Wiedergabefehler.",
-        notif_permission_title: "Benachrichtigungen aktivieren",
-        notif_permission_text: "Wir benachrichtigen Sie über:\n• Routen in der Nähe\n• Neue Audioguides\n• App-Updates\n\nVerpassen Sie nichts Wichtiges!",
-        notif_allow: "Erlauben",
-        notif_later: "Später",
+
         city_kemerovo: "Kemerowo", city_moscow: "Moskau", city_yerevan: "Eriwan", city_dusseldorf: "Düsseldorf", city_arambol: "Arambol",
 
         "Культурные и исторические маршруты": "Kultur & Geschichte",
@@ -459,10 +449,6 @@ const TRANSLATIONS = {
         new: "Նոր", near: "Մոտակայքում", empty_list: "Ցուցակը դատարկ է",
         download: "Ներբեռնել",
         audio_error: "Սխալ:",
-        notif_permission_title: "Թույլ տվեք ծանուցումները",
-        notif_permission_text: "Մենք կծանուցենք ձեզ՝\n• Մոտակա երթուղիների մասին\n• Նոր աուդիոուղեցույցների\n• Թարմացումների\n\nՄի՛ բաց թողեք կարևորը!",
-        notif_allow: "Թույլատրել",
-        notif_later: "Ավելի ուշ",
         city_kemerovo: "Կեմերովո", city_moscow: "Մոսկվա", city_yerevan: "Երևան", city_dusseldorf: "Դյուսելդորֆ", city_arambol: "Արամբոլ",
 
         "Культурные и исторические маршруты": "Մշակութային",
@@ -506,10 +492,6 @@ const TRANSLATIONS = {
         new: "नया", near: "आपके पास", empty_list: "सूची खाली है",
         download: "डाउनलोड करें",
         audio_error: "ऑडियो त्रुटि।",
-        notif_permission_title: "सूचनाएं सक्षम करें",
-        notif_permission_text: "हम आपको सूचित करेंगे:\n• पास के मार्गों के बारे में\n• नए ऑडियो गाइड\n• ऐप अपडेट\n\nकुछ भी महत्वपूर्ण न चूकें!",
-        notif_allow: "अनुमति दें",
-        notif_later: "बाद में",
         city_kemerovo: "केमेरोवो", city_moscow: "मास्को", city_yerevan: "येरेवान", city_dusseldorf: "डसेलडोर्फ", city_arambol: "अरम्बोल",
         
         "Культурные и исторические маршруты": "सांस्कृतिक",
@@ -550,7 +532,7 @@ const isCategoryActive = (categoryData) => {
 };
 
 const RUSTORE_LINK = "https://www.rustore.ru/catalog/app/com.yasam.app";
-const VERSION_CHECK_URL = "https://archive.org/download/version_20260220/version.json";
+const VERSION_CHECK_URL = "https://archive.org/download/version_202511/version.json";
 
 const CATALOG_STRUCTURE = {
     "Культурные и исторические маршруты": ["Набережная", "Музеи и выставки", "Памятники и мемориалы", "Архитектурные достопримечательности", "Городские площади", "Исторические кварталы", "Церкви и храмы", "Легенды и мифы города"],
@@ -601,8 +583,7 @@ const getRoutesData = (cityId, lang) => {
         // --- ПЕРЕМЕННЫЕ КЕМЕРОВО ---
         const pushkinRoute = { name: "Площадь и Памятник Пушкину", distance: 0.5, time: "5 мин", difficulty: "Лёгкая", videoUrl: "https://rutube.ru/video/39841ce0856abb688f35f07e6d06f474/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXRGla", audioUrl: "https://archive.org/download/20251028_20251028_0740/%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D1%8C%20%D0%BF%D1%83%D1%88%D0%BA%D0%B8%D0%BD%D0%B0.MP3", image: "https://archive.org/download/20251028_20251028_0740/IMG_20251028_130447.jpg", location: { lat: 55.357344, lon: 86.087308 }, descriptionShort: "Уютная площадь в центре города.", subCategory: "Городские площади" };
         const minerRoute = { name: "Память шахтёрам Кузбасса", distance: 1.5, time: "20 мин", difficulty: "Лёгкая", videoUrl: "https://rutube.ru/video/a296940a183cdc08d317c54345547175/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXRS8n", audioUrl: "https://archive.org/download/miner_202510/miner.MP3", image: "https://archive.org/download/miner_202510/7933c1ff3b8662e1762c21e13a75417f.jpg", location: { lat: 55.374074, lon: 86.078468 }, descriptionShort: "Монументальный памятник шахтёрам.", subCategory: "Памятники и мемориалы" };
-        const importCoffeeRoute = { name: "Import Coffee", distance: 0.1, time: "5 мин", difficulty: "Очень лёгкая", videoUrl: "", geoUrl: "https://yandex.ru/maps/-/CLSXRDmw", audioUrl: "https://archive.org/download/20251029_20251029_1604/%D0%B8%D0%BC%D0%BF%D0%BE%D1%80%D1%82%D0%BA%D0%BE%D1%84%D0%B5.MP3", image: "https://archive.org/download/20251029_20251029_1604/caska-kapucino-s-kofe-v-zernah-na-stole.jpg", location: { lat: 55.358212, lon: 86.083722 }, descriptionShort: "Вкусный кофе в районе набережной.", subCategory: "Кофе" };
-        const coffeePrivalRoute = {  name: "Кофейный привал",  distance: 0.1,  time: "10 мин",  difficulty: "Лёгкая", videoUrl: "https://rutube.ru/video/7cbee9191db8eecab9033d0f237bc979/",   geoUrl: "https://yandex.ru/maps/org/kofeyny_prival/8039828444/?ll=86.085832%2C55.358612&z=16",  audioUrl: "https://archive.org/download/2_20260127_20260127_0510/2.MP3", image: "https://archive.org/download/koffe2/koffe2.png", location: { lat: 55.358612, lon: 86.085832 },  descriptionShort: "Самая вкусная и атмосферная кофейня в районе набережной.", subCategory: "Кофе"  };
+        const importCoffeeRoute = { name: "Import Coffee", distance: 0.1, time: "5 мин", difficulty: "Очень лёгкая", videoUrl: "", geoUrl: "https://yandex.ru/maps/-/CLSXRDmw", audioUrl: "https://archive.org/download/20251029_20251029_1604/%D0%B8%D0%BC%D0%BF%D0%BE%D1%80%D1%82%D0%BA%D0%BE%D1%84%D0%B5.MP3", image: "https://archive.org/download/20251029_20251029_1604/caska-kapucino-s-kofe-v-zernah-na-stole.jpg", location: { lat: 55.358212, lon: 86.083722 }, descriptionShort: "Лучший кофе с видом на набережную.", subCategory: "Кофе" };
         const fiveFacts = { name: "5 фактов о Кемерово, о которых ты не знал",  distance: 0.5,  time: "10 мин",  difficulty: "Лёгкая",  geoUrl: "https://yandex.ru/maps/-/CLSXRGla", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/5fakt(1).MP3", videoUrl: "https://rutube.ru/video/52b6f916e4e102125400908a2a16c876/", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/5fakt.png", location: { lat: 55.354692, lon: 86.088503 }, descriptionShort: "Удивительные факты о городе, которые знают только местные.", subCategory: "Легенды и мифы города", isExploreRoute: true };
         const leninMemorialRoute = { name: "Памятник Ленину", distance: 1.2, time: "15 мин", difficulty: "Лёгкая", videoUrl: "https://rutube.ru/video/b617deb9362e1df28c969ae16db82226/", geoUrl: "https://yandex.ru/maps/-/CLSXRL1p", audioUrl: "https://archive.org/download/lenin_202511/Lenin.MP3", image: "https://archive.org/download/lenin_202511/Lenin.jpg", location: { lat: 55.354692, lon: 86.088503 }, descriptionShort: "Центральный памятник города.", subCategory: "Городские площади" };
         const oldestHouseRoute = { name: "Самый старый дом", distance: 0.8, time: "10 мин", difficulty: "Лёгкая", videoUrl: "https://rutube.ru/video/207c76befeba4aa49f13a0e052c3f21b/", geoUrl: "https://yandex.ru/maps/-/CLSXRXKJ", audioUrl: "https://archive.org/download/dom_20251106/dom.MP3", image: "https://archive.org/download/dom_20251106/Tx_Iuw-HnAzmgKSZsGgXEatwymlG86OJTzNFN1Wma3lQbj7sC8aecRqAmKUOdp6uKgumyxwbfGu2GN26ptLJ71oH.jpg", location: { lat: 55.359329, lon: 86.078126 }, descriptionShort: "Историческое здание, свидетель начала города.", subCategory: "Архитектурные достопримечательности" };
@@ -616,9 +597,6 @@ const getRoutesData = (cityId, lang) => {
         const mod = { name: "Модница", distance: 0.3, time: "3 мин", difficulty: "Лёгкая", image: "https://archive.org/download/modnica/XXXL.jpeg", audioUrl: "https://archive.org/download/modnica/modnica.MP3", location: { lat: 55.334873, lon: 86.174779 }, geoUrl: "https://yandex.ru/maps/-/CLgFuH67", descriptionShort: "Памятник девочке в маминых туфлях.", subCategory: "Скульптуры и уличное искусство", videoUrl: "https://rutube.ru/video/private/5106ecfe76e6c4d597832abed7e0887a/?p=np-frlzREk_KtGIxq4UfKg", explicitDate: "2025-12-05" };
         const olenLesnaya = { name: "Скульптура Олень", distance: 12.0, time: "25 мин (авто)", difficulty: "Лёгкая", image: "https://cdn-ru.bitrix24.ru/b35117284/landing/ef2/ef2830181fccd03ee7a3fe12d599ee77/orig_2x.jpeg", audioUrl: "https://archive.org/download/orig_20251118/olen.MP3", location: { lat: 55.416023, lon: 86.238736 }, geoUrl: "https://yandex.ru/maps/-/CLSXV8ov", videoUrl: "https://rutube.ru/video/4c0fb0036f5480277844c2c598f9d30d/", descriptionShort: "Скульптура в районе Лесная Поляна.", subCategory: "Природные зоны и парки", explicitDate: "2025-11-22" };
         const chas_usp = { name: "Часовня иконы Божией Матери", distance: 0.5, time: "6 мин", difficulty: "Лёгкая", image: "https://archive.org/download/dsc-1432_202511/DSC_1432.JPG", audioUrl: "https://archive.org/download/dsc-1432_202511/chas_usp.MP3", geoUrl: "https://yandex.ru/maps/-/CLSXVLlU", location: { lat: 55.353792, lon: 86.092382 }, descriptionShort: "Часовня Всех Скорбящих Радость.", subCategory: "Церкви и храмы", explicitDate: "2025-11-23", videoUrl: "https://rutube.ru/video/a667d8bccefbf54646a11b53166558cf/?r=wd" };
-        const park_pobedi = { name: "Парк Победы имени Георгия Константиновича Жукова", distance: 1.5, time: "30 мин", difficulty: "сложная", image: "https://archive.org/download/20260210_20260210_1146/001.jpg", audioUrl: "https://archive.org/download/20260210_20260210_1146/%D0%BF%D0%B0%D1%80%D0%BA_%D0%BF%D0%BE%D0%B1%D0%B5%D0%B4%D1%8B.MP3", geoUrl: "https://yandex.ru/maps/-/CPQZBJ4~", location: { lat: 55.348852, lon: 86.094377 }, descriptionShort: "Парк с военной техникой", subCategory: "Парки", explicitDate: "2026-02-10", videoUrl: " https://rutube.ru/video/0d0a0b9576446540595107193164ab5e/" };
-        const pcoff = { name: "Лучшее Кафе - Парадная", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/cp_20260211/photo_2026-02-11%2013.17.16_thumb.jpg", audioUrl: "https://archive.org/download/cp_20260211/cp.MP3", geoUrl: "https://yandex.ru/maps/-/CPQ7q4M0", location: { lat: 55.358599, lon: 86.085642 }, descriptionShort: "Лучший кофе в районе набережной", subCategory: "Кофе", explicitDate: "2026-02-11", videoUrl: "https://rutube.ru/video/e246f605cbaaf51506c051839f9e2461/" };
-        const s_bor = { name: "Сосновый Бор", distance: 5.5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sb_20260220/sb.jpg", audioUrl: "https://archive.org/download/sb_20260220/sb.MP3", geoUrl: "https://yandex.com/maps/-/CPanVZ31", location: { lat: 55.378308, lon: 86.104392 }, descriptionShort: "Самый большой в мире хвойный городской парк!", subCategory: "Парки", explicitDate: "2026-02-19", videoUrl: "" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -632,33 +610,29 @@ const getRoutesData = (cityId, lang) => {
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [kuzbassMuseum, krasnayaGorkaMuseum, artMuseum, artCenter];
-        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
+        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
-        structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
+        structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [rampa, olenLesnaya];
         
-        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [s_bor, mod, olenLesnaya, park_pobedi];
-        structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [s_bor];
-         structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [s_bor];
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [mod, olenLesnaya];
         
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [mod, minerRoute, pushkinRoute, leninMemorialRoute, bezdomniipec, olenLesnaya];
         structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [mod, bezdomniipec];
         structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [oldestHouseRoute, sovKirCrossroadRoute];
         
-        structure["Гастрономические маршруты"]["Кофе"] = [pcoff, importCoffeeRoute, coffeePrivalRoute];
+        structure["Гастрономические маршруты"]["Кофе"] = [importCoffeeRoute];
         
-        structure["Семейные маршруты"]["Парки аттракционы и детские площадки"] = [s_bor, olenLesnaya, park_pobedi];
+        structure["Семейные маршруты"]["Парки аттракционы и детские площадки"] = [olenLesnaya];
         structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [olenLesnaya];
-        structure["Семейные маршруты"]["Пикники на природе"] = [s_bor];
         
-        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
+        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [rampa];
         
         structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, olenLesnaya];
-        structure["Тематические маршруты"]["Спортивные маршруты"] = [s_bor];
-        
+
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"].push(fiveFacts);
 
     } else if (cityId === 'arambol') {
@@ -714,57 +688,6 @@ const ContactModal = ({ show, onClose, darkMode, lang }) => {
     const handleCopy = (text, label) => { navigator.clipboard.writeText(text).then(() => { setCopyStatus(prev => ({ ...prev, [label]: 'Скопировано!' })); setTimeout(() => setCopyStatus(prev => ({ ...prev, [label]: null })), 2000); }); };
     const handleOpen = (url) => { window.open(url, '_blank', 'noopener,noreferrer'); };
     return (<div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 150, padding: '1rem' }} onClick={onClose}> <div style={{ borderRadius: '0.75rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', padding: '1.5rem', position: 'relative', width: '100%', maxWidth: '28rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, color: C.text }} onClick={e => e.stopPropagation()}> <h3 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1.5rem', textAlign: 'center' }}>{t('contact')}</h3> <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}> {contactLinks.map(link => (<div key={link.label}> <div style={{ ...S.flex, ...S.itemsCenter, gap: '0.75rem', marginBottom: '0.5rem' }}> {link.icon} <div> <p style={{ ...S.fontSemibold, color: C.text }}>{link.label}</p> <p style={{ fontSize: '0.875rem', color: C.textMuted, wordBreak: 'break-all' }}>{link.value}</p> </div> </div> <div style={{ ...S.flex, gap: '0.5rem', marginTop: '0.5rem' }}> <button onClick={() => handleCopy(link.copyValue, link.label)} style={{ flex: 1, backgroundColor: S.emerald600, color: 'white', ...S.fontSemibold, ...S.py3, ...S.roundedXl, border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}> {copyStatus[link.label] || 'Копировать'} </button> <button onClick={() => handleOpen(link.url)} style={{ flex: 1, backgroundColor: 'transparent', color: C.text, ...S.fontSemibold, ...S.py3, ...S.roundedXl, border: `1px solid ${C.cardBorder}`, cursor: 'pointer', fontSize: '0.875rem' }}> Открыть </button> </div> </div>))} </div> <button onClick={onClose} style={{ width: '100%', marginTop: '2rem', backgroundColor: 'transparent', color: C.textMuted, ...S.fontSemibold, ...S.py3, ...S.roundedXl, border: `1px solid ${C.cardBorder}`, cursor: 'pointer' }}>{t('close')}</button> </div> </div>);
-};
-
-const NotificationPermissionModal = ({ show, onAllow, onLater, darkMode, lang }) => {
-    if (!show) return null;
-    const C = darkMode ? S.dark : S.light;
-    const t = (k) => TRANSLATIONS[lang]?.[k] || k;
-    
-    return (
-        <div style={{ 
-            position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, 
-            backgroundColor: 'rgba(0, 0, 0, 0.4)', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center', 
-            zIndex: 160, padding: '1rem',
-            backdropFilter: 'blur(4px)'
-        }} onClick={onLater}>
-            <div style={{ 
-                borderRadius: '1.5rem', 
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', 
-                padding: '2rem 1.5rem', 
-                width: '100%', maxWidth: '22rem', 
-                backgroundColor: C.cardBg, 
-                border: `1px solid ${C.cardBorder}`, 
-                color: C.text,
-                textAlign: 'center'
-            }} onClick={e => e.stopPropagation()}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔔</div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>
-                    {t('notif_permission_title')}
-                </h3>
-                <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: C.textMuted, marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>
-                    {t('notif_permission_text')}
-                </p>
-                <div style={{ display: 'flex', gap: '0.75rem', flexDirection: 'column' }}>
-                    <button onClick={onAllow} style={{ 
-                        width: '100%', backgroundColor: S.emerald600, color: 'white', 
-                        fontWeight: 600, padding: '0.875rem 0', borderRadius: '0.75rem', 
-                        border: 'none', cursor: 'pointer', fontSize: '1rem'
-                    }}>
-                        {t('notif_allow')}
-                    </button>
-                    <button onClick={onLater} style={{ 
-                        width: '100%', backgroundColor: 'transparent', color: C.textMuted, 
-                        fontWeight: 500, padding: '0.75rem 0', borderRadius: '0.75rem', 
-                        border: `1px solid ${C.cardBorder}`, cursor: 'pointer', fontSize: '0.9rem'
-                    }}>
-                        {t('notif_later')}
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
 };
 
 const SelectionModal = ({ show, onClose, title, items, onSelect, currentId, darkMode, lang }) => {
@@ -898,14 +821,10 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
             </button>
             <div style={{ flex: 1, margin: '0 1rem' }}>
                 <input type="range" min="0" max={duration || 0} value={progress} onChange={handleScrub} style={{ width: '100%', height: '4px', cursor: 'pointer', background: `linear-gradient(to right, ${barColor} ${((progress / duration) * 100) || 0}%, #d1d5db ${((progress / duration) * 100) || 0}%)` }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
-    <span style={{ fontSize: '0.75rem', color: C.text }}>
-        {Math.floor(progress / 60)}:{String(Math.floor(progress % 60)).padStart(2, '0')}
-    </span>
-    <span style={{ fontSize: '0.75rem', color: C.text }}>
-        {Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, '0')}
-    </span>
-</div>
+                <div style={{ ...S.flex, ...S.justifyBetween, marginTop: '0.25rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: C.text }}>{Math.floor(progress / 60)}:{String(Math.floor(progress % 60)).padStart(2, '0')}</span>
+                    <span style={{ fontSize: '0.75rem', color: C.text }}>{Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, '0')}</span>
+                </div>
             </div>
             <button onClick={downloadAudio} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', color: C.text }}><Download style={{ width: '1.25rem', height: '1.25rem' }} /></button>
             <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', color: C.text }}><XCircle style={{ width: '1.5rem', height: '1.5rem' }} /></button>
@@ -1096,28 +1015,15 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
     const distance = userLocation ? calculateDistance(userLocation.lat, userLocation.lon, route.location?.lat, route.location?.lon) : 0;
     const steps = Math.floor(route.distance * 1250);
     const t = (k) => TRANSLATIONS[lang]?.[k] || k;
-    
     return (
-        <div onClick={() => onClick(route)} style={{ 
-            // БЫЛО: minWidth: '59.5%', height: '13.6rem'
-            minWidth: '42%',  // Сделали уже (было почти 60%)
-            height: '11rem',  // Сделали ниже (было 13.6rem)
-            borderRadius: '1.25rem', // Чуть уменьшили скругление
-            position: 'relative', 
-            overflow: 'hidden', 
-            cursor: 'pointer', 
-            boxShadow: C.cardShadow, 
-            border: `1px solid ${C.border}` 
-        }}>
+        <div onClick={() => onClick(route)} style={{ minWidth: '70%', height: '16rem', borderRadius: '1.5rem', position: 'relative', overflow: 'hidden', cursor: 'pointer', boxShadow: C.cardShadow, border: `1px solid ${C.border}` }}>
             <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', padding: '1rem 0.75rem 0.75rem 0.75rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                <div style={{ color: '#10B981', fontWeight: 700, fontSize: '0.65rem', textTransform: 'uppercase', marginBottom: '0.1rem' }}>{t(route.subCategory)}</div>
-                {/* БЫЛО: fontSize: '1.25rem' -> СТАЛО: '0.95rem' (чтобы текст влезал) */}
-                <h3 style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', margin: '0 0 0.25rem 0', lineHeight: 1.2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{route.name}</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.9)', fontSize: '0.75rem', fontWeight: 500 }}>
-                    <span>👣 {steps}</span>
-                    {/* Убрали лишние скобки с км для экономии места */}
-                    {/* <span><Clock size={12} /> {route.time.replace("мин", t("min"))}</span> */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', padding: '1.5rem 1rem 1rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                <div style={{ color: '#10B981', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.25rem' }}>{t(route.subCategory)}</div>
+                <h3 style={{ color: 'white', fontWeight: 800, fontSize: '1.25rem', margin: '0 0 0.5rem 0', lineHeight: 1.2 }}>{route.name}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'rgba(255,255,255,0.9)', fontSize: '0.85rem', fontWeight: 500 }}>
+                    <span>👣 {steps} <span style={{ opacity: 0.7, fontSize: '0.75rem' }}>({formatDistance(distance)})</span></span>
+                    <span><Clock size={14} /> {route.time.replace("мин", t("min"))}</span>
                 </div>
             </div>
         </div>
@@ -1138,7 +1044,7 @@ function MainRouteApp({ onExit, setAccount, ...props }) {
     const [showCityModal, setShowCityModal] = useState(false);
     const [notifiedRoutes, setNotifiedRoutes] = useState(new Set());
     const [appNotifications, setAppNotifications] = useState([]);
-    const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
+
     const activeRoutes = useMemo(() => getRoutesData(currentCity, currentLang), [currentCity, currentLang]);
     const audioPlayerRef = useRef(null);
     const settingsRef = useRef(null);
@@ -1162,114 +1068,23 @@ function MainRouteApp({ onExit, setAccount, ...props }) {
     }, []);
 
     const allRoutesFlatForSearch = useMemo(() => { return Object.values(activeRoutes).flatMap(cat => Object.values(cat).flat()); }, [activeRoutes]);
-    const uniqueAllRoutes = useMemo(() => { const unique = new Map(); 
-        
-        allRoutesFlatForSearch.forEach(r => { if (!unique.has(r.name)) unique.set(r.name, r); }); return Array.from(unique.values()); }, [allRoutesFlatForSearch]);
-// Запрос разрешений на уведомления
-// Запрос разрешений на уведомления
-useEffect(() => {
-    const checkPermissions = async () => {
-        const result = await LocalNotifications.checkPermissions();
-        
-        // Если уже разрешено — ничего не делаем
-        if (result.display === 'granted') return;
-        
-        // Если запрещено или не спрашивали — показываем модалку через 3 секунды
-        setTimeout(() => {
-            setShowNotifPermissionModal(true);
-        }, 3000);
-    };
-    checkPermissions();
-}, []);
+    const uniqueAllRoutes = useMemo(() => { const unique = new Map(); allRoutesFlatForSearch.forEach(r => { if (!unique.has(r.name)) unique.set(r.name, r); }); return Array.from(unique.values()); }, [allRoutesFlatForSearch]);
 
-// Обработчики модалки разрешений
-const handleAllowNotifications = async () => {
-    setShowNotifPermissionModal(false);
-    const result = await LocalNotifications.requestPermissions();
-    if (result.display === 'granted') {
-        setModalMessage(t('notif_permission_title') + ' ✅');
-        setShowModal(true);
-    }
-};
-
-const handleLaterNotifications = () => {
-    setShowNotifPermissionModal(false);
-    // Запомним, что пользователь отложил (можно спросить через день)
-    localStorage.setItem('notifPermissionAskedAt', Date.now());
-};
     useEffect(() => {
-    const geoSuccess = (position) => {
-        const lat = position.coords.latitude; 
-        const lon = position.coords.longitude; 
-        setUserLocation({ lat, lon });
-        
-        // Находим все маршруты в радиусе 150м и сортируем по близости
-const nearbyRoutes = allRoutesFlatForSearch
-    .filter(route => {
-        if (!route.location) return false;
-        if (notifiedRoutes.has(route.name)) return false; // уже уведомляли
-        
-        const distanceKm = calculateDistance(lat, lon, route.location.lat, route.location.lon);
-        const distanceMeters = distanceKm * 1000;
-        return distanceMeters <= 150;
-    })
-    .map(route => {
-        const distanceKm = calculateDistance(lat, lon, route.location.lat, route.location.lon);
-        return {
-            ...route,
-            distanceMeters: Math.round(distanceKm * 1000)
+        const geoSuccess = (position) => {
+            const lat = position.coords.latitude; const lon = position.coords.longitude; setUserLocation({ lat, lon });
+            allRoutesFlatForSearch.forEach(route => {
+                if (!route.location) return;
+                if (calculateDistance(lat, lon, route.location.lat, route.location.lon) <= 0.02 && !notifiedRoutes.has(route.name)) {
+                    LocalNotifications.schedule({ notifications: [{ title: t('near'), body: route.name, id: Math.floor(Math.random() * 100000), schedule: { at: new Date(Date.now() + 100) }, extra: { routeId: route.name } }] });
+                    setNotifiedRoutes(prev => new Set(prev).add(route.name));
+                }
+            });
         };
-    })
-    .sort((a, b) => a.distanceMeters - b.distanceMeters); // сортируем: ближайший первый
-
-// Уведомляем только о БЛИЖАЙШЕМ маршруте (не чаще раз в 5 минут)
-if (nearbyRoutes.length > 0) {
-    const lastNotifTime = parseInt(localStorage.getItem('lastRouteNotification') || '0');
-    const now = Date.now();
-    const timeSinceLastNotif = now - lastNotifTime;
-    const minInterval = 5 * 60 * 1000; // 5 минут
-    
-    if (timeSinceLastNotif >= minInterval) {
-        const closestRoute = nearbyRoutes[0]; // берём самый близкий
-        
-        LocalNotifications.schedule({ 
-            notifications: [{ 
-                title: "Рядом интересный маршрут! 🎧", 
-                body: `${closestRoute.name} (${closestRoute.distanceMeters} м)\nПослушать аудиогид?`, 
-                id: Math.floor(Math.random() * 100000), 
-                schedule: { at: new Date(Date.now() + 100) },
-                sound: 'default',
-                extra: { 
-                    routeId: closestRoute.name,
-                    routeData: JSON.stringify(closestRoute)
-                } 
-            }] 
-        });
-        
-        setNotifiedRoutes(prev => new Set(prev).add(closestRoute.name));
-        localStorage.setItem('lastRouteNotification', now.toString());
-    }
-}
-    };
-
-    const geoError = () => setUserLocation(CITIES.find(c => c.id === currentCity)); 
-    
-    let watchId; 
-    if (navigator.geolocation) { 
-        watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, { 
-            enableHighAccuracy: true,
-            maximumAge: 10000, // обновление каждые 10 сек
-            timeout: 5000
-        }); 
-    } else { 
-        geoError(); 
-    }
-    
-    return () => { 
-        if (watchId) navigator.geolocation.clearWatch(watchId); 
-    };
-}, 
-  [allRoutesFlatForSearch, notifiedRoutes, currentCity]);
+        const geoError = () => setUserLocation(CITIES.find(c => c.id === currentCity)); 
+        let watchId; if (navigator.geolocation) { watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, { enableHighAccuracy: true }); } else { geoError(); }
+        return () => { if (watchId) navigator.geolocation.clearWatch(watchId); };
+    }, [allRoutesFlatForSearch, notifiedRoutes, currentCity, currentLang]);
 
     const allRoutesFlat = useMemo(() => { return Object.keys(activeRoutes).flatMap(topCat => Object.keys(activeRoutes[topCat]).flatMap(subCat => activeRoutes[topCat][subCat])); }, [activeRoutes]);
 
@@ -1279,26 +1094,20 @@ if (nearbyRoutes.length > 0) {
         allRoutesFlat.forEach(route => { if (!uniqueRoutes.has(route.name)) { uniqueRoutes.set(route.name, { ...route, calculatedDistance: calculateDistance(userLocation.lat, userLocation.lon, route.location?.lat, route.location?.lon) }); } });
         return Array.from(uniqueRoutes.values()).sort((a, b) => a.calculatedDistance - b.calculatedDistance).slice(0, 5);
     }, [userLocation, allRoutesFlat]);
-    // --- ЗАМЕНА: Вместо newestRoutes делаем promoRoutes ---
-        // РЕКЛАМА (Фильтрация из общего списка)
-    const promoRoutes = useMemo(() => {
-        // Ищем маршруты, у которых имя "
-        return allRoutesFlat.filter(route => 
-            route.name === "Лучшее Кафе - Парадная"
-        );
-    }, [allRoutesFlat]);
+
 // РАЗДЕЛ "ИССЛЕДУЙ" (4 рандомных маршрута + 1 вручную)
-// РАЗДЕЛ "ИССЛЕДУЙ" (Генерируется один раз при смене города/списка)
 const exploreRoutes = useMemo(() => {
+    // 1. Обязательный маршрут (вручную)
     const manualRoute = allRoutesFlat.find(r => r.name === "5 фактов о Кемерово, о которых ты не знал");
     
-    // МЫ УБРАЛИ recommendedRoutes ИЗ ЭТОГО СПИСКА
-    // Теперь маршруты здесь не будут зависеть от того, что сейчас в разделе "Рядом"
+    // 2. Исключаем маршруты, которые уже показаны в других разделах
     const excludedNames = new Set([
-        ...promoRoutes.map(r => r.name), 
+        ...recommendedRoutes.map(r => r.name),
+        ...newestRoutes.map(r => r.name),
         manualRoute?.name
     ].filter(Boolean));
     
+    // 3. Уникальные маршруты для рандома
     const uniqueRoutes = new Map();
     allRoutesFlat
         .filter(route => !excludedNames.has(route.name))
@@ -1308,36 +1117,24 @@ const exploreRoutes = useMemo(() => {
             }
         });
     
+    // 4. Перемешиваем и берём 3 штуки
     const availableRoutes = Array.from(uniqueRoutes.values());
-    // Сортировка (рандом) сработает только один раз
     const shuffled = availableRoutes.sort(() => Math.random() - 0.5);
     const randomRoutes = shuffled.slice(0, 3);
     
+    // 5. Возвращаем: вручную + 3 рандомных
     return manualRoute 
         ? [manualRoute, ...randomRoutes] 
         : randomRoutes.slice(0, 4);
+}, [allRoutesFlat, recommendedRoutes, newestRoutes]);
 
-// ВАЖНО: Убрал recommendedRoutes из квадратных скобок внизу
-}, [currentCity, allRoutesFlat, promoRoutes]);
-// Обработка нажатия на уведомление
-useEffect(() => {
-    const listener = LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-        const routeData = notification.notification.extra?.routeData;
-        if (routeData) {
-            try {
-                const route = JSON.parse(routeData);
-                navigate('routeDetails', { route });
-                setActiveTab('recommendations');
-            } catch (e) {
-                console.error('Ошибка парсинга маршрута из уведомления:', e);
-            }
-        }
-    });
-    
-    return () => {
-        listener.remove();
-    };
-}, []);
+    const newestRoutes = useMemo(() => {
+        const getCreationDate = (route) => { if (route.explicitDate) return new Date(route.explicitDate); if (!route.audioUrl) return null; let match = route.audioUrl.match(/(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])/); if (match) return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3])); return null; };
+        const excludedNames = new Set(recommendedRoutes.map(r => r.name));
+        const uniqueRoutes = new Map();
+        allRoutesFlat.filter(route => route.audioUrl || route.explicitDate).forEach(route => { if (!uniqueRoutes.has(route.name)) { uniqueRoutes.set(route.name, { ...route, creationDate: getCreationDate(route) }); } });
+        return Array.from(uniqueRoutes.values()).filter(route => route.creationDate).sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime()).filter(route => !excludedNames.has(route.name)).slice(0, 2);
+    }, [allRoutesFlat, recommendedRoutes]);
 
     const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
     const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
@@ -1416,20 +1213,17 @@ useEffect(() => {
                 {currentView.type === 'subRoutes' && (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {(activeRoutes[currentView.category]?.[currentView.subCategory] || []).map((route) => (<RouteListItem key={route.name} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div>)} </>);
         }
         
-               case 'recommendations': {
+        case 'recommendations': {
             const cityName = t('city_' + currentCity) || CITIES.find(c => c.id === currentCity)?.name || "City";
             return (
                 <div>
                     <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: C.text, marginBottom: '0.5rem', marginTop: '0.5rem' }}> <span style={{ color: S.emerald600 }}>{t('app_name')}</span> {cityName} </h1>
                     
-                    {/* 1. БЛОК "РЯДОМ С ВАМИ" (Первый по списку) */}
                     {recommendedRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>{t('near')}</h2> <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}> {recommendedRoutes.map((route, idx) => (<RecommendationTile key={`rec-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />))} </div> </div>)}
                     
-                    {/* 2. БЛОК "РЕКЛАМА" (Второй по списку */}
-                    {promoRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>{t('ads') || "Реклама"}</h2> <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {promoRoutes.map((route, idx) => (<RouteListItem key={`promo-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div> <div style={{ marginBottom: '1.5rem' }}></div> </div>)}
-
-                    {/* 3. БЛОК "ИССЛЕДУЙ" (Третий по списку) */}
                     {exploreRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>🔍 Исследуй</h2> <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}> {exploreRoutes.map((route, idx) => (<RecommendationTile key={`explore-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />))} </div> </div>)}
+                    
+                    {newestRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>{t('new')}</h2> <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {newestRoutes.map((route, idx) => (<RouteListItem key={`new-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div> </div>)}
                 </div>
             );
         }
@@ -1452,7 +1246,8 @@ useEffect(() => {
     const containerStyle = isMapTab ? { width: '100%', height: '100vh', backgroundColor: C.bg, overflow: 'hidden' } : { width: '100%', padding: '1rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px)) 1rem', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box', overflowY: 'auto', minHeight: '100vh' };
 
     return (<> <div style={containerStyle}>
-        {!isMapTab && (<div ref={settingsRef} style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', right: '1rem', zIndex: 110 }}> <button onClick={() => setSettingsOpen(!settingsOpen)} style={{ cursor: 'pointer', padding: '0.5rem', borderRadius: '9999px', color: C.textMuted, backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, position: 'relative' }}> <Settings style={{ width: '1.25rem', height: '1.25rem', color: C.text }} /> </button> {settingsOpen && (<div style={{ position: 'absolute', top: '3rem', right: 0, width: '16rem', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', borderRadius: '1rem', padding: '0.5rem', zIndex: 20, border: `1px solid ${C.cardBorder}`, backgroundColor: C.cardBg }}> {settingsItems.map((item, index) => { if (item.type === 'divider') return <hr key={`div-${index}`} style={{ border: 'none', borderTop: `1px solid ${C.cardBorder}`, margin: '0.5rem 0' }} />; return <button key={item.label} onClick={item.action} style={{ width: '100%', display: 'flex', alignItems: 'center', textAlign: 'left', padding: '0.75rem', borderRadius: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: C.text, transition: 'background 0.2s' }}>{item.icon}<span>{item.label}</span></button>; })} </div>)} </div>)} {renderCurrentView()} </div>
+        {!isMapTab && (<div ref={settingsRef} style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', right: '1rem', zIndex: 110 }}> <button onClick={() => setSettingsOpen(!settingsOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '9999px', color: C.textMuted, backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, position: 'relative' }}> <Settings style={{ width: '1.25rem', height: '1.25rem', color: C.text }} /> </button> {settingsOpen && (<div style={{ position: 'absolute', top: '3rem', right: 0, width: '16rem', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', borderRadius: '1rem', padding: '0.5rem', zIndex: 20, border: `1px solid ${C.cardBorder}`, backgroundColor: C.cardBg }}> {settingsItems.map((item, index) => { if (item.type === 'divider') return <hr key={`div-${index}`} style={{ border: 'none', borderTop: `1px solid ${C.cardBorder}`, margin: '0.5rem 0' }} />; return <button key={item.label} onClick={item.action} style={{ width: '100%', display: 'flex', alignItems: 'center', textAlign: 'left', padding: '0.75rem', borderRadius: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: C.text, transition: 'background 0.2s' }}>{item.icon}<span>{item.label}</span></button>; })} </div>)} </div>)}
+        {renderCurrentView()} </div>
         <Modal show={showModal} message={modalMessage} onClose={() => setShowModal(false)} darkMode={darkMode} lang={currentLang} />
         <SelectionModal show={showCityModal} onClose={() => setShowCityModal(false)} title={t('city')} items={CITIES} onSelect={setCurrentCity} currentId={currentCity} darkMode={darkMode} lang={currentLang} />
         <SelectionModal show={showLangModal} onClose={() => setShowLangModal(false)} title={t('lang')} items={LANGUAGES} onSelect={setCurrentLang} currentId={currentLang} darkMode={darkMode} lang={currentLang} />
@@ -1483,9 +1278,8 @@ export default function App() {
     const [rewardMsg, setRewardMsg] = useState("");
     const [showContactModal, setShowContactModal] = useState(false);
 
-    const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.9", date: "19.02.2026" }; 
+    const buildInfo = { version: "2.1", date: "10&01&2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
@@ -1496,73 +1290,13 @@ export default function App() {
     useEffect(() => { localStorage.setItem('app-lang', JSON.stringify(currentLang)); }, [currentLang]);
     useEffect(() => { localStorage.setItem('app-city', JSON.stringify(currentCity)); }, [currentCity]);
 
-
-useEffect(() => {
-    const checkNotifPermissions = async () => {
-        try {
-            const result = await LocalNotifications.checkPermissions();
-            if (result.display === 'granted') return;
-            
-            const lastAsked = parseInt(localStorage.getItem('notifPermissionAskedAt') || '0');
-            const dayInMs = 24 * 60 * 60 * 1000;
-            const now = Date.now();
-            
-            if (now - lastAsked < dayInMs) return;
-            
-            setTimeout(() => {
-                setShowNotifPermissionModal(true);
-            }, 3000);
-        } catch (e) {
-            console.error('Ошибка проверки разрешений:', e);
-        }
-    };
-    
-    if (phase === 'mainApp') {
-        checkNotifPermissions();
-    }
-}, [phase]);
-
     useEffect(() => { const C = darkMode ? S.dark : S.light; document.body.style.backgroundColor = C.bg; const styleTag = document.createElement('style'); styleTag.innerHTML = `html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; box-sizing: border-box; }`; document.head.appendChild(styleTag); return () => { document.head.removeChild(styleTag); document.body.style.backgroundColor = ''; }; }, [darkMode]);
 
-    const startApp = useCallback(() => { 
-    const hasAccepted = loadFromStorage('agreementAccepted', false); 
-    if (!hasAccepted) { 
-        setPhase('agreement'); 
-        return; 
-    } 
-    setPhase('mainApp'); 
-}, []);
+    const startApp = useCallback(() => { const hasAccepted = loadFromStorage('agreementAccepted', false); if (!hasAccepted) { setPhase('agreement'); return; } setPhase('mainApp'); }, []);
+    useEffect(() => { const timer = setTimeout(() => { startApp(); }, 1500); return () => clearTimeout(timer); }, [startApp]);
 
-useEffect(() => { 
-    const timer = setTimeout(() => { 
-        startApp(); 
-    }, 1500); 
-    return () => clearTimeout(timer); 
-}, [startApp]);
-
-const handleAcceptAgreement = () => { 
-    localStorage.setItem('agreementAccepted', JSON.stringify(true)); 
-    setPhase('loading'); 
-    setTimeout(startApp, 300); 
-};
+    const handleAcceptAgreement = () => { localStorage.setItem('agreementAccepted', JSON.stringify(true)); setPhase('loading'); setTimeout(startApp, 300); };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
-
-    const handleAllowNotifications = async () => {
-    setShowNotifPermissionModal(false);
-    try {
-        const result = await LocalNotifications.requestPermissions();
-        if (result.display === 'granted') {
-            alert('Уведомления включены! 🎉');
-        }
-    } catch (e) {
-        console.error('Ошибка запроса разрешений:', e);
-    }
-};
-
-const handleLaterNotifications = () => {
-    setShowNotifPermissionModal(false);
-    localStorage.setItem('notifPermissionAskedAt', Date.now().toString());
-};
 
     const handleComplete = useCallback((route) => { if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } const date = new Date(); const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; setCompleted(newCompleted); const newCount = newCompleted.length; setAccount(prevAccount => { const newAccountState = { ...prevAccount, completedRoutesCount: newCount }; const tier = rewardTiers.find(t => t.count === newCount); if (tier && !prevAccount.rewards.includes(tier.title)) { newAccountState.level = tier.title; newAccountState.rewards.push(tier.title); setRewardMsg(`Поздравляем! Вы получили новое звание: «${tier.title}»!`); setRewardModal(true); } return newAccountState; }); }, [completed, rewardTiers]);
     const isFav = useCallback((route) => favs.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))), [favs, currentCity]);
@@ -1580,19 +1314,10 @@ const handleLaterNotifications = () => {
     };
 
     return (
-    <div style={appRootStyle}>
-        {renderContent()}
-        <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
-        <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
-        
-        {/* Модалка разрешений на уведомления */}
-        <NotificationPermissionModal 
-            show={showNotifPermissionModal} 
-            onAllow={handleAllowNotifications} 
-            onLater={handleLaterNotifications} 
-            darkMode={darkMode} 
-            lang={currentLang} 
-        />
-    </div>
-);
+        <div style={appRootStyle}>
+            {renderContent()}
+            <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
+            <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
+        </div>
+    );
 }

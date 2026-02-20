@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Я САМ</string>
+    <string name="title_activity_main">Я САМ</string>
+    <string name="package_name">com.yasam.app</string>
+    <string name="custom_url_scheme">com.yasam.app</string>
+</resources>
