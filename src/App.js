@@ -920,11 +920,13 @@ const LiquidMenu = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) =
     const C = darkMode ? S.dark : S.light;
     const t = (k) => TRANSLATIONS[lang]?.[k] || k;
 
-    const tabs = [
-        { id: 'recommendations', icon: Compass, label: t('rec') },
+    const leftTabs = [
+        { id: 'recommendations', icon: Home, label: t('rec') },
         { id: 'catalog', icon: Landmark, label: t('cat') },
+    ];
+    
+    const rightTabs = [
         { id: 'search', icon: Search, label: t('search'), isSearch: true },
-        { id: 'favorites', icon: Star, label: t('fav') },
         { id: 'map', icon: MapIcon, label: t('map') },
     ];
 
@@ -937,251 +939,170 @@ const LiquidMenu = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) =
         setIsOpen(false);
     };
 
+    const renderTabButton = (tab, index, side) => {
+        const isActive = activeTab === tab.id;
+        const Icon = tab.icon;
+        const delay = index * 0.05;
+        
+        return (
+            <div
+                key={tab.id}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleTabClick(tab);
+                }}
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    padding: '0.5rem',
+                    borderRadius: '0.75rem',
+                    cursor: 'pointer',
+                    backgroundColor: isActive 
+                        ? (darkMode ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.15)')
+                        : (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'),
+                    backdropFilter: 'blur(10px)',
+                    opacity: isOpen ? 1 : 0,
+                    transform: isOpen 
+                        ? 'translateX(0) scale(1)' 
+                        : `translateX(${side === 'left' ? '30px' : '-30px'}) scale(0.5)`,
+                    transition: `all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) ${delay}s`,
+                    pointerEvents: isOpen ? 'auto' : 'none',
+                    minWidth: '52px',
+                }}
+            >
+                <Icon 
+                    size={22} 
+                    color={isActive ? '#10B981' : (darkMode ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)')} 
+                />
+                <span style={{
+                    fontSize: '0.6rem',
+                    fontWeight: isActive ? 600 : 500,
+                    color: isActive ? '#10B981' : (darkMode ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'),
+                    whiteSpace: 'nowrap',
+                }}>
+                    {tab.label}
+                </span>
+            </div>
+        );
+    };
+
     return (
         <>
-           {/* Светящаяся сфера */}
-<div
-    onClick={() => setIsOpen(!isOpen)}
-    style={{
-        position: 'fixed',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)',
-        left: '50%',
-        marginLeft: '-32px',
-        width: '64px',
-        height: '64px',
-        borderRadius: '50%',
-        background: isOpen 
-            ? 'linear-gradient(135deg, #ef4444, #dc2626)' 
-            : 'linear-gradient(135deg, #10B981, #059669)',
-        boxShadow: isOpen
-            ? '0 0 40px rgba(239, 68, 68, 0.6), 0 0 80px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(255,255,255,0.2)'
-            : '0 0 40px rgba(16, 185, 129, 0.6), 0 0 80px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255,255,255,0.2)',
-        cursor: 'pointer',
-        zIndex: 200,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        animation: isOpen ? 'none' : 'spherePulse 3s ease-in-out infinite',
-    }}
->
-    <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '28px',
-        height: '28px',
-        color: 'white',
-        transition: 'transform 0.3s ease',
-        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
-    }}>
-        {isOpen ? <XCircle size={28} /> : <Compass size={28} />}
-    </div>
-
-    <div style={{
-        position: 'absolute',
-        top: '-8px',
-        left: '-8px',
-        right: '-8px',
-        bottom: '-8px',
-        borderRadius: '50%',
-        border: '2px solid rgba(255,255,255,0.2)',
-        animation: 'ringPulse 2s ease-in-out infinite',
-        pointerEvents: 'none',
-    }} />
-    <div style={{
-        position: 'absolute',
-        top: '-16px',
-        left: '-16px',
-        right: '-16px',
-        bottom: '-16px',
-        borderRadius: '50%',
-        border: '1px solid rgba(255,255,255,0.1)',
-        animation: 'ringPulse 2s ease-in-out infinite 0.5s',
-        pointerEvents: 'none',
-    }} />
-</div>
-
-            {/* Полноэкранное меню */}
+            {/* Затемнение фона при открытом меню */}
             {isOpen && (
-                <div
+                <div 
+                    onClick={() => setIsOpen(false)}
                     style={{
                         position: 'fixed',
                         inset: 0,
+                        backgroundColor: darkMode ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)',
                         zIndex: 190,
-                        animation: 'liquidFadeIn 0.4s ease-out',
                     }}
-                    onClick={() => setIsOpen(false)}
-                >
-                    {/* Фон жидкий металл */}
-                    <div style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: darkMode
-                            ? `
-                                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(120, 120, 140, 0.4) 0%, transparent 50%),
-                                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(100, 100, 120, 0.5) 0%, transparent 50%),
-                                radial-gradient(ellipse 100% 80% at 50% 50%, rgba(80, 80, 100, 0.3) 0%, transparent 70%),
-                                linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%)
-                            `
-                            : `
-                                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(200, 200, 220, 0.6) 0%, transparent 50%),
-                                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(180, 180, 200, 0.5) 0%, transparent 50%),
-                                radial-gradient(ellipse 100% 80% at 50% 50%, rgba(220, 220, 240, 0.4) 0%, transparent 70%),
-                                linear-gradient(180deg, #e8e8f0 0%, #d0d0e0 50%, #c0c0d0 100%)
-                            `,
-                        animation: 'liquidFlow 8s ease-in-out infinite',
-                    }} />
-
-                    {/* Блики */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '15%',
-                        left: '10%',
-                        width: '200px',
-                        height: '200px',
-                        borderRadius: '50%',
-                        background: darkMode 
-                            ? 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)'
-                            : 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)',
-                        filter: 'blur(40px)',
-                        animation: 'blobMove1 6s ease-in-out infinite',
-                    }} />
-                    <div style={{
-                        position: 'absolute',
-                        bottom: '20%',
-                        right: '15%',
-                        width: '250px',
-                        height: '250px',
-                        borderRadius: '50%',
-                        background: darkMode
-                            ? 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)'
-                            : 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
-                        filter: 'blur(50px)',
-                        animation: 'blobMove2 7s ease-in-out infinite',
-                    }} />
-
-                    {/* Пункты меню */}
-                    <div style={{
-                        position: 'relative',
-                        zIndex: 1,
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '1.5rem',
-                        padding: '2rem',
-                    }}>
-                        {tabs.map((tab, index) => {
-                            const isActive = activeTab === tab.id;
-                            const Icon = tab.icon;
-                            
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleTabClick(tab);
-                                    }}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '1rem',
-                                        padding: '1.25rem 2.5rem',
-                                        fontSize: '1.25rem',
-                                        fontWeight: isActive ? 700 : 500,
-                                        color: isActive ? '#10B981' : (darkMode ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'),
-                                        background: isActive
-                                            ? (darkMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(16, 185, 129, 0.1)')
-                                            : 'transparent',
-                                        border: 'none',
-                                        borderRadius: '1rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s ease',
-                                        animation: `menuItemSlide 0.5s ease-out ${index * 0.08}s both`,
-                                        backdropFilter: isActive ? 'blur(10px)' : 'none',
-                                        minWidth: '200px',
-                                    }}
-                                >
-                                    <Icon size={24} />
-                                    <span>{tab.label}</span>
-                                    {isActive && (
-                                        <div style={{
-                                            width: '8px',
-                                            height: '8px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#10B981',
-                                            marginLeft: 'auto',
-                                            boxShadow: '0 0 10px rgba(16, 185, 129, 0.8)',
-                                        }} />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 6rem)',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                        fontSize: '0.875rem',
-                        animation: 'fadeIn 0.5s ease-out 0.3s both',
-                    }}>
-                        Нажмите для закрытия
-                    </div>
-                </div>
+                />
             )}
 
+            {/* Контейнер меню */}
+            <div style={{
+                position: 'fixed',
+                bottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.5rem)',
+                left: '0',
+                right: '0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                zIndex: 200,
+            }}>
+                
+                {/* Левые кнопки: Главная, Каталог */}
+                {leftTabs.map((tab, index) => renderTabButton(tab, index, 'left'))}
+
+                {/* Центральная сфера (кнопка меню) */}
+                <div
+                    onClick={() => setIsOpen(!isOpen)}
+                    style={{
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '50%',
+                        background: isOpen 
+                            ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+                            : 'linear-gradient(135deg, #10B981, #059669)',
+                        boxShadow: isOpen
+                            ? '0 0 30px rgba(239, 68, 68, 0.5), inset 0 0 15px rgba(255,255,255,0.2)'
+                            : '0 0 30px rgba(16, 185, 129, 0.5), inset 0 0 15px rgba(255,255,255,0.2)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                        transform: isOpen ? 'scale(0.9)' : 'scale(1)',
+                        animation: !isOpen ? 'spherePulse 3s ease-in-out infinite' : 'none',
+                        flexShrink: 0,
+                        position: 'relative',
+                    }}
+                >
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '28px',
+                        height: '28px',
+                        color: 'white',
+                        transition: 'transform 0.3s ease',
+                        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                    }}>
+                        {isOpen ? <XCircle size={28} /> : <Compass size={28} />}
+                    </div>
+
+                    {/* Кольца */}
+                    {!isOpen && (
+                        <>
+                            <div style={{
+                                position: 'absolute',
+                                top: '-6px',
+                                left: '-6px',
+                                right: '-6px',
+                                bottom: '-6px',
+                                borderRadius: '50%',
+                                border: '2px solid rgba(255,255,255,0.2)',
+                                animation: 'ringPulse 2s ease-in-out infinite',
+                                pointerEvents: 'none',
+                            }} />
+                            <div style={{
+                                position: 'absolute',
+                                top: '-12px',
+                                left: '-12px',
+                                right: '-12px',
+                                bottom: '-12px',
+                                borderRadius: '50%',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                animation: 'ringPulse 2s ease-in-out infinite 0.5s',
+                                pointerEvents: 'none',
+                            }} />
+                        </>
+                    )}
+                </div>
+
+                {/* Правые кнопки: Поиск, Карта */}
+                {rightTabs.map((tab, index) => renderTabButton(tab, index, 'right'))}
+            </div>
+
+            {/* CSS анимации */}
             <style>{`
                 @keyframes spherePulse {
                     0%, 100% {
-                        box-shadow: 0 0 40px rgba(16, 185, 129, 0.6), 0 0 80px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255,255,255,0.2);
+                        box-shadow: 0 0 30px rgba(16, 185, 129, 0.5), inset 0 0 15px rgba(255,255,255,0.2);
                     }
                     50% {
-                        box-shadow: 0 0 60px rgba(16, 185, 129, 0.8), 0 0 100px rgba(16, 185, 129, 0.4), inset 0 0 30px rgba(255,255,255,0.3);
+                        box-shadow: 0 0 45px rgba(16, 185, 129, 0.7), inset 0 0 20px rgba(255,255,255,0.3);
                     }
                 }
                 
                 @keyframes ringPulse {
                     0%, 100% { transform: scale(1); opacity: 0.3; }
-                    50% { transform: scale(1.1); opacity: 0.1; }
-                }
-                
-                @keyframes liquidFadeIn {
-                    from { opacity: 0; backdrop-filter: blur(0px); }
-                    to { opacity: 1; backdrop-filter: blur(20px); }
-                }
-                
-                @keyframes liquidFlow {
-                    0%, 100% { background-position: 0% 0%; }
-                    25% { background-position: 100% 50%; }
-                    50% { background-position: 50% 100%; }
-                    75% { background-position: 0% 50%; }
-                }
-                
-                @keyframes blobMove1 {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    33% { transform: translate(30px, -20px) scale(1.1); }
-                    66% { transform: translate(-20px, 30px) scale(0.9); }
-                }
-                
-                @keyframes blobMove2 {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    33% { transform: translate(-40px, 20px) scale(1.15); }
-                    66% { transform: translate(30px, -30px) scale(0.85); }
-                }
-                
-                @keyframes menuItemSlide {
-                    from { opacity: 0; transform: translateY(30px) scale(0.9); }
-                    to { opacity: 1; transform: translateY(0) scale(1); }
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
+                    50% { transform: scale(1.05); opacity: 0.15; }
                 }
             `}</style>
         </>
@@ -1363,25 +1284,56 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
     
     return (
         <div onClick={() => onClick(route)} style={{ 
-            // БЫЛО: minWidth: '59.5%', height: '13.6rem'
-            minWidth: '42%',  // Сделали уже (было почти 60%)
-            height: '11rem',  // Сделали ниже (было 13.6rem)
-            borderRadius: '1.25rem', // Чуть уменьшили скругление
+            minWidth: '38%',
+            height: '9.5rem',
+            borderRadius: '1rem',
             position: 'relative', 
             overflow: 'hidden', 
             cursor: 'pointer', 
             boxShadow: C.cardShadow, 
-            border: `1px solid ${C.border}` 
+            border: `1px solid ${C.border}`,
+            flexShrink: 0,
         }}>
             <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', padding: '1rem 0.75rem 0.75rem 0.75rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                <div style={{ color: '#10B981', fontWeight: 700, fontSize: '0.65rem', textTransform: 'uppercase', marginBottom: '0.1rem' }}>{t(route.subCategory)}</div>
-                {/* БЫЛО: fontSize: '1.25rem' -> СТАЛО: '0.95rem' (чтобы текст влезал) */}
-                <h3 style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', margin: '0 0 0.25rem 0', lineHeight: 1.2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{route.name}</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.9)', fontSize: '0.75rem', fontWeight: 500 }}>
+            <div style={{ 
+                position: 'absolute', 
+                bottom: 0, 
+                left: 0, 
+                right: 0, 
+                background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)', 
+                padding: '0.5rem 0.6rem 0.5rem 0.6rem',
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'flex-end' 
+            }}>
+                <div style={{ 
+                    color: '#10B981', 
+                    fontWeight: 600, 
+                    fontSize: '0.6rem', 
+                    textTransform: 'uppercase', 
+                    marginBottom: '0.15rem',
+                    lineHeight: 1.1,
+                }}>{t(route.subCategory)}</div>
+                <h3 style={{ 
+                    color: 'white', 
+                    fontWeight: 700, 
+                    fontSize: '0.85rem', 
+                    margin: '0 0 0.2rem 0', 
+                    lineHeight: 1.15, 
+                    display: '-webkit-box', 
+                    WebkitLineClamp: 2, 
+                    WebkitBoxOrient: 'vertical', 
+                    overflow: 'hidden' 
+                }}>{route.name}</h3>
+                <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    color: 'rgba(255,255,255,0.85)', 
+                    fontSize: '0.7rem', 
+                    fontWeight: 500 
+                }}>
                     <span>👣 {steps}</span>
-                    {/* Убрали лишние скобки с км для экономии места */}
-                    {/* <span><Clock size={12} /> {route.time.replace("мин", t("min"))}</span> */}
                 </div>
             </div>
         </div>
@@ -1651,8 +1603,9 @@ useEffect(() => {
 
     const settingsItems = [
         { label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { label: t('contact'), action: () => { setShowContactModal(true); setSettingsOpen(false); }, icon: <Mail style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+    { label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+    { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+{ label: t('contact'), action: () => { setShowContactModal(true); setSettingsOpen(false); }, icon: <Mail style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('notif'), action: () => { setActiveTab('notifications'); navigate('notifications'); setSettingsOpen(false); }, icon: <Bell style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { type: 'divider' },
         { label: t('city'), action: () => { setShowCityModal(true); setSettingsOpen(false); }, icon: <Building style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
@@ -1666,7 +1619,37 @@ useEffect(() => {
     const handleNavigateToDetails = useCallback((route) => { navigate('routeDetails', { route }); }, [navigate]);
     const renderCurrentView = () => {
     if (!currentView) return null;
-    
+    if (currentView.type === 'favorites') {
+    const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
+    return (
+        <div>
+            <CatalogHeader title={t('fav')} onBack={goBack} darkMode={darkMode} />
+            {currentCityFavorites.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {currentCityFavorites.map((route) => (
+                        <RouteListItem 
+                            key={route.name} 
+                            route={route} 
+                            onNavigate={handleNavigateToDetails} 
+                            onPlayAudio={playAudio} 
+                            onToggleFavorite={toggleFavorite} 
+                            isFavorite={true} 
+                            isCompleted={completedRoutes.some(c => c.name === route.name)} 
+                            userLocation={userLocation} 
+                            formatDistance={formatDistance} 
+                            C={C} 
+                            lang={currentLang} 
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.textCenter, padding: '3rem 1rem' }}>
+                    <p style={{ color: C.text, fontWeight: 600 }}>{t('empty_list')}</p>
+                </div>
+            )}
+        </div>
+    );
+}
     if (currentView.type === 'routeDetails') {
         return <RouteDetailsPage route={currentView.route} darkMode={darkMode} isFavorite={isRouteInFavorites(currentView.route)} isCompleted={completedRoutes.some(c => c.name === currentView.route.name)} onBack={goBack} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} onMarkCompleted={handleRouteCompletionGlobal} lang={currentLang} />;
     }
@@ -1716,23 +1699,52 @@ useEffect(() => {
                 {currentView.type === 'subRoutes' && (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {(activeRoutes[currentView.category]?.[currentView.subCategory] || []).map((route) => (<RouteListItem key={route.name} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div>)} </>);
         }
         
-               case 'recommendations': {
-            const cityName = t('city_' + currentCity) || CITIES.find(c => c.id === currentCity)?.name || "City";
-            return (
-                <div>
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: C.text, marginBottom: '0.5rem', marginTop: '0.5rem' }}> <span style={{ color: S.emerald600 }}>{t('app_name')}</span> {cityName} </h1>
-                    
-                    {/* 1. БЛОК "РЯДОМ С ВАМИ" (Первый по списку) */}
-                    {recommendedRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>{t('near')}</h2> <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}> {recommendedRoutes.map((route, idx) => (<RecommendationTile key={`rec-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />))} </div> </div>)}
-                    
-                    {/* 2. БЛОК "РЕКЛАМА" (Второй по списку */}
-                    {promoRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>{t('ads') || "Реклама"}</h2> <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {promoRoutes.map((route, idx) => (<RouteListItem key={`promo-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div> <div style={{ marginBottom: '1.5rem' }}></div> </div>)}
-
-                    {/* 3. БЛОК "ИССЛЕДУЙ" (Третий по списку) */}
-                    {exploreRoutes.length > 0 && (<div> <h2 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1rem', color: C.text }}>🔍 Исследуй</h2> <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}> {exploreRoutes.map((route, idx) => (<RecommendationTile key={`explore-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />))} </div> </div>)}
+              case 'recommendations': {
+    const cityName = t('city_' + currentCity) || CITIES.find(c => c.id === currentCity)?.name || "City";
+    return (
+        <div>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: C.text, marginBottom: '0.75rem', marginTop: '0.25rem' }}> 
+                <span style={{ color: S.emerald600 }}>{t('app_name')}</span> {cityName} 
+            </h1>
+            
+            {/* 1. БЛОК "РЯДОМ С ВАМИ" */}
+            {recommendedRoutes.length > 0 && (
+                <div style={{ marginBottom: '1rem' }}> 
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>{t('near')}</h2> 
+                    <div style={{ display: 'flex', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}> 
+                        {recommendedRoutes.map((route, idx) => (
+                            <RecommendationTile key={`rec-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />
+                        ))} 
+                    </div> 
                 </div>
-            );
-        }
+            )}
+            
+            {/* 2. БЛОК "РЕКЛАМА" */}
+            {promoRoutes.length > 0 && (
+                <div style={{ marginBottom: '1rem' }}> 
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>{t('ads') || "Реклама"}</h2> 
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}> 
+                        {promoRoutes.map((route, idx) => (
+                            <RouteListItem key={`promo-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />
+                        ))} 
+                    </div> 
+                </div>
+            )}
+
+            {/* 3. БЛОК "ИССЛЕДУЙ" */}
+            {exploreRoutes.length > 0 && (
+                <div style={{ marginBottom: '1rem' }}> 
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>🔍 Исследуй</h2> 
+                    <div style={{ display: 'flex', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}> 
+                        {exploreRoutes.map((route, idx) => (
+                            <RecommendationTile key={`explore-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />
+                        ))} 
+                    </div> 
+                </div>
+            )}
+        </div>
+    );
+}
         
         case 'favorites': {
             const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
