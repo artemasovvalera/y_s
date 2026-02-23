@@ -915,277 +915,13 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
     );
 });
 
-const LiquidMenu = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const FooterNav = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) => {
     const C = darkMode ? S.dark : S.light;
     const t = (k) => TRANSLATIONS[lang]?.[k] || k;
-
-    const tabs = [
-        { id: 'recommendations', icon: Compass, label: t('rec') },
-        { id: 'catalog', icon: Landmark, label: t('cat') },
-        { id: 'search', icon: Search, label: t('search'), isSearch: true },
-        { id: 'favorites', icon: Star, label: t('fav') },
-        { id: 'map', icon: MapIcon, label: t('map') },
-    ];
-
-    const handleTabClick = (tab) => {
-        if (tab.isSearch) {
-            onSearchClick();
-        } else {
-            onTabChange(tab.id);
-        }
-        setIsOpen(false);
-    };
-
-    return (
-        <>
-           {/* Светящаяся сфера */}
-<div
-    onClick={() => setIsOpen(!isOpen)}
-    style={{
-        position: 'fixed',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)',
-        left: '50%',
-        marginLeft: '-32px',
-        width: '64px',
-        height: '64px',
-        borderRadius: '50%',
-        background: isOpen 
-            ? 'linear-gradient(135deg, #ef4444, #dc2626)' 
-            : 'linear-gradient(135deg, #10B981, #059669)',
-        boxShadow: isOpen
-            ? '0 0 40px rgba(239, 68, 68, 0.6), 0 0 80px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(255,255,255,0.2)'
-            : '0 0 40px rgba(16, 185, 129, 0.6), 0 0 80px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255,255,255,0.2)',
-        cursor: 'pointer',
-        zIndex: 200,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        animation: isOpen ? 'none' : 'spherePulse 3s ease-in-out infinite',
-    }}
->
-    <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '28px',
-        height: '28px',
-        color: 'white',
-        transition: 'transform 0.3s ease',
-        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
-    }}>
-        {isOpen ? <XCircle size={28} /> : <Compass size={28} />}
-    </div>
-
-    <div style={{
-        position: 'absolute',
-        top: '-8px',
-        left: '-8px',
-        right: '-8px',
-        bottom: '-8px',
-        borderRadius: '50%',
-        border: '2px solid rgba(255,255,255,0.2)',
-        animation: 'ringPulse 2s ease-in-out infinite',
-        pointerEvents: 'none',
-    }} />
-    <div style={{
-        position: 'absolute',
-        top: '-16px',
-        left: '-16px',
-        right: '-16px',
-        bottom: '-16px',
-        borderRadius: '50%',
-        border: '1px solid rgba(255,255,255,0.1)',
-        animation: 'ringPulse 2s ease-in-out infinite 0.5s',
-        pointerEvents: 'none',
-    }} />
-</div>
-
-            {/* Полноэкранное меню */}
-            {isOpen && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        zIndex: 190,
-                        animation: 'liquidFadeIn 0.4s ease-out',
-                    }}
-                    onClick={() => setIsOpen(false)}
-                >
-                    {/* Фон жидкий металл */}
-                    <div style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: darkMode
-                            ? `
-                                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(120, 120, 140, 0.4) 0%, transparent 50%),
-                                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(100, 100, 120, 0.5) 0%, transparent 50%),
-                                radial-gradient(ellipse 100% 80% at 50% 50%, rgba(80, 80, 100, 0.3) 0%, transparent 70%),
-                                linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%)
-                            `
-                            : `
-                                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(200, 200, 220, 0.6) 0%, transparent 50%),
-                                radial-gradient(ellipse 60% 40% at 80% 70%, rgba(180, 180, 200, 0.5) 0%, transparent 50%),
-                                radial-gradient(ellipse 100% 80% at 50% 50%, rgba(220, 220, 240, 0.4) 0%, transparent 70%),
-                                linear-gradient(180deg, #e8e8f0 0%, #d0d0e0 50%, #c0c0d0 100%)
-                            `,
-                        animation: 'liquidFlow 8s ease-in-out infinite',
-                    }} />
-
-                    {/* Блики */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '15%',
-                        left: '10%',
-                        width: '200px',
-                        height: '200px',
-                        borderRadius: '50%',
-                        background: darkMode 
-                            ? 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)'
-                            : 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)',
-                        filter: 'blur(40px)',
-                        animation: 'blobMove1 6s ease-in-out infinite',
-                    }} />
-                    <div style={{
-                        position: 'absolute',
-                        bottom: '20%',
-                        right: '15%',
-                        width: '250px',
-                        height: '250px',
-                        borderRadius: '50%',
-                        background: darkMode
-                            ? 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)'
-                            : 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
-                        filter: 'blur(50px)',
-                        animation: 'blobMove2 7s ease-in-out infinite',
-                    }} />
-
-                    {/* Пункты меню */}
-                    <div style={{
-                        position: 'relative',
-                        zIndex: 1,
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '1.5rem',
-                        padding: '2rem',
-                    }}>
-                        {tabs.map((tab, index) => {
-                            const isActive = activeTab === tab.id;
-                            const Icon = tab.icon;
-                            
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleTabClick(tab);
-                                    }}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '1rem',
-                                        padding: '1.25rem 2.5rem',
-                                        fontSize: '1.25rem',
-                                        fontWeight: isActive ? 700 : 500,
-                                        color: isActive ? '#10B981' : (darkMode ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'),
-                                        background: isActive
-                                            ? (darkMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(16, 185, 129, 0.1)')
-                                            : 'transparent',
-                                        border: 'none',
-                                        borderRadius: '1rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s ease',
-                                        animation: `menuItemSlide 0.5s ease-out ${index * 0.08}s both`,
-                                        backdropFilter: isActive ? 'blur(10px)' : 'none',
-                                        minWidth: '200px',
-                                    }}
-                                >
-                                    <Icon size={24} />
-                                    <span>{tab.label}</span>
-                                    {isActive && (
-                                        <div style={{
-                                            width: '8px',
-                                            height: '8px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#10B981',
-                                            marginLeft: 'auto',
-                                            boxShadow: '0 0 10px rgba(16, 185, 129, 0.8)',
-                                        }} />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 6rem)',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                        fontSize: '0.875rem',
-                        animation: 'fadeIn 0.5s ease-out 0.3s both',
-                    }}>
-                        Нажмите для закрытия
-                    </div>
-                </div>
-            )}
-
-            <style>{`
-                @keyframes spherePulse {
-                    0%, 100% {
-                        box-shadow: 0 0 40px rgba(16, 185, 129, 0.6), 0 0 80px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(255,255,255,0.2);
-                    }
-                    50% {
-                        box-shadow: 0 0 60px rgba(16, 185, 129, 0.8), 0 0 100px rgba(16, 185, 129, 0.4), inset 0 0 30px rgba(255,255,255,0.3);
-                    }
-                }
-                
-                @keyframes ringPulse {
-                    0%, 100% { transform: scale(1); opacity: 0.3; }
-                    50% { transform: scale(1.1); opacity: 0.1; }
-                }
-                
-                @keyframes liquidFadeIn {
-                    from { opacity: 0; backdrop-filter: blur(0px); }
-                    to { opacity: 1; backdrop-filter: blur(20px); }
-                }
-                
-                @keyframes liquidFlow {
-                    0%, 100% { background-position: 0% 0%; }
-                    25% { background-position: 100% 50%; }
-                    50% { background-position: 50% 100%; }
-                    75% { background-position: 0% 50%; }
-                }
-                
-                @keyframes blobMove1 {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    33% { transform: translate(30px, -20px) scale(1.1); }
-                    66% { transform: translate(-20px, 30px) scale(0.9); }
-                }
-                
-                @keyframes blobMove2 {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    33% { transform: translate(-40px, 20px) scale(1.15); }
-                    66% { transform: translate(30px, -30px) scale(0.85); }
-                }
-                
-                @keyframes menuItemSlide {
-                    from { opacity: 0; transform: translateY(30px) scale(0.9); }
-                    to { opacity: 1; transform: translateY(0) scale(1); }
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-            `}</style>
-        </>
-    );
+    const tabs = [{ id: 'recommendations', icon: Compass, label: t('rec') }, { id: 'catalog', icon: Landmark, label: t('cat') }, { id: 'search', icon: Search, label: t('search') }, { id: 'favorites', icon: Star, label: t('fav') }, { id: 'map', icon: MapIcon, label: t('map') },];
+    const footerStyle = { position: 'fixed', bottom: 0, left: 0, right: 0, height: '5rem', backgroundColor: C.cardBg, borderTop: `1px solid ${C.cardBorder}`, ...S.flex, ...S.itemsCenter, zIndex: 120, boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', transition: 'padding-bottom 0.3s ease-out' };
+    const buttonStyle = { flex: 1, ...S.flex, flexDirection: 'column', ...S.itemsCenter, ...S.justifyCenter, background: 'none', border: 'none', cursor: 'pointer', height: '100%' };
+    return (<div style={footerStyle}> {tabs.map(tab => { const isActive = activeTab === tab.id; const color = isActive ? S.emerald600 : C.textMuted; const clickHandler = tab.id === 'search' ? onSearchClick : () => onTabChange(tab.id); return (<button key={tab.id} onClick={clickHandler} style={buttonStyle}> <tab.icon style={{ width: '1.5rem', height: '1.5rem', color }} /> <span style={{ fontSize: '0.75rem', color, fontWeight: isActive ? 600 : 400, marginTop: '0.25rem' }}>{tab.label}</span> </button>); })} </div>);
 };
 
 const SearchModal = ({ show, onClose, onNavigate, allRoutes, darkMode, lang }) => {
@@ -1585,33 +1321,21 @@ const exploreRoutes = useMemo(() => {
 }, [currentCity, allRoutesFlat, promoRoutes]);
 // Обработка нажатия на уведомление
 useEffect(() => {
-    let listener = null;
-    
-    const setupListener = async () => {
-        try {
-            listener = await LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                const routeData = notification.notification.extra?.routeData;
-                if (routeData) {
-                    try {
-                        const route = JSON.parse(routeData);
-                        navigate('routeDetails', { route });
-                        setActiveTab('recommendations');
-                    } catch (e) {
-                        console.error('Ошибка парсинга маршрута из уведомления:', e);
-                    }
-                }
-            });
-        } catch (e) {
-            console.log('Notification listener not available');
+    const listener = LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+        const routeData = notification.notification.extra?.routeData;
+        if (routeData) {
+            try {
+                const route = JSON.parse(routeData);
+                navigate('routeDetails', { route });
+                setActiveTab('recommendations');
+            } catch (e) {
+                console.error('Ошибка парсинга маршрута из уведомления:', e);
+            }
         }
-    };
-    
-    setupListener();
+    });
     
     return () => {
-        if (listener && typeof listener.remove === 'function') {
-            listener.remove();
-        }
+        listener.remove();
     };
 }, []);
 
@@ -1621,31 +1345,7 @@ useEffect(() => {
     const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route); } else { setModalMessage("Нет аудиогида"); setShowModal(true); } }, []);
     const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId === 'catalog') { setNavigationStack([{ type: 'categories' }]); } else { setNavigationStack([{ type: 'home' }]); } }, []);
 
-    useEffect(() => { 
-    let listener = null;
-    
-    const setupListener = async () => {
-        try {
-            listener = await CapacitorApp.addListener('backButton', () => { 
-                if (navigationStack.length > 1) { 
-                    goBack(); 
-                    return; 
-                } 
-                onExit(); 
-            });
-        } catch (e) {
-            console.log('BackButton listener not available');
-        }
-    };
-    
-    setupListener();
-    
-    return () => { 
-        if (listener && typeof listener.remove === 'function') {
-            listener.remove(); 
-        }
-    }; 
-}, [navigationStack.length, goBack, onExit]);
+    useEffect(() => { const listener = CapacitorApp.addListener('backButton', () => { if (navigationStack.length > 1) { goBack(); return; } onExit(); }); return () => { listener.remove(); }; }, [navigationStack.length, goBack, onExit]);
     useEffect(() => { const handleClickOutside = (event) => { if (settingsRef.current && !settingsRef.current.contains(event.target)) { setSettingsOpen(false); } }; if (settingsOpen) { document.addEventListener("mousedown", handleClickOutside); } return () => { document.removeEventListener("mousedown", handleClickOutside); }; }, [settingsOpen]);
     const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${t('dist')}`, [units, currentLang]);
 
@@ -1757,153 +1457,11 @@ useEffect(() => {
         <SelectionModal show={showCityModal} onClose={() => setShowCityModal(false)} title={t('city')} items={CITIES} onSelect={setCurrentCity} currentId={currentCity} darkMode={darkMode} lang={currentLang} />
         <SelectionModal show={showLangModal} onClose={() => setShowLangModal(false)} title={t('lang')} items={LANGUAGES} onSelect={setCurrentLang} currentId={currentLang} darkMode={darkMode} lang={currentLang} />
         <SearchModal show={showSearchModal} onClose={() => setShowSearchModal(false)} onNavigate={navigate} allRoutes={uniqueAllRoutes} darkMode={darkMode} lang={currentLang} />
-        {currentPlayingRoute && <MiniAudioPlayer route={currentPlayingRoute} onClose={stopAudio} darkMode={darkMode} ref={audioPlayerRef} onAudioError={() => { stopAudio(); setModalMessage(t('audio_error')); setShowModal(true); }} />} 
-            <LiquidMenu activeTab={activeTab} onTabChange={handleTabChange} onSearchClick={() => setShowSearchModal(true)} darkMode={darkMode} lang={currentLang} />     </>);
+        {currentPlayingRoute && <MiniAudioPlayer route={currentPlayingRoute} onClose={stopAudio} darkMode={darkMode} ref={audioPlayerRef} onAudioError={() => { stopAudio(); setModalMessage(t('audio_error')); setShowModal(true); }} />} <FooterNav activeTab={activeTab} onTabChange={handleTabChange} onSearchClick={() => setShowSearchModal(true)} onContactClick={() => setShowContactModal(true)} darkMode={darkMode} lang={currentLang} /> </>);
 }
 
-const LoadingScreen = ({ darkMode, onComplete }) => {
-    const [showButton, setShowButton] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const [imageError, setImageError] = useState(false);
-    
-    useEffect(() => {
-        // Показываем кнопку через 2 секунды
-        const timer = setTimeout(() => setShowButton(true), 2000);
-        return () => clearTimeout(timer);
-    }, []);
+const LoadingScreen = ({ darkMode }) => { const C = darkMode ? S.dark : S.light; return (<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', padding: '1rem', backgroundColor: C.bg, color: C.text }}> <h1 style={{ fontSize: '3.75rem', fontWeight: 800, marginBottom: '1rem' }}>Я САМ</h1> <p style={{ fontSize: '1.25rem' }}>Загрузка...</p> <div style={{ marginTop: '2rem', width: '8rem', height: '0.5rem', backgroundColor: '#374151', borderRadius: '9999px', overflow: 'hidden' }}> <div style={{ height: '100%', width: '100%', backgroundColor: S.emerald600, animation: 'loading-bar 1.5s linear forwards' }}></div> </div> <style>{`@keyframes loading-bar { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }`}</style> </div>); };
 
-    // Предзагрузка изображения
-    useEffect(() => {
-        const img = new Image();
-        img.onload = () => setImageLoaded(true);
-        img.onerror = () => setImageError(true);
-        img.src = 'https://archive.org/download/logo_20260223/logo.jpg';
-    }, []);
-
-    const letters = ['Я', ' ', 'С', 'А', 'М'];
-    const C = darkMode ? S.dark : S.light;
-
-    return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: C.bg,
-            backgroundImage: imageLoaded && !imageError 
-                ? 'url(https://archive.org/download/logo_20260223/logo.jpg)' 
-                : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-        }}>
-            {/* Затемняющий оверлей */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: imageLoaded && !imageError
-                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))'
-                    : 'transparent',
-            }} />
-
-            {/* Плывущие буквы "Я САМ" */}
-            <div style={{
-                position: 'relative',
-                zIndex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '0.5rem',
-            }}>
-                {letters.map((letter, i) => (
-                    <span 
-                        key={i}
-                        style={{
-                            fontSize: letter === ' ' ? '1rem' : '5rem',
-                            fontWeight: 900,
-                            color: imageLoaded && !imageError 
-                                ? 'rgba(255, 255, 255, 0.15)' 
-                                : S.emerald600,
-                            textShadow: imageLoaded && !imageError 
-                                ? '0 0 40px rgba(255,255,255,0.3)'
-                                : 'none',
-                            animation: `floatLetter 3s ease-in-out infinite`,
-                            animationDelay: `${i * 0.4}s`,
-                            letterSpacing: '0.1em',
-                        }}
-                    >
-                        {letter === ' ' ? '' : letter}
-                    </span>
-                ))}
-            </div>
-
-            {/* Кнопка "Начать" - ТОЛЬКО по клику */}
-            {showButton && (
-                <button
-                    onClick={() => {
-                        console.log('Button clicked!');
-                        if (onComplete) onComplete();
-                    }}
-                    style={{
-                        position: 'absolute',
-                        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)',
-                        zIndex: 2,
-                        padding: '1rem 3rem',
-                        fontSize: '1.125rem',
-                        fontWeight: 700,
-                        color: 'white',
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 1))',
-                        border: 'none',
-                        borderRadius: '9999px',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 30px rgba(16, 185, 129, 0.5), 0 4px 20px rgba(0,0,0,0.3)',
-                        animation: 'fadeInUp 0.8s ease-out, pulseGlow 2s ease-in-out infinite',
-                        WebkitTapHighlightColor: 'transparent',
-                        touchAction: 'manipulation',
-                    }}
-                >
-                    Начать
-                </button>
-            )}
-
-            {/* CSS анимации */}
-            <style>{`
-                @keyframes floatLetter {
-                    0%, 100% { 
-                        transform: translateY(0) scale(1); 
-                        opacity: 0.15;
-                    }
-                    50% { 
-                        transform: translateY(-30px) scale(1.05); 
-                        opacity: 0.4;
-                    }
-                }
-                
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(30px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                
-                @keyframes pulseGlow {
-                    0%, 100% {
-                        box-shadow: 0 0 30px rgba(16, 185, 129, 0.5), 0 4px 20px rgba(0,0,0,0.3);
-                    }
-                    50% {
-                        box-shadow: 0 0 50px rgba(16, 185, 129, 0.8), 0 4px 30px rgba(0,0,0,0.4);
-                    }
-                }
-            `}</style>
-        </div>
-    );
-};
 const AgreementScreen = ({ onAccept, darkMode }) => {
     const [isChecked, setIsChecked] = useState(false);
     const C = darkMode ? S.dark : S.light;
@@ -1966,13 +1524,26 @@ useEffect(() => {
 
     useEffect(() => { const C = darkMode ? S.dark : S.light; document.body.style.backgroundColor = C.bg; const styleTag = document.createElement('style'); styleTag.innerHTML = `html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; box-sizing: border-box; }`; document.head.appendChild(styleTag); return () => { document.head.removeChild(styleTag); document.body.style.backgroundColor = ''; }; }, [darkMode]);
 
-    
+    const startApp = useCallback(() => { 
+    const hasAccepted = loadFromStorage('agreementAccepted', false); 
+    if (!hasAccepted) { 
+        setPhase('agreement'); 
+        return; 
+    } 
+    setPhase('mainApp'); 
+}, []);
 
-
+useEffect(() => { 
+    const timer = setTimeout(() => { 
+        startApp(); 
+    }, 1500); 
+    return () => clearTimeout(timer); 
+}, [startApp]);
 
 const handleAcceptAgreement = () => { 
     localStorage.setItem('agreementAccepted', JSON.stringify(true)); 
-    setPhase('mainApp'); 
+    setPhase('loading'); 
+    setTimeout(startApp, 300); 
 };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
@@ -1998,50 +1569,15 @@ const handleLaterNotifications = () => {
     const toggleFavorite = useCallback((route) => { setFavs(prev => { const isCurrentlyFav = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); if (isCurrentlyFav) { return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); } else { return [...prev, { ...route, cityId: currentCity }]; } }); }, [currentCity]);
 
     const appRootStyle = { minHeight: '100vh', width: '100%', backgroundColor: darkMode ? S.dark.bg : S.light.bg, boxSizing: 'border-box' };
-const handleLoadingComplete = () => {
-    const hasAccepted = loadFromStorage('agreementAccepted', false);
-    if (!hasAccepted) {
-        setPhase('agreement');
-    } else {
-        setPhase('mainApp');
-    }
-};
-// Автопереход через 4 секунды (страховка для Android)
 
     const renderContent = () => {
-    switch (phase) {
-        case 'loading': 
-            return <LoadingScreen darkMode={darkMode} onComplete={handleLoadingComplete} />;
-        case 'agreement': 
-            return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
-        case 'mainApp': 
-            return (
-                <MainRouteApp 
-                    onExit={handleExitApp} 
-                    favoriteRoutes={favs} 
-                    completedRoutes={completed} 
-                    handleRouteCompletionGlobal={handleComplete} 
-                    isRouteInFavorites={isFav} 
-                    toggleFavorite={toggleFavorite} 
-                    account={account} 
-                    darkMode={darkMode} 
-                    setDarkMode={setDarkMode} 
-                    units={units} 
-                    setUnits={setUnits} 
-                    routeIcons={routeIcons} 
-                    buildInfo={buildInfo} 
-                    setShowContactModal={setShowContactModal} 
-                    setAccount={setAccount} 
-                    currentLang={currentLang} 
-                    setCurrentLang={setCurrentLang} 
-                    currentCity={currentCity} 
-                    setCurrentCity={setCurrentCity} 
-                />
-            );
-        default:
-            return <LoadingScreen darkMode={darkMode} onComplete={handleLoadingComplete} />;
-    }
-};
+        switch (phase) {
+            case 'loading': return <LoadingScreen darkMode={darkMode} />;
+            case 'agreement': return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
+            case 'mainApp': return (<MainRouteApp onExit={handleExitApp} favoriteRoutes={favs} completedRoutes={completed} handleRouteCompletionGlobal={handleComplete} isRouteInFavorites={isFav} toggleFavorite={toggleFavorite} account={account} darkMode={darkMode} setDarkMode={setDarkMode} units={units} setUnits={setUnits} routeIcons={routeIcons} buildInfo={buildInfo} setShowContactModal={setShowContactModal} setAccount={setAccount} currentLang={currentLang} setCurrentLang={setCurrentLang} currentCity={currentCity} setCurrentCity={setCurrentCity} />);
+            default: return <LoadingScreen darkMode={darkMode} />;
+        }
+    };
 
     return (
     <div style={appRootStyle}>

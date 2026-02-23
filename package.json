@@ -2,7 +2,6 @@
   "name": "ya-sam-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://artemasovvalera.github.io/y_s",
   "dependencies": {
     "@capacitor/android": "^7.4.4",
     "@capacitor/app": "^7.1.0",
@@ -23,9 +22,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:android": "react-scripts build",
+    "build:github": "PUBLIC_URL=/y_s react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "react-scripts build && gh-pages -d build"
+    "deploy": "npm run build:github && gh-pages -d build",
+    "android": "npm run build:android && npx cap sync && npx cap open android"
   },
   "eslintConfig": {
     "extends": [
