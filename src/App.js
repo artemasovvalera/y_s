@@ -1774,13 +1774,13 @@ useEffect(() => {
 }
 
 const LoadingScreen = ({ darkMode, onComplete }) => {
-    const [showButton, setShowButton] = useState(false);
+    const [showHint, setShowHint] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
     
     useEffect(() => {
-        // Показываем кнопку через 2 секунды
-        const timer = setTimeout(() => setShowButton(true), 2000);
+        // Показываем подсказку через 2 секунды
+        const timer = setTimeout(() => setShowHint(true), 2000);
         return () => clearTimeout(timer);
     }, []);
 
@@ -1792,58 +1792,69 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
         img.src = 'https://archive.org/download/logo_20260223/logo.jpg';
     }, []);
 
+    // Клик по экрану = переход
+    const handleScreenClick = () => {
+        if (showHint && onComplete) {
+            onComplete();
+        }
+    };
+
     const letters = ['Я', ' ', 'С', 'А', 'М'];
     const C = darkMode ? S.dark : S.light;
 
     return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: C.bg,
-            backgroundImage: imageLoaded && !imageError 
-                ? 'url(https://archive.org/download/logo_20260223/logo.jpg)' 
-                : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-        }}>
+        <div 
+            onClick={handleScreenClick}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: C.bg,
+                backgroundImage: imageLoaded && !imageError 
+                    ? 'url(https://archive.org/download/logo_20260223/logo.jpg)' 
+                    : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+                cursor: showHint ? 'pointer' : 'default',
+            }}
+        >
             {/* Затемняющий оверлей */}
             <div style={{
                 position: 'absolute',
                 inset: 0,
                 background: imageLoaded && !imageError
-                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))'
+                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5))'
                     : 'transparent',
             }} />
 
-            {/* Плывущие буквы "Я САМ" */}
+            {/* Плывущие буквы "Я САМ" — менее прозрачные */}
             <div style={{
                 position: 'relative',
                 zIndex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '0.5rem',
+                gap: '0.3rem',
             }}>
                 {letters.map((letter, i) => (
                     <span 
                         key={i}
                         style={{
-                            fontSize: letter === ' ' ? '1rem' : '5rem',
+                            fontSize: letter === ' ' ? '0.5rem' : '5rem',
                             fontWeight: 900,
                             color: imageLoaded && !imageError 
-                                ? 'rgba(255, 255, 255, 0.15)' 
+                                ? 'rgba(255, 255, 255, 0.6)' 
                                 : S.emerald600,
                             textShadow: imageLoaded && !imageError 
-                                ? '0 0 40px rgba(255,255,255,0.3)'
+                                ? '0 0 60px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.3)'
                                 : 'none',
                             animation: `floatLetter 3s ease-in-out infinite`,
-                            animationDelay: `${i * 0.4}s`,
-                            letterSpacing: '0.1em',
+                            animationDelay: `${i * 0.3}s`,
+                            letterSpacing: '0.05em',
                         }}
                     >
                         {letter === ' ' ? '' : letter}
@@ -1851,33 +1862,44 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
                 ))}
             </div>
 
-            {/* Кнопка "Начать" - ТОЛЬКО по клику */}
-            {showButton && (
-                <button
-                    onClick={() => {
-                        console.log('Button clicked!');
-                        if (onComplete) onComplete();
-                    }}
-                    style={{
-                        position: 'absolute',
-                        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)',
-                        zIndex: 2,
-                        padding: '1rem 3rem',
-                        fontSize: '1.125rem',
-                        fontWeight: 700,
-                        color: 'white',
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 1))',
-                        border: 'none',
-                        borderRadius: '9999px',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 30px rgba(16, 185, 129, 0.5), 0 4px 20px rgba(0,0,0,0.3)',
-                        animation: 'fadeInUp 0.8s ease-out, pulseGlow 2s ease-in-out infinite',
-                        WebkitTapHighlightColor: 'transparent',
-                        touchAction: 'manipulation',
-                    }}
-                >
-                    Начать
-                </button>
+            {/* Подсказка "Коснитесь экрана для начала" */}
+            {showHint && (
+                <div style={{
+                    position: 'absolute',
+                    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    animation: 'fadeInUp 0.8s ease-out, pulse 2s ease-in-out infinite',
+                }}>
+                    <p style={{
+                        color: imageLoaded && !imageError 
+                            ? 'rgba(255, 255, 255, 0.9)' 
+                            : C.text,
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        textShadow: imageLoaded && !imageError 
+                            ? '0 2px 10px rgba(0,0,0,0.5)'
+                            : 'none',
+                        margin: 0,
+                    }}>
+                        Коснитесь экрана для начала
+                    </p>
+                    
+                    {/* Анимированная стрелка вверх */}
+                    <div style={{
+                        marginTop: '1rem',
+                        animation: 'bounce 1.5s ease-in-out infinite',
+                    }}>
+                        <div style={{
+                            width: '40px',
+                            height: '40px',
+                            margin: '0 auto',
+                            borderLeft: '3px solid rgba(255,255,255,0.7)',
+                            borderTop: '3px solid rgba(255,255,255,0.7)',
+                            transform: 'rotate(45deg)',
+                        }} />
+                    </div>
+                </div>
             )}
 
             {/* CSS анимации */}
@@ -1885,18 +1907,18 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
                 @keyframes floatLetter {
                     0%, 100% { 
                         transform: translateY(0) scale(1); 
-                        opacity: 0.15;
+                        opacity: 0.5;
                     }
                     50% { 
-                        transform: translateY(-30px) scale(1.05); 
-                        opacity: 0.4;
+                        transform: translateY(-20px) scale(1.03); 
+                        opacity: 0.8;
                     }
                 }
                 
                 @keyframes fadeInUp {
                     from {
                         opacity: 0;
-                        transform: translateY(30px);
+                        transform: translateY(20px);
                     }
                     to {
                         opacity: 1;
@@ -1904,12 +1926,21 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
                     }
                 }
                 
-                @keyframes pulseGlow {
+                @keyframes pulse {
                     0%, 100% {
-                        box-shadow: 0 0 30px rgba(16, 185, 129, 0.5), 0 4px 20px rgba(0,0,0,0.3);
+                        opacity: 1;
                     }
                     50% {
-                        box-shadow: 0 0 50px rgba(16, 185, 129, 0.8), 0 4px 30px rgba(0,0,0,0.4);
+                        opacity: 0.7;
+                    }
+                }
+                
+                @keyframes bounce {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-10px);
                     }
                 }
             `}</style>
