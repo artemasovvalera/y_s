@@ -619,6 +619,7 @@ const getRoutesData = (cityId, lang) => {
         const park_pobedi = { name: "Парк Победы имени Георгия Константиновича Жукова", distance: 1.5, time: "30 мин", difficulty: "сложная", image: "https://archive.org/download/20260210_20260210_1146/001.jpg", audioUrl: "https://archive.org/download/20260210_20260210_1146/%D0%BF%D0%B0%D1%80%D0%BA_%D0%BF%D0%BE%D0%B1%D0%B5%D0%B4%D1%8B.MP3", geoUrl: "https://yandex.ru/maps/-/CPQZBJ4~", location: { lat: 55.348852, lon: 86.094377 }, descriptionShort: "Парк с военной техникой", subCategory: "Парки", explicitDate: "2026-02-10", videoUrl: " https://rutube.ru/video/0d0a0b9576446540595107193164ab5e/" };
         const pcoff = { name: "Лучшее Кафе - Парадная", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/cp_20260211/photo_2026-02-11%2013.17.16_thumb.jpg", audioUrl: "https://archive.org/download/cp_20260211/cp.MP3", geoUrl: "https://yandex.ru/maps/-/CPQ7q4M0", location: { lat: 55.358599, lon: 86.085642 }, descriptionShort: "Лучший кофе в районе набережной", subCategory: "Кофе", explicitDate: "2026-02-11", videoUrl: "https://rutube.ru/video/e246f605cbaaf51506c051839f9e2461/" };
         const s_bor = { name: "Сосновый Бор", distance: 5.5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sb_20260220/sb.jpg", audioUrl: "https://archive.org/download/sb_20260220/sb.MP3", geoUrl: "https://yandex.com/maps/-/CPanVZ31", location: { lat: 55.378308, lon: 86.104392 }, descriptionShort: "Самый большой в мире хвойный городской парк!", subCategory: "Парки", explicitDate: "2026-02-19", videoUrl: "" };
+        const mmuz = { name: "МиТОК — стройка, которую все видели, но никто не знает", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/m1_20260226/m1.png", audioUrl: "https://archive.org/download/m1_20260226/1.MP3", geoUrl: "https://yandex.com/maps/-/CPeSrGpJ", location: { lat: 55.351509, lon: 86.100853 }, descriptionShort: "Мировой рекорд прямо в центре Кемерова", subCategory: "Музей", explicitDate: "2026-02-27", videoUrl: "https://rutube.ru/video/cf7e0d0c483280763d4ec451fb241f0a/" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -631,9 +632,9 @@ const getRoutesData = (cityId, lang) => {
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [kuzbassMuseum, artMuseum, artCenter];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [mmuz, kuzbassMuseum, artMuseum, artCenter];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp];
@@ -644,7 +645,7 @@ const getRoutesData = (cityId, lang) => {
          structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [s_bor];
         
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [mod, minerRoute, pushkinRoute, leninMemorialRoute, bezdomniipec, olenLesnaya];
-        structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [mod, bezdomniipec];
+        structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [mmuz, mod, bezdomniipec];
         structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [oldestHouseRoute, sovKirCrossroadRoute];
         
         structure["Гастрономические маршруты"]["Кофе"] = [pcoff, importCoffeeRoute, coffeePrivalRoute];
@@ -653,7 +654,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [olenLesnaya];
         structure["Семейные маршруты"]["Пикники на природе"] = [s_bor];
         
-        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
+        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [mmuz, s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [rampa];
         
         structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, olenLesnaya];
@@ -1970,7 +1971,7 @@ export default function App() {
 
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.9", date: "19.02.2026" }; 
+    const buildInfo = { version: "2.10", date: "27.02.2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
