@@ -1505,37 +1505,44 @@ if (nearbyRoutes.length > 0) {
         );
     }, [allRoutesFlat]);
 // РАЗДЕЛ "ИССЛЕДУЙ" (4 рандомных маршрута + 1 вручную)
-// РАЗДЕЛ "ИССЛЕДУЙ" (Генерируется один раз при смене города/списка)
 const exploreRoutes = useMemo(() => {
-    const manualRoute = allRoutesFlat.find(r => r.name === "5 фактов о Кемерово, о которых ты не знал");
-    
-    // МЫ УБРАЛИ recommendedRoutes ИЗ ЭТОГО СПИСКА
-    // Теперь маршруты здесь не будут зависеть от того, что сейчас в разделе "Рядом"
+    // 👇 Сначала ищем ОБА наших ручных маршрута
+    const manualRouteNames = [
+        "МиТОК — стройка, которую все видели, но никто не знает",
+        "5 фактов о Кемерово, о которых ты не знал"
+    ]
+    const manualRoutes = allRoutesFlat.filter(r => manualRouteNames.includes(r.name))
+
     const excludedNames = new Set([
         ...promoRoutes.map(r => r.name), 
-        manualRoute?.name
+        ...manualRoutes.map(r => r.name)
     ].filter(Boolean));
-    
-    const uniqueRoutes = new Map();
-    allRoutesFlat
-        .filter(route => !excludedNames.has(route.name))
-        .forEach(route => {
-            if (!uniqueRoutes.has(route.name)) {
-                uniqueRoutes.set(route.name, route);
-            }
-        });
-    
-    const availableRoutes = Array.from(uniqueRoutes.values());
-    // Сортировка (рандом) сработает только один раз
-    const shuffled = availableRoutes.sort(() => Math.random() - 0.5);
-    const randomRoutes = shuffled.slice(0, 3);
-    
-    return manualRoute 
-        ? [manualRoute, ...randomRoutes] 
-        : randomRoutes.slice(0, 4);
 
-// ВАЖНО: Убрал recommendedRoutes из квадратных скобок внизу
-}, [currentCity, allRoutesFlat, promoRoutes]);
+    // Сначала дедублируем все маршруты
+    const uniqueRoutes = new Map();
+    allRoutesFlat.forEach(route => {
+        if (!excludedNames.has(route.name) && !uniqueRoutes.has(route.name)) {
+            uniqueRoutes.set(route.name, route);
+        }
+    });
+
+    const availableRoutes = Array.from(uniqueRoutes.values());
+
+    // 👇 Правильный равномерный шаффл Фишера-Йейтса
+    for (let i = availableRoutes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availableRoutes[i], availableRoutes[j]] = [availableRoutes[j], availableRoutes[i]];
+    }
+
+    // 👇 Считаем сколько рандомных нам не хватает до 4 всего
+    const needRandomCount = 4 - manualRoutes.length;
+    const randomRoutes = availableRoutes.slice(0, needRandomCount);
+
+    // Ручные маршруты всегда идут первыми, потом рандомные
+    return [...manualRoutes, ...randomRoutes]
+
+// Рандом будет генерироваться ТОЛЬКО при смене города, allRoutesFlat или промо
+}, [currentCity, allRoutesFlat, promoRoutes]);            }
 // Обработка нажатия на уведомление
 useEffect(() => {
     let listener = null;
