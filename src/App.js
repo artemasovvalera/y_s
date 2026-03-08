@@ -550,7 +550,7 @@ const isCategoryActive = (categoryData) => {
 };
 
 const RUSTORE_LINK = "https://www.rustore.ru/catalog/app/com.yasam.app";
-const VERSION_CHECK_URL = "https://archive.org/download/version_20260220/version.json";
+const VERSION_CHECK_URL = "https://raw.githubusercontent.com/artemasovvalera/y_s/main/version.json";
 
 const CATALOG_STRUCTURE = {
     "Культурные и исторические маршруты": ["Набережная", "Музеи и выставки", "Памятники и мемориалы", "Архитектурные достопримечательности", "Городские площади", "Исторические кварталы", "Церкви и храмы", "Легенды и мифы города"],
@@ -620,6 +620,7 @@ const getRoutesData = (cityId, lang) => {
         const pcoff = { name: "Лучшее Кафе - Парадная", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/cp_20260211/photo_2026-02-11%2013.17.16_thumb.jpg", audioUrl: "https://archive.org/download/cp_20260211/cp.MP3", geoUrl: "https://yandex.ru/maps/-/CPQ7q4M0", location: { lat: 55.358599, lon: 86.085642 }, descriptionShort: "Лучший кофе в районе набережной", subCategory: "Кофе", explicitDate: "2026-02-11", videoUrl: "https://rutube.ru/video/e246f605cbaaf51506c051839f9e2461/" };
         const s_bor = { name: "Сосновый Бор", distance: 5.5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sb_20260220/sb.jpg", audioUrl: "https://archive.org/download/sb_20260220/sb.MP3", geoUrl: "https://yandex.com/maps/-/CPanVZ31", location: { lat: 55.378308, lon: 86.104392 }, descriptionShort: "Самый большой в мире хвойный городской парк!", subCategory: "Парки", explicitDate: "2026-02-19", videoUrl: "" };
         const mmuz = { name: "МиТОК — стройка, которую все видели, но никто не знает", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/m1_20260226/m1.png", audioUrl: "https://archive.org/download/m1_20260226/1.MP3", geoUrl: "https://yandex.com/maps/-/CPeSrGpJ", location: { lat: 55.351509, lon: 86.100853 }, descriptionShort: "Мировой рекорд прямо в центре Кемерова", subCategory: "Музей", explicitDate: "2026-02-27", videoUrl: "https://rutube.ru/video/cf7e0d0c483280763d4ec451fb241f0a/" };
+        const eli = { name: "Елыкаево-Кузбасс факты о которых вы не знали!", distance: 25, time: "120 мин", difficulty: "Сложная", image: "", audioUrl: "", geoUrl: "https://yandex.com/maps/-/CPukRCiz", location: { lat: 55.301100, lon: 86.257060 }, descriptionShort: "Село 1800 года!", subCategory: "Музей", explicitDate: "2026-03-08", videoUrl: "https://rutube.ru/video/a7ada5bb55d661862fb1c7fe66c04f97/" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -1971,7 +1972,7 @@ export default function App() {
 
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.10", date: "27.02.2026" }; 
+    const buildInfo = { version: "2.11", date: "08.03.2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
