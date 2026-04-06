@@ -621,6 +621,7 @@ const getRoutesData = (cityId, lang) => {
         const s_bor = { name: "Сосновый Бор", distance: 5.5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sb_20260220/sb.jpg", audioUrl: "https://archive.org/download/sb_20260220/sb.MP3", geoUrl: "https://yandex.com/maps/-/CPanVZ31", location: { lat: 55.378308, lon: 86.104392 }, descriptionShort: "Самый большой в мире хвойный городской парк!", subCategory: "Парки", explicitDate: "2026-02-19", videoUrl: "" };
         const mmuz = { name: "МиТОК — стройка, которую все видели, но никто не знает", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/m1_20260226/m1.png", audioUrl: "https://archive.org/download/m1_20260226/1.MP3", geoUrl: "https://yandex.com/maps/-/CPeSrGpJ", location: { lat: 55.351509, lon: 86.100853 }, descriptionShort: "Мировой рекорд прямо в центре Кемерова", subCategory: "Музей", explicitDate: "2026-02-27", videoUrl: "https://rutube.ru/video/cf7e0d0c483280763d4ec451fb241f0a/" };
         const eli = { name: "Елыкаево-Кузбасс факты о которых вы не знали!", distance: 25, time: "120 мин", difficulty: "Сложная", image: "https://archive.org/download/elikaevo/1.png", audioUrl: "https://archive.org/download/elikaevo/elikaevo.MP3", geoUrl: "https://yandex.com/maps/-/CPukRCiz", location: { lat: 55.301100, lon: 86.257060 }, descriptionShort: "Село 1800 года!", subCategory: "Музей", explicitDate: "2026-03-08", videoUrl: "https://rutube.ru/video/a7ada5bb55d661862fb1c7fe66c04f97/" };
+        const svist = { name: "Святой источник преподобного Серафима Саровского ", distance: 5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sv_istochnik/23454.jpeg", audioUrl: "https://archive.org/download/sv_istochnik/sv_istochnik.MP3", geoUrl: "https://yandex.com/maps/-/CPf75Vkt", location: { lat: 55.379137, lon: 86.088940 }, descriptionShort: "Святой источник преподобного Серафима Саровского в Сосновом бору Кемерова", subCategory: "", explicitDate: "2026-04-06", videoUrl: "https://rutube.ru/video/e33695b51bb32d21c4a255ce7d90917b/?r=wd" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -638,11 +639,11 @@ const getRoutesData = (cityId, lang) => {
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
-        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp];
+        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp, svist];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [rampa, olenLesnaya];
         
-        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [s_bor, mod, olenLesnaya, park_pobedi, eli];
-        structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [s_bor, eli];
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [s_bor, mod, svist, olenLesnaya, park_pobedi, eli];
+        structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [svist, s_bor, eli];
          structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [s_bor];
         
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [mod, minerRoute, pushkinRoute, leninMemorialRoute, bezdomniipec, olenLesnaya];
@@ -1972,7 +1973,7 @@ export default function App() {
 
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.11", date: "08.03.2026" }; 
+    const buildInfo = { version: "2.12", date: "06.04.2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
