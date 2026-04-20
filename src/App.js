@@ -622,6 +622,7 @@ const getRoutesData = (cityId, lang) => {
         const mmuz = { name: "МиТОК — стройка, которую все видели, но никто не знает", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/m1_20260226/m1.png", audioUrl: "https://archive.org/download/m1_20260226/1.MP3", geoUrl: "https://yandex.com/maps/-/CPeSrGpJ", location: { lat: 55.351509, lon: 86.100853 }, descriptionShort: "Мировой рекорд прямо в центре Кемерова", subCategory: "Музей", explicitDate: "2026-02-27", videoUrl: "https://rutube.ru/video/cf7e0d0c483280763d4ec451fb241f0a/" };
         const eli = { name: "Елыкаево-Кузбасс факты о которых вы не знали!", distance: 25, time: "120 мин", difficulty: "Сложная", image: "https://archive.org/download/elikaevo/1.png", audioUrl: "https://archive.org/download/elikaevo/elikaevo.MP3", geoUrl: "https://yandex.com/maps/-/CPukRCiz", location: { lat: 55.301100, lon: 86.257060 }, descriptionShort: "Село 1800 года!", subCategory: "Музей", explicitDate: "2026-03-08", videoUrl: "https://rutube.ru/video/a7ada5bb55d661862fb1c7fe66c04f97/" };
         const svist = { name: "Святой источник преподобного Серафима Саровского ", distance: 5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sv_istochnik/23454.jpeg", audioUrl: "https://archive.org/download/sv_istochnik/sv_istochnik.MP3", geoUrl: "https://yandex.com/maps/-/CPf75Vkt", location: { lat: 55.379137, lon: 86.088940 }, descriptionShort: "Святой источник преподобного Серафима Саровского в Сосновом бору Кемерова", subCategory: "", explicitDate: "2026-04-06", videoUrl: "https://rutube.ru/video/e33695b51bb32d21c4a255ce7d90917b/?r=wd" };
+        const filar = { name: "Государственная филармония Кузбасса", distance: 1, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/filarmony/Filharmonio_en_Kemerovo.jpg", audioUrl: "https://archive.org/download/filarmony/filarmony.MP3", geoUrl: "https://yandex.ru/maps/-/CPCru4o4", location: { lat: 55.353329, lon: 86.094416 }, descriptionShort: "Государственная филармония Кузбасса имени Бориса Штоколова", subCategory: "", explicitDate: "2026-04-20", videoUrl: "https://rutube.ru/video/98c3e4106ce74ac28f12149488d20d99/" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -634,9 +635,9 @@ const getRoutesData = (cityId, lang) => {
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [mmuz, kuzbassMuseum, artMuseum, artCenter];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [filar, mmuz, kuzbassMuseum, artMuseum, artCenter];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [filar, mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp, svist];
@@ -661,6 +662,7 @@ const getRoutesData = (cityId, lang) => {
         
         structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, olenLesnaya];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [s_bor];
+        structure["Тематические маршруты"]["Музыкальные маршруты"] = [filar];
         
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"].push(fiveFacts);
 
@@ -1973,7 +1975,7 @@ export default function App() {
 
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.12", date: "06.04.2026" }; 
+    const buildInfo = { version: "2.13", date: "06.04.2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
