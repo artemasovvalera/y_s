@@ -623,6 +623,7 @@ const getRoutesData = (cityId, lang) => {
         const eli = { name: "Елыкаево-Кузбасс факты о которых вы не знали!", distance: 25, time: "120 мин", difficulty: "Сложная", image: "https://archive.org/download/elikaevo/1.png", audioUrl: "https://archive.org/download/elikaevo/elikaevo.MP3", geoUrl: "https://yandex.com/maps/-/CPukRCiz", location: { lat: 55.301100, lon: 86.257060 }, descriptionShort: "Село 1800 года!", subCategory: "Музей", explicitDate: "2026-03-08", videoUrl: "https://rutube.ru/video/a7ada5bb55d661862fb1c7fe66c04f97/" };
         const svist = { name: "Святой источник преподобного Серафима Саровского ", distance: 5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sv_istochnik/23454.jpeg", audioUrl: "https://archive.org/download/sv_istochnik/sv_istochnik.MP3", geoUrl: "https://yandex.com/maps/-/CPf75Vkt", location: { lat: 55.379137, lon: 86.088940 }, descriptionShort: "Святой источник преподобного Серафима Саровского в Сосновом бору Кемерова", subCategory: "", explicitDate: "2026-04-06", videoUrl: "https://rutube.ru/video/e33695b51bb32d21c4a255ce7d90917b/?r=wd" };
         const filar = { name: "Государственная филармония Кузбасса", distance: 1, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/filarmony/Filharmonio_en_Kemerovo.jpg", audioUrl: "https://archive.org/download/filarmony/filarmony.MP3", geoUrl: "https://yandex.ru/maps/-/CPCru4o4", location: { lat: 55.353329, lon: 86.094416 }, descriptionShort: "Государственная филармония Кузбасса имени Бориса Штоколова", subCategory: "", explicitDate: "2026-04-20", videoUrl: "https://rutube.ru/video/98c3e4106ce74ac28f12149488d20d99/" };
+        const pristan = { name: "Пристань-могила", distance: 1, time: "20 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pristan_202604/scale_1200.jpg", audioUrl: "https://archive.org/download/pristan_202604/pristan.MP3", geoUrl: "https://yandex.com/maps/-/CPCHiTPb", location: { lat: 55.376020, lon: 86.063089 }, descriptionShort: "Красная горка. Гора горелая", subCategory: "", explicitDate: "2026-04-22", videoUrl: "https://rutube.ru/video/fc544587c4c09346afaf9c25543557b1/" };
 
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
@@ -641,7 +642,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp, svist];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [rampa, olenLesnaya];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [rampa, pristan, olenLesnaya];
         
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [s_bor, mod, svist, olenLesnaya, park_pobedi, eli];
         structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [svist, s_bor, eli];
@@ -658,9 +659,9 @@ const getRoutesData = (cityId, lang) => {
         structure["Семейные маршруты"]["Пикники на природе"] = [s_bor, eli];
         
         structure["Альтернативные маршруты"]["Урбанистические исследования"] = [mmuz, s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
-        structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [rampa];
+        structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [pristan, rampa];
         
-        structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, olenLesnaya];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, pristan, olenLesnaya];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [s_bor];
         structure["Тематические маршруты"]["Музыкальные маршруты"] = [filar];
         
