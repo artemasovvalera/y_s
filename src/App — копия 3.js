@@ -1503,11 +1503,12 @@ if (nearbyRoutes.length > 0) {
     }, [userLocation, allRoutesFlat]);
     // --- ЗАМЕНА: Вместо newestRoutes делаем promoRoutes ---
         // РЕКЛАМА (Фильтрация из общего списка)
-   const promoRoutes = useMemo(() => {
-    return allRoutesFlat.filter(route => 
-        route.name === "5 фактов о Кемерово, о которых ты не знал"
-    );
-}, [allRoutesFlat]);
+    const promoRoutes = useMemo(() => {
+        // Ищем маршруты, у которых имя "
+        return allRoutesFlat.filter(route => 
+            route.name === "Лучшее Кафе - Парадная"
+        );
+    }, [allRoutesFlat]);
 // РАЗДЕЛ "ИССЛЕДУЙ" (4 рандомных маршрута + 1 вручную)
 // РАЗДЕЛ "ИССЛЕДУЙ" (Генерируется один раз при смене города/списка)
 const exploreRoutes = useMemo(() => {
@@ -1727,7 +1728,7 @@ useEffect(() => {
             {/* 2. БЛОК "РЕКЛАМА" */}
             {promoRoutes.length > 0 && (
                 <div style={{ marginBottom: '1rem' }}> 
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>⭐ Рекомендуем</h2> 
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>{t('ads') || "Реклама"}</h2> 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}> 
                         {promoRoutes.map((route, idx) => (
                             <RouteListItem key={`promo-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />
@@ -1766,7 +1767,7 @@ useEffect(() => {
     }
 };
     const isMapTab = activeTab === 'map';
-    const containerStyle = isMapTab ? { width: '100%', height: '100dvh', backgroundColor: C.bg, overflow: 'hidden' } : { width: '100%', padding: '1rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px)) 1rem', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box', overflowY: 'auto', minHeight: '100dvh' };
+    const containerStyle = isMapTab ? { width: '100%', height: '100vh', backgroundColor: C.bg, overflow: 'hidden' } : { width: '100%', padding: '1rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px)) 1rem', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box', overflowY: 'auto', minHeight: '100vh' };
 
     return (<> <div style={containerStyle}>
         {!isMapTab && (<div ref={settingsRef} style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', right: '1rem', zIndex: 110 }}> <button onClick={() => setSettingsOpen(!settingsOpen)} style={{ cursor: 'pointer', padding: '0.5rem', borderRadius: '9999px', color: C.textMuted, backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, position: 'relative' }}> <Settings style={{ width: '1.25rem', height: '1.25rem', color: C.text }} /> </button> {settingsOpen && (<div style={{ position: 'absolute', top: '3rem', right: 0, width: '16rem', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', borderRadius: '1rem', padding: '0.5rem', zIndex: 20, border: `1px solid ${C.cardBorder}`, backgroundColor: C.cardBg }}> {settingsItems.map((item, index) => { if (item.type === 'divider') return <hr key={`div-${index}`} style={{ border: 'none', borderTop: `1px solid ${C.cardBorder}`, margin: '0.5rem 0' }} />; return <button key={item.label} onClick={item.action} style={{ width: '100%', display: 'flex', alignItems: 'center', textAlign: 'left', padding: '0.75rem', borderRadius: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: C.text, transition: 'background 0.2s' }}>{item.icon}<span>{item.label}</span></button>; })} </div>)} </div>)} {renderCurrentView()} </div>
@@ -1867,7 +1868,46 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
                 ))}
             </div>
 
-           
+            {/* Подсказка "Коснитесь экрана для начала" */}
+            {showHint && (
+                <div style={{
+                    position: 'absolute',
+                    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    animation: 'fadeInUp 0.8s ease-out, pulse 2s ease-in-out infinite',
+                }}>
+                    <p style={{
+                        color: imageLoaded && !imageError 
+                            ? 'rgba(255, 255, 255, 0.9)' 
+                            : C.text,
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        textShadow: imageLoaded && !imageError 
+                            ? '0 2px 10px rgba(0,0,0,0.5)'
+                            : 'none',
+                        margin: 0,
+                    }}>
+                        Коснитесь экрана для начала
+                    </p>
+                    
+                    {/* Анимированная стрелка вверх */}
+                    <div style={{
+                        marginTop: '1rem',
+                        animation: 'bounce 1.5s ease-in-out infinite',
+                    }}>
+                        <div style={{
+                            width: '40px',
+                            height: '40px',
+                            margin: '0 auto',
+                            borderLeft: '3px solid rgba(255,255,255,0.7)',
+                            borderTop: '3px solid rgba(255,255,255,0.7)',
+                            transform: 'rotate(45deg)',
+                        }} />
+                    </div>
+                </div>
+            )}
+
             {/* CSS анимации */}
             <style>{`
                 @keyframes floatLetter {
