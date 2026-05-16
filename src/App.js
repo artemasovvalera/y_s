@@ -624,7 +624,7 @@ const getRoutesData = (cityId, lang) => {
         const svist = { name: "Святой источник преподобного Серафима Саровского ", distance: 5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sv_istochnik/23454.jpeg", audioUrl: "https://archive.org/download/sv_istochnik/sv_istochnik.MP3", geoUrl: "https://yandex.com/maps/-/CPf75Vkt", location: { lat: 55.379137, lon: 86.088940 }, descriptionShort: "Святой источник преподобного Серафима Саровского в Сосновом бору Кемерова", subCategory: "", explicitDate: "2026-04-06", videoUrl: "https://rutube.ru/video/e33695b51bb32d21c4a255ce7d90917b/?r=wd" };
         const filar = { name: "Государственная филармония Кузбасса", distance: 1, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/filarmony/Filharmonio_en_Kemerovo.jpg", audioUrl: "https://archive.org/download/filarmony/filarmony.MP3", geoUrl: "https://yandex.ru/maps/-/CPCru4o4", location: { lat: 55.353329, lon: 86.094416 }, descriptionShort: "Государственная филармония Кузбасса имени Бориса Штоколова", subCategory: "", explicitDate: "2026-04-20", videoUrl: "https://rutube.ru/video/98c3e4106ce74ac28f12149488d20d99/" };
         const pristan = { name: "Пристань-могила", distance: 1, time: "20 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pristan_202604/scale_1200.jpg", audioUrl: "https://archive.org/download/pristan_202604/pristan.MP3", geoUrl: "https://yandex.com/maps/-/CPCHiTPb", location: { lat: 55.376020, lon: 86.063089 }, descriptionShort: "Красная горка. Гора горелая", subCategory: "", explicitDate: "2026-04-22", videoUrl: "https://rutube.ru/video/fc544587c4c09346afaf9c25543557b1/" };
-
+        const reki = {  name: "Малые реки Кемерово — те, о которых никто не знает", distance: 15, time: "1 ч",  difficulty: "Средняя",  image: "https://archive.org/download/reki_20260516/reki.jpg",  audioUrl: "https://archive.org/download/reki_20260516/reki.MP3", geoUrl: "https://maps.app.goo.gl/fW2CjGaV2zUy9d8C9",  location: { lat: 55.348154, lon: 86.094916 },   descriptionShort: "Евсеевка, Алыкаевка, Камышная — история рек под улицами города.",  subCategory: "история",  explicitDate: "2026-05-16", videoUrl: "https://rutube.ru/video/private/8f695da140aac3c353ae3822c9d1a7d3/?p=eFydx2K6gNOlnbhvrKPhSA" };
         // Маршруты Набережной
         const nabIntro = { name: "Введение в Набережную", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F.jpg", audioUrl: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/vvednaber.MP3", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/340092f174a1c1614460c1d503f66ce0/", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Начало прогулки по набережной.", subCategory: "Набережная" };
         const nabteremok = { name: "Теремок", distance: 0.1, time: "2 мин", difficulty: "Лёгкая", image: "https://raw.githubusercontent.com/artemasovvalera/yasamkem/main/terem.jpg", audioUrl: "", location: { lat: 55.365094, lon: 86.076369 }, videoUrl: "https://rutube.ru/video/private/153d44b2c761310c5c55d9ae58f9e36e/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXZEJU", descriptionShort: "Великолепное чугунное литье - фонари по набережной.", subCategory: "Набережная" };
@@ -635,16 +635,16 @@ const getRoutesData = (cityId, lang) => {
         const nabHeart = { name: "Арт-обьект Я Люблю Кемерово", distance: 0.2, time: "4 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20251107_20251107_1108/%D1%8F%20%D0%BB%D1%8E%D0%B1%D0%BB%D1%8E%20%D0%BA%D0%B5%D0%BC%D0%B5%D1%80%D0%BE%D0%B2%D0%BE.png", audioUrl: "https://archive.org/download/ograjdenie_end/%D1%81%D0%B5%D1%80%D0%B4%D1%86%D0%B5.MP3", location: { lat: 55.359595, lon: 86.087298 }, videoUrl: "https://rutube.ru/video/a38198ad8df1e004b93c0e56940f331c/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXZXIO", descriptionShort: "Популярный арт-объект.", subCategory: "Набережная" };
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
-        structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
+        structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, reki, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [filar, mmuz, kuzbassMuseum, artMuseum, artCenter];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [filar, mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp, svist];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [rampa, pristan, olenLesnaya];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [reki, rampa, pristan, olenLesnaya];
         
-        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [s_bor, mod, svist, olenLesnaya, park_pobedi, eli];
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [reki, s_bor, mod, svist, olenLesnaya, park_pobedi, eli];
         structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [svist, s_bor, eli];
          structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [s_bor];
         
@@ -658,7 +658,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [olenLesnaya];
         structure["Семейные маршруты"]["Пикники на природе"] = [s_bor, eli];
         
-        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [mmuz, s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
+        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [reki, mmuz, s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [pristan, rampa];
         
         structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, pristan, olenLesnaya];
@@ -1936,7 +1936,7 @@ export default function App() {
 
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.13", date: "06.04.2026" }; 
+    const buildInfo = { version: "2.14", date: "16.05.2026" }; 
     const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
