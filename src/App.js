@@ -8,8 +8,285 @@ import {
     Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
     Music, Camera, BookOpen, Smile, Bike, Globe, Building, Download, Loader
 } from "lucide-react";
+// ==========================================
+// УЛЬТРАСОВРЕМЕННЫЙ ЭКРАН ЗДОРОВЬЯ (Premium Health UI)
 
-//
+const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = [], currentPosition, steps, calories, weather }) => {
+    const stepGoal = 10000;
+    const calorieGoal = 400;
+    const displaySteps = steps || 0;
+    const displayCalories = calories || 0;
+    const stepsPercent = Math.min((displaySteps / stepGoal) * 100, 100);
+    const caloriesPercent = Math.min((displayCalories / calorieGoal) * 100, 100);
+    const currentHour = new Date().getHours();
+    const hoursLeft = Math.max(24 - currentHour, 1);
+    const stepsPerHour = currentHour > 0 ? displaySteps / currentHour : 0;
+    const predictedSteps = displaySteps > 100 
+        ? Math.round(displaySteps + stepsPerHour * hoursLeft) 
+        : Math.round(stepGoal * 0.7);
+    const ringRadius = 42;
+    const ringCircumference = 2 * Math.PI * ringRadius;
+    const stepsOffset = ringCircumference - (ringCircumference * stepsPercent) / 100;
+    const innerRadius = 30;
+    const innerCircumference = 2 * Math.PI * innerRadius;
+    const calOffset = innerCircumference - (innerCircumference * caloriesPercent) / 100;
+
+    const getWeatherEmoji = (desc) => {
+        if (!desc) return '🌤️';
+        const d = desc.toLowerCase();
+        if (d.includes('ясно') || d.includes('clear')) return '☀️';
+        if (d.includes('облач') || d.includes('cloud') || d.includes('пасмурно')) return '☁️';
+        if (d.includes('дожд') || d.includes('rain') || d.includes('ливень')) return '🌧️';
+        if (d.includes('снег') || d.includes('snow')) return '❄️';
+        if (d.includes('гроза') || d.includes('thunder')) return '⛈️';
+        if (d.includes('туман') || d.includes('fog')) return '🌫️';
+        return '🌤️';
+    };
+
+    const getGreeting = () => {
+        const h = new Date().getHours();
+        if (lang === 'en') {
+            if (h < 6) return 'Good night';
+            if (h < 12) return 'Good morning';
+            if (h < 18) return 'Good afternoon';
+            return 'Good evening';
+        }
+        if (lang === 'de') {
+            if (h < 6) return 'Gute Nacht';
+            if (h < 12) return 'Guten Morgen';
+            if (h < 18) return 'Guten Tag';
+            return 'Guten Abend';
+        }
+        if (h < 6) return 'Доброй ночи';
+        if (h < 12) return 'Доброе утро';
+        if (h < 18) return 'Добрый день';
+        return 'Добрый вечер';
+    };
+
+    const t = {
+        ru: {
+            greeting: getGreeting(), subtitle: "Ваш день в движении",
+            steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
+            forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
+            weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
+            meters: "м", km: "км", btn: "Начать исследовать",
+            noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
+        },
+        en: {
+            greeting: getGreeting(), subtitle: "Your day in motion",
+            steps: "Steps", calories: "Calories", of: "of", kcal: "kcal", goal: "goal",
+            forecast: "Today's forecast", forecastSteps: "steps by end of day",
+            weatherTitle: "Weather now", nearbyTitle: "Interesting nearby",
+            meters: "m", km: "km", btn: "Start exploring",
+            noData: "Start walking — data will appear", loading: "Finding your location..."
+        },
+        de: {
+            greeting: getGreeting(), subtitle: "Ihr Tag in Bewegung",
+            steps: "Schritte", calories: "Kalorien", of: "von", kcal: "kcal", goal: "Ziel",
+            forecast: "Tagesprognose", forecastSteps: "Schritte bis Tagesende",
+            weatherTitle: "Wetter jetzt", nearbyTitle: "Interessantes in der Nähe",
+            meters: "m", km: "km", btn: "Erkunden starten",
+            noData: "Beginnen Sie zu gehen", loading: "Standort wird ermittelt..."
+        },
+        hy: {
+            greeting: getGreeting(), subtitle: "Ձեր օրը շարժման մdelays",
+            steps: "Քայլեր", calories: "Կdelays", of: "ից", kcal: " delays", goal: "նdelays",
+            forecast: "Delays", forecastSteps: "delays",
+            weatherTitle: "Delays", nearbyTitle: "Delays մdelays",
+            meters: "մ", km: "delays", btn: "Delays",
+            noData: "Delays", loading: "Delays..."
+        },
+        hi: {
+            greeting: getGreeting(), subtitle: "आपका दिन गति में",
+            steps: "कदम", calories: "कैलdelay", of: "में से", kcal: "delay", goal: "लdelays",
+            forecast: "Delays", forecastSteps: "delays",
+            weatherTitle: "Delays", nearbyTitle: "Delays",
+            meters: "मीdelay", km: "किdelay", btn: "Delays शुरू करें",
+            noData: "Delays", loading: "Delays..."
+        }
+    }[lang] || {
+        greeting: getGreeting(), subtitle: "Ваш день в движении",
+        steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
+        forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
+        weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
+        meters: "м", km: "км", btn: "Начать исследовать",
+        noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
+    };
+
+    const colors = darkMode ? {
+        bg: '#0A0E1A', surface: 'rgba(255,255,255,0.06)', glass: 'rgba(255,255,255,0.08)',
+        text: '#F1F5F9', textSecondary: '#94A3B8', textMuted: '#64748B',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.3)',
+        calColor: '#F59E0B', calGlow: 'rgba(245, 158, 11, 0.3)',
+        border: 'rgba(255,255,255,0.08)', cardBg: 'rgba(30, 41, 59, 0.8)',
+    } : {
+        bg: '#F0F4F8', surface: 'rgba(255,255,255,0.9)', glass: 'rgba(255,255,255,0.7)',
+        text: '#0F172A', textSecondary: '#475569', textMuted: '#94A3B8',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.15)',
+        calColor: '#F59E0B', calGlow: 'rgba(245, 158, 11, 0.15)',
+        border: 'rgba(0,0,0,0.06)', cardBg: 'rgba(255,255,255,0.95)',
+    };
+
+    const nearbyPlaces = useMemo(() => {
+        if (locations && locations.length > 0) return locations.slice(0, 4);
+        return [];
+    }, [locations]);
+
+    const formatDist = (meters) => {
+        if (!meters) return '';
+        if (meters >= 1000) return `${(meters / 1000).toFixed(1)} ${t.km}`;
+        return `${meters} ${t.meters}`;
+    };
+
+    const getRouteEmoji = (route) => {
+        const sub = (route.subCategory || '').toLowerCase();
+        if (sub.includes('набережн')) return '🌊';
+        if (sub.includes('музе')) return '🏛️';
+        if (sub.includes('памятник') || sub.includes('мемориал')) return '🗿';
+        if (sub.includes('архитектур')) return '🏗️';
+        if (sub.includes('площад')) return '⛲';
+        if (sub.includes('церк') || sub.includes('храм')) return '⛪';
+        if (sub.includes('парк') || sub.includes('природ')) return '🌳';
+        if (sub.includes('кофе')) return '☕';
+        if (sub.includes('скульптур') || sub.includes('искусств')) return '🎨';
+        if (sub.includes('тайн') || sub.includes('мистич')) return '🔮';
+        if (sub.includes('спорт')) return '⚽';
+        if (sub.includes('легенд') || sub.includes('миф')) return '📜';
+        return '📍';
+    };
+
+    return (
+        <div style={{
+            padding: '0 0 140px 0', backgroundColor: colors.bg, color: colors.text,
+            minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
+            boxSizing: 'border-box', overflowX: 'hidden',
+        }}>
+            {/* HEADER */}
+            <div style={{
+                background: darkMode 
+                    ? 'linear-gradient(135deg, #064E3B 0%, #0A0E1A 60%)' 
+                    : 'linear-gradient(135deg, #D1FAE5 0%, #F0F4F8 60%)',
+                padding: '50px 24px 40px 24px',
+                borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
+                position: 'relative', overflow: 'hidden',
+            }}>
+                <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: darkMode ? 'rgba(16, 185, 129, 0.08)' : 'rgba(16, 185, 129, 0.12)' }} />
+                <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: darkMode ? 'rgba(245, 158, 11, 0.06)' : 'rgba(245, 158, 11, 0.1)' }} />
+
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <p style={{ fontSize: '14px', color: colors.accent, fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px', textTransform: 'uppercase' }}>
+                        {t.greeting} 👋
+                    </p>
+                    <h1 style={{ fontSize: '28px', fontWeight: 900, margin: '0 0 4px 0', letterSpacing: '-0.5px', lineHeight: 1.1 }}>
+                        {t.subtitle}
+                    </h1>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '28px' }}>
+                    <div style={{ position: 'relative', width: '120px', height: '120px', flexShrink: 0 }}>
+                        <svg width="120" height="120" style={{ transform: 'rotate(-90deg)' }}>
+                            <circle cx="60" cy="60" r={ringRadius} stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} strokeWidth="10" fill="transparent" />
+                            <circle cx="60" cy="60" r={ringRadius} stroke={colors.accent} strokeWidth="10" fill="transparent" strokeDasharray={ringCircumference} strokeDashoffset={stepsOffset} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 1s ease', filter: `drop-shadow(0 0 6px ${colors.accentGlow})` }} />
+                            <circle cx="60" cy="60" r={innerRadius} stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} strokeWidth="8" fill="transparent" />
+                            <circle cx="60" cy="60" r={innerRadius} stroke={colors.calColor} strokeWidth="8" fill="transparent" strokeDasharray={innerCircumference} strokeDashoffset={calOffset} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 1s ease', filter: `drop-shadow(0 0 6px ${colors.calGlow})` }} />
+                        </svg>
+                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+                            <div style={{ fontSize: '22px', fontWeight: 900, lineHeight: 1 }}>
+                                {displaySteps > 0 ? displaySteps.toLocaleString() : '—'}
+                            </div>
+                            <div style={{ fontSize: '10px', color: colors.textMuted, fontWeight: 600, marginTop: '2px' }}>{t.steps}</div>
+                        </div>
+                    </div>
+
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: colors.accent, boxShadow: `0 0 8px ${colors.accentGlow}` }} />
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: colors.textSecondary }}>{t.steps}</span>
+                            </div>
+                            <div style={{ fontSize: '24px', fontWeight: 900 }}>{displaySteps > 0 ? displaySteps.toLocaleString() : '—'}</div>
+                            <div style={{ fontSize: '11px', color: colors.textMuted }}>{t.goal}: {stepGoal.toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: colors.calColor, boxShadow: `0 0 8px ${colors.calGlow}` }} />
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: colors.textSecondary }}>{t.calories}</span>
+                            </div>
+                            <div style={{ fontSize: '24px', fontWeight: 900 }}>
+                                {displayCalories > 0 ? displayCalories : '—'}
+                                <span style={{ fontSize: '13px', color: colors.textMuted, fontWeight: 500, marginLeft: '4px' }}>{t.kcal}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {displaySteps === 0 && (
+                    <div style={{ marginTop: '16px', padding: '10px 16px', background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: '12px', fontSize: '13px', color: colors.textMuted, textAlign: 'center' }}>
+                        👟 {t.noData}
+                    </div>
+                )}
+            </div>
+
+            <div style={{ padding: '20px 20px 0 20px' }}>
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+                    <div style={{ flex: 1, padding: '16px', background: colors.cardBg, borderRadius: '20px', border: `1px solid ${colors.border}`, backdropFilter: 'blur(20px)' }}>
+                        <div style={{ fontSize: '11px', color: colors.textMuted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>📈 {t.forecast}</div>
+                        <div style={{ fontSize: '22px', fontWeight: 900, color: colors.accent, marginTop: '8px' }}>{predictedSteps > 0 ? `~${predictedSteps.toLocaleString()}` : '—'}</div>
+                        <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: '2px' }}>{t.forecastSteps}</div>
+                    </div>
+                    <div style={{ flex: 1, padding: '16px', background: colors.cardBg, borderRadius: '20px', border: `1px solid ${colors.border}`, backdropFilter: 'blur(20px)' }}>
+                        <div style={{ fontSize: '11px', color: colors.textMuted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{getWeatherEmoji(weather?.desc)} {t.weatherTitle}</div>
+                        <div style={{ fontSize: '22px', fontWeight: 900, marginTop: '8px' }}>{weather ? weather.temp : '—°C'}</div>
+                        <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: '2px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{weather ? weather.desc : '...'}</div>
+                    </div>
+                </div>
+
+                {nearbyPlaces.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '20px' }}>📍</span> {t.nearbyTitle}
+                        </h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {nearbyPlaces.map((loc, idx) => (
+                                <div key={idx} style={{ background: colors.cardBg, borderRadius: '16px', border: `1px solid ${colors.border}`, overflow: 'hidden', display: 'flex', alignItems: 'center', gap: '12px', padding: '0', backdropFilter: 'blur(20px)', cursor: 'pointer' }}>
+                                    {loc.image ? (
+                                        <img src={loc.image} alt={loc.name || loc.title} style={{ width: '72px', height: '72px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
+                                    ) : (
+                                        <div style={{ width: '72px', height: '72px', flexShrink: 0, background: darkMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', borderRadius: '16px 0 0 16px' }}>
+                                            {getRouteEmoji(loc)}
+                                        </div>
+                                    )}
+                                    <div style={{ flex: 1, padding: '12px 14px 12px 0', minWidth: 0 }}>
+                                        <div style={{ fontWeight: 700, fontSize: '14px', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {loc.name || loc.title}
+                                        </div>
+                                        {loc.subCategory && (
+                                            <div style={{ fontSize: '11px', color: colors.accent, fontWeight: 600, marginTop: '2px' }}>{loc.subCategory}</div>
+                                        )}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px', fontSize: '12px', color: colors.textMuted }}>
+                                            {loc.dist !== undefined && <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>📏 {formatDist(loc.dist)}</span>}
+                                            {loc.time && <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>🕐 {loc.time}</span>}
+                                        </div>
+                                    </div>
+                                    <div style={{ paddingRight: '14px', color: colors.accent, fontSize: '18px', fontWeight: 700, flexShrink: 0 }}>→</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {nearbyPlaces.length === 0 && (
+                    <div style={{ padding: '24px', textAlign: 'center', background: colors.cardBg, borderRadius: '20px', border: `1px solid ${colors.border}`, marginBottom: '24px' }}>
+                        <div style={{ fontSize: '28px', marginBottom: '8px' }}>🗺️</div>
+                        <div style={{ fontSize: '14px', color: colors.textMuted }}>{t.loading}</div>
+                    </div>
+                )}
+            </div>
+
+        </div>
+    );
+};
+
 // 1. СТИЛИ И НАСТРОЙКИ (Styles & Config)
 //
 
@@ -617,7 +894,7 @@ const getRoutesData = (cityId, lang) => {
         const olenLesnaya = { name: "Скульптура Олень", distance: 12.0, time: "25 мин (авто)", difficulty: "Лёгкая", image: "https://cdn-ru.bitrix24.ru/b35117284/landing/ef2/ef2830181fccd03ee7a3fe12d599ee77/orig_2x.jpeg", audioUrl: "https://archive.org/download/orig_20251118/olen.MP3", location: { lat: 55.416023, lon: 86.238736 }, geoUrl: "https://yandex.ru/maps/-/CLSXV8ov", videoUrl: "https://rutube.ru/video/4c0fb0036f5480277844c2c598f9d30d/", descriptionShort: "Скульптура в районе Лесная Поляна.", subCategory: "Природные зоны и парки", explicitDate: "2025-11-22" };
         const chas_usp = { name: "Часовня иконы Божией Матери", distance: 0.5, time: "6 мин", difficulty: "Лёгкая", image: "https://archive.org/download/dsc-1432_202511/DSC_1432.JPG", audioUrl: "https://archive.org/download/dsc-1432_202511/chas_usp.MP3", geoUrl: "https://yandex.ru/maps/-/CLSXVLlU", location: { lat: 55.353792, lon: 86.092382 }, descriptionShort: "Часовня Всех Скорбящих Радость.", subCategory: "Церкви и храмы", explicitDate: "2025-11-23", videoUrl: "https://rutube.ru/video/a667d8bccefbf54646a11b53166558cf/?r=wd" };
         const park_pobedi = { name: "Парк Победы имени Георгия Константиновича Жукова", distance: 1.5, time: "30 мин", difficulty: "сложная", image: "https://archive.org/download/20260210_20260210_1146/001.jpg", audioUrl: "https://archive.org/download/20260210_20260210_1146/%D0%BF%D0%B0%D1%80%D0%BA_%D0%BF%D0%BE%D0%B1%D0%B5%D0%B4%D1%8B.MP3", geoUrl: "https://yandex.ru/maps/-/CPQZBJ4~", location: { lat: 55.348852, lon: 86.094377 }, descriptionShort: "Парк с военной техникой", subCategory: "Парки", explicitDate: "2026-02-10", videoUrl: " https://rutube.ru/video/0d0a0b9576446540595107193164ab5e/" };
-        const pcoff = { name: "Лучшее Кафе - Парадная", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/cp_20260211/photo_2026-02-11%2013.17.16_thumb.jpg", audioUrl: "https://archive.org/download/cp_20260211/cp.MP3", geoUrl: "https://yandex.ru/maps/-/CPQ7q4M0", location: { lat: 55.358599, lon: 86.085642 }, descriptionShort: "Лучший кофе в районе набережной", subCategory: "Кофе", explicitDate: "2026-02-11", videoUrl: "https://rutube.ru/video/e246f605cbaaf51506c051839f9e2461/" };
+        const pcoff = { name: "Лучшее Кафе - Парадная", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/cp_20260211/1100.jpg", audioUrl: "https://archive.org/download/cp_20260211/cp.MP3", geoUrl: "https://yandex.ru/maps/-/CPQ7q4M0", location: { lat: 55.358599, lon: 86.085642 }, descriptionShort: "Лучший кофе в районе набережной", subCategory: "Кофе", explicitDate: "2026-02-11", videoUrl: "https://rutube.ru/video/e246f605cbaaf51506c051839f9e2461/" };
         const s_bor = { name: "Сосновый Бор", distance: 5.5, time: "60 мин", difficulty: "Сложная", image: "https://archive.org/download/sb_20260220/sb.jpg", audioUrl: "https://archive.org/download/sb_20260220/sb.MP3", geoUrl: "https://yandex.com/maps/-/CPanVZ31", location: { lat: 55.378308, lon: 86.104392 }, descriptionShort: "Самый большой в мире хвойный городской парк!", subCategory: "Парки", explicitDate: "2026-02-19", videoUrl: "" };
         const mmuz = { name: "МиТОК — стройка, которую все видели, но никто не знает", distance: 0.5, time: "10 мин", difficulty: "Лёгкая", image: "https://archive.org/download/m1_20260226/m1.png", audioUrl: "https://archive.org/download/m1_20260226/1.MP3", geoUrl: "https://yandex.com/maps/-/CPeSrGpJ", location: { lat: 55.351509, lon: 86.100853 }, descriptionShort: "Мировой рекорд прямо в центре Кемерова", subCategory: "Музей", explicitDate: "2026-02-27", videoUrl: "https://rutube.ru/video/cf7e0d0c483280763d4ec451fb241f0a/" };
         const eli = { name: "Елыкаево-Кузбасс факты о которых вы не знали!", distance: 25, time: "120 мин", difficulty: "Сложная", image: "https://archive.org/download/elikaevo/1.png", audioUrl: "https://archive.org/download/elikaevo/elikaevo.MP3", geoUrl: "https://yandex.com/maps/-/CPukRCiz", location: { lat: 55.301100, lon: 86.257060 }, descriptionShort: "Село 1800 года!", subCategory: "Музей", explicitDate: "2026-03-08", videoUrl: "https://rutube.ru/video/a7ada5bb55d661862fb1c7fe66c04f97/" };
@@ -691,9 +968,57 @@ const getRoutesData = (cityId, lang) => {
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [redSquare];
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [zaryadye];
         
-    } else if (cityId === 'yerevan') {
-        const cascade = { name: t("Cascade"), distance: 1.0, time: "20 min", image: "https://images.unsplash.com/photo-1580137189272-c9379f8864fd?w=1200", location: { lat: 40.1925, lon: 44.5165 }, descriptionShort: "Giant stairway.", subCategory: "Архитектурные достопримечательности" };
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [cascade];
+       } else if (cityId === 'yerevan') {
+        const cascadeRoute = { name: "Каскад — самостоятельная прогулка с аудиогидом", distance: 1.2, time: "40 мин", difficulty: "Средняя", image: "https://archive.org/download/kaskad/photo_2026-05-21_01-55-03%20%282%29.jpg", audioUrl: "https://archive.org/download/kaskad/kaskad.MP3", videoUrl: "https://rutube.ru/video/3e9045ab4ca1d7ace838324c173e2b98/", geoUrl: "https://yandex.ru/maps/-/CCUiaMXrtB", location: { lat: 40.1919, lon: 44.5153 }, descriptionShort: "Каскад — монументальная лестница из белого туфа с фонтанами, скульптурами и смотровыми площадками. Внутри — Центр искусств Гафесчяна с коллекцией современного искусства. С вершины открывается панорама Еревана и вид на Арарат.", subCategory: "Архитектурные достопримечательности" };
+
+        // === Культурные и исторические маршруты ===
+        structure["Культурные и исторические маршруты"]["Набережная"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [cascadeRoute];
+
+        // === Природные и активные маршруты ===
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [cascadeRoute];
+        structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [cascadeRoute];
+        structure["Природные и активные маршруты"]["Активный отдых у воды"] = [cascadeRoute];
+        structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [cascadeRoute];
+
+        // === Современные и урбанистические маршруты ===
+        structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [cascadeRoute];
+
+        // === Гастрономические маршруты ===
+        structure["Гастрономические маршруты"]["Кофе"] = [cascadeRoute];
+        structure["Гастрономические маршруты"]["Уличная еда"] = [cascadeRoute];
+        structure["Гастрономические маршруты"]["Традиционные рестораны"] = [cascadeRoute];
+        structure["Гастрономические маршруты"]["Гастрономические мастер-классы"] = [cascadeRoute];
+
+        // === Семейные маршруты ===
+        structure["Семейные маршруты"]["Парки аттракционы и детские площадки"] = [cascadeRoute];
+        structure["Семейные маршруты"]["Зоопарки"] = [cascadeRoute];
+        structure["Семейные маршруты"]["Музеи для детей"] = [cascadeRoute];
+        structure["Семейные маршруты"]["Пикники на природе"] = [cascadeRoute];
+        structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [cascadeRoute];
+
+        // === Альтернативные маршруты ===
+        structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [cascadeRoute];
+        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [cascadeRoute];
+        structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [cascadeRoute];
+        structure["Альтернативные маршруты"]["Ночные экскурсии"] = [cascadeRoute];
+
+        // === Тематические маршруты ===
+        structure["Тематические маршруты"]["Музыкальные маршруты"] = [cascadeRoute];
+        structure["Тематические маршруты"]["Кино и телевидение"] = [cascadeRoute];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [cascadeRoute];
+        structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [cascadeRoute];
+        structure["Тематические маршруты"]["Спортивные маршруты"] = [cascadeRoute];
+     
         
     } else if (cityId === 'dusseldorf') {
         const tower = { name: t("Rheinturm"), distance: 0.2, time: "10 min", image: "https://images.unsplash.com/photo-1555818671-55b35242735a?w=1200", location: { lat: 51.2179, lon: 6.7617 }, descriptionShort: "Telecommunications tower.", subCategory: "Архитектурные достопримечательности" };
@@ -932,18 +1257,22 @@ const LiquidMenu = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) =
     ];
     
     const rightTabs = [
-        { id: 'search', icon: Search, label: t('search'), isSearch: true },
-        { id: 'map', icon: MapIcon, label: t('map') },
-    ];
+    { id: 'dashboard', icon: Activity, label: 'Активность', isDashboard: true },
+    { id: 'map', icon: MapIcon, label: t('map') },
+];
 
-    const handleTabClick = (tab) => {
-        if (tab.isSearch) {
-            onSearchClick();
-        } else {
-            onTabChange(tab.id);
-        }
+   const handleTabClick = (tab) => {
+    if (tab.isSearch) {
+        onSearchClick();
+    } else if (tab.isDashboard) {
+        if (window.__showDashboard) window.__showDashboard();
         setIsOpen(false);
-    };
+        return;
+    } else {
+        onTabChange(tab.id);
+    }
+    setIsOpen(false);
+};
 
     const renderTabButton = (tab, index, side) => {
         const isActive = activeTab === tab.id;
@@ -1474,7 +1803,19 @@ if (nearbyRoutes.length > 0) {
 }
     };
 
-    const geoError = () => setUserLocation(CITIES.find(c => c.id === currentCity)); 
+        const geoError = () => {
+        const city = CITIES.find(c => c.id === currentCity);
+        if (city) setUserLocation({ lat: city.lat, lon: city.lon });
+    };
+    
+    // При смене города сразу ставим координаты города
+    const cityCoords = CITIES.find(c => c.id === currentCity);
+    if (cityCoords) {
+        setUserLocation(prev => {
+            if (!prev || !navigator.geolocation) return { lat: cityCoords.lat, lon: cityCoords.lon };
+            return prev;
+        });
+    }
     
     let watchId; 
     if (navigator.geolocation) { 
@@ -1495,12 +1836,24 @@ if (nearbyRoutes.length > 0) {
 
     const allRoutesFlat = useMemo(() => { return Object.keys(activeRoutes).flatMap(topCat => Object.keys(activeRoutes[topCat]).flatMap(subCat => activeRoutes[topCat][subCat])); }, [activeRoutes]);
 
-    const recommendedRoutes = useMemo(() => {
-        if (!userLocation || !allRoutesFlat.length) return [];
+       const recommendedRoutes = useMemo(() => {
+        if (!allRoutesFlat.length) return [];
+        const city = CITIES.find(c => c.id === currentCity);
+        const loc = userLocation || (city ? { lat: city.lat, lon: city.lon } : null);
+        if (!loc) return [];
+        const lat = loc.lat;
+        const lon = loc.lon || loc.lng;
         const uniqueRoutes = new Map();
-        allRoutesFlat.forEach(route => { if (!uniqueRoutes.has(route.name)) { uniqueRoutes.set(route.name, { ...route, calculatedDistance: calculateDistance(userLocation.lat, userLocation.lon, route.location?.lat, route.location?.lon) }); } });
+        allRoutesFlat.forEach(route => { 
+            if (!uniqueRoutes.has(route.name)) { 
+                uniqueRoutes.set(route.name, { 
+                    ...route, 
+                    calculatedDistance: calculateDistance(lat, lon, route.location?.lat, route.location?.lon) 
+                }); 
+            } 
+        });
         return Array.from(uniqueRoutes.values()).sort((a, b) => a.calculatedDistance - b.calculatedDistance).slice(0, 5);
-    }, [userLocation, allRoutesFlat]);
+    }, [userLocation, allRoutesFlat, currentCity]);
     // --- ЗАМЕНА: Вместо newestRoutes делаем promoRoutes ---
         // РЕКЛАМА (Фильтрация из общего списка)
    const promoRoutes = useMemo(() => {
@@ -1606,19 +1959,44 @@ useEffect(() => {
     useEffect(() => { const handleClickOutside = (event) => { if (settingsRef.current && !settingsRef.current.contains(event.target)) { setSettingsOpen(false); } }; if (settingsOpen) { document.addEventListener("mousedown", handleClickOutside); } return () => { document.removeEventListener("mousedown", handleClickOutside); }; }, [settingsOpen]);
     const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${t('dist')}`, [units, currentLang]);
 
-    const settingsItems = [
+       const settingsItems = [
         { label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-    { label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-    { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-{ label: t('contact'), action: () => { setShowContactModal(true); setSettingsOpen(false); }, icon: <Mail style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { label: t('contact'), action: () => { setShowContactModal(true); setSettingsOpen(false); }, icon: <Mail style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('notif'), action: () => { setActiveTab('notifications'); navigate('notifications'); setSettingsOpen(false); }, icon: <Bell style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { type: 'divider' },
         { label: t('city'), action: () => { setShowCityModal(true); setSettingsOpen(false); }, icon: <Building style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('lang'), action: () => { setShowLangModal(true); setSettingsOpen(false); }, icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: darkMode ? t('theme_light') : t('theme_dark'), action: () => { setDarkMode(!darkMode); setSettingsOpen(false); }, icon: darkMode ? <Sun style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> : <Moon style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { label: t('exit'), action: onExit, icon: <LogOut style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { type: 'divider' },
-        { label: `Версия сборки ${buildInfo.version}`, action: () => {}, icon: <Info style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> }
+        { 
+            label: "Дашборд активности", 
+            action: () => { 
+                setSettingsOpen(false); 
+                if (window.__showDashboard) window.__showDashboard();
+            }, 
+            icon: <Activity style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
+        },
+        { 
+            label: "Веб-версия", 
+            action: () => { 
+                setSettingsOpen(false); 
+                window.open('https://artemasovvalera.github.io/y_s/', '_system'); 
+            }, 
+            icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
+        },
+        { type: 'divider' },
+        {    label: t('search'),    action: () => { setShowSearchModal(true); setSettingsOpen(false); },    icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} />},
+        { label: t('exit'), action: onExit, icon: <LogOut style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { 
+            label: `Версия ${buildInfo.version} — обновить`, 
+            action: () => { 
+                setSettingsOpen(false); 
+                window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); 
+            }, 
+            icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
+        }
     ];
 
     const handleNavigateToDetails = useCallback((route) => { navigate('routeDetails', { route }); }, [navigate]);
@@ -1626,32 +2004,247 @@ useEffect(() => {
     if (!currentView) return null;
     if (currentView.type === 'favorites') {
     const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
+    const partnerRoute = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
+
+    const colors = darkMode ? {
+        bg: '#0A0E1A', cardBg: 'rgba(30, 41, 59, 0.8)', border: 'rgba(255,255,255,0.08)',
+        text: '#F1F5F9', textSecondary: '#94A3B8', textMuted: '#64748B',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.3)',
+    } : {
+        bg: '#F0F4F8', cardBg: 'rgba(255,255,255,0.95)', border: 'rgba(0,0,0,0.06)',
+        text: '#0F172A', textSecondary: '#475569', textMuted: '#94A3B8',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.15)',
+    };
+
     return (
-        <div>
-            <CatalogHeader title={t('fav')} onBack={goBack} darkMode={darkMode} />
-            {currentCityFavorites.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    {currentCityFavorites.map((route) => (
-                        <RouteListItem 
-                            key={route.name} 
-                            route={route} 
-                            onNavigate={handleNavigateToDetails} 
-                            onPlayAudio={playAudio} 
-                            onToggleFavorite={toggleFavorite} 
-                            isFavorite={true} 
-                            isCompleted={completedRoutes.some(c => c.name === route.name)} 
-                            userLocation={userLocation} 
-                            formatDistance={formatDistance} 
-                            C={C} 
-                            lang={currentLang} 
-                        />
-                    ))}
+        <div style={{
+            backgroundColor: colors.bg, minHeight: '100vh',
+            margin: '-1rem', padding: '0', boxSizing: 'border-box',
+        }}>
+            {/* HEADER с градиентом */}
+            <div style={{
+                background: darkMode 
+                    ? 'linear-gradient(135deg, #7C2D12 0%, #0A0E1A 60%)' 
+                    : 'linear-gradient(135deg, #FEF3C7 0%, #F0F4F8 60%)',
+                padding: '50px 24px 32px 24px',
+                borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
+                position: 'relative', overflow: 'hidden',
+            }}>
+                <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: darkMode ? 'rgba(239, 68, 68, 0.08)' : 'rgba(239, 68, 68, 0.08)' }} />
+                <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: darkMode ? 'rgba(245, 158, 11, 0.06)' : 'rgba(245, 158, 11, 0.1)' }} />
+                
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <button onClick={goBack} style={{
+                        background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
+                        border: 'none', borderRadius: '50%', width: '40px', height: '40px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: colors.text, cursor: 'pointer', marginBottom: '16px',
+                    }}>
+                        <ArrowLeft size={20} />
+                    </button>
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{
+                            width: '56px', height: '56px', borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #EF4444, #F59E0B)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '28px', boxShadow: '0 8px 24px rgba(239, 68, 68, 0.3)',
+                        }}>
+                            ❤️
+                        </div>
+                        <div>
+                            <p style={{ fontSize: '14px', color: colors.accent, fontWeight: 700, letterSpacing: '0.5px', marginBottom: '2px', textTransform: 'uppercase', margin: 0 }}>
+                                {t('fav')}
+                            </p>
+                            <h1 style={{ fontSize: '26px', fontWeight: 900, margin: '0', letterSpacing: '-0.5px', lineHeight: 1.1, color: colors.text }}>
+                                {currentCityFavorites.length > 0 
+                                    ? `${currentCityFavorites.length} ${currentCityFavorites.length === 1 ? 'место' : currentCityFavorites.length < 5 ? 'места' : 'мест'}`
+                                    : t('empty_list')
+                                }
+                            </h1>
+                        </div>
+                    </div>
                 </div>
-            ) : (
-                <div style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.textCenter, padding: '3rem 1rem' }}>
-                    <p style={{ color: C.text, fontWeight: 600 }}>{t('empty_list')}</p>
+            </div>
+
+            {/* СПИСОК ИЗБРАННОГО */}
+            <div style={{ padding: '20px 20px 0 20px' }}>
+                {currentCityFavorites.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
+                        {currentCityFavorites.map((route, idx) => (
+                            <div key={route.name} onClick={() => handleNavigateToDetails(route)} style={{
+                                background: colors.cardBg, borderRadius: '16px',
+                                border: `1px solid ${colors.border}`, overflow: 'hidden',
+                                display: 'flex', alignItems: 'center', gap: '12px',
+                                padding: '0', backdropFilter: 'blur(20px)', cursor: 'pointer',
+                            }}>
+                                {route.image ? (
+                                    <img src={route.image} alt={route.name} style={{
+                                        width: '76px', height: '76px', objectFit: 'cover',
+                                        flexShrink: 0, borderRadius: '16px 0 0 16px',
+                                    }} />
+                                ) : (
+                                    <div style={{
+                                        width: '76px', height: '76px', flexShrink: 0,
+                                        background: darkMode ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.1)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontSize: '28px', borderRadius: '16px 0 0 16px',
+                                    }}>
+                                        ❤️
+                                    </div>
+                                )}
+                                <div style={{ flex: 1, padding: '12px 4px 12px 0', minWidth: 0 }}>
+                                    <div style={{
+                                        fontWeight: 700, fontSize: '14px', lineHeight: 1.3,
+                                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                                        color: colors.text,
+                                    }}>
+                                        {route.name}
+                                    </div>
+                                    {route.subCategory && (
+                                        <div style={{ fontSize: '11px', color: colors.accent, fontWeight: 600, marginTop: '2px' }}>
+                                            {t(route.subCategory) || route.subCategory}
+                                        </div>
+                                    )}
+                                    <div style={{
+                                        display: 'flex', alignItems: 'center', gap: '10px',
+                                        marginTop: '4px', fontSize: '12px', color: colors.textMuted,
+                                    }}>
+                                        {route.distance && (
+                                            <span style={{ fontWeight: 600 }}>📏 {route.distance} {t('dist')}</span>
+                                        )}
+                                        {route.time && (
+                                            <span>🕐 {route.time}</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '12px', flexShrink: 0 }}>
+                                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(route); }} style={{
+                                        background: 'none', border: 'none', padding: '6px',
+                                        cursor: 'pointer', color: '#EF4444',
+                                    }}>
+                                        <Heart size={20} fill="#EF4444" />
+                                    </button>
+                                    <div style={{ color: colors.accent, fontSize: '16px', fontWeight: 700 }}>→</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{
+                        padding: '40px 24px', textAlign: 'center',
+                        background: colors.cardBg, borderRadius: '20px',
+                        border: `1px solid ${colors.border}`, marginBottom: '28px',
+                    }}>
+                        <div style={{ fontSize: '48px', marginBottom: '12px' }}>💫</div>
+                        <div style={{ fontSize: '16px', fontWeight: 700, color: colors.text, marginBottom: '4px' }}>
+                            {t('empty_list')}
+                        </div>
+                        <div style={{ fontSize: '13px', color: colors.textMuted }}>
+                            Добавляйте маршруты нажатием ❤️
+                        </div>
+                    </div>
+                )}
+
+                {/* === НАШИ ПАРТНЁРЫ === */}
+                <div style={{ marginBottom: '100px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                        <div style={{
+                            width: '32px', height: '32px', borderRadius: '10px',
+                            background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '16px',
+                        }}>
+                            🤝
+                        </div>
+                        <h3 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: colors.text }}>
+                            Наши партнёры
+                        </h3>
+                    </div>
+
+                    {partnerRoute && (
+                        <div onClick={() => handleNavigateToDetails(partnerRoute)} style={{
+                            background: colors.cardBg, borderRadius: '20px',
+                            border: `1px solid ${colors.border}`, overflow: 'hidden',
+                            cursor: 'pointer', backdropFilter: 'blur(20px)',
+                            boxShadow: darkMode 
+                                ? '0 8px 32px rgba(245, 158, 11, 0.1)' 
+                                : '0 8px 32px rgba(245, 158, 11, 0.15)',
+                        }}>
+                            {/* Картинка */}
+                            <div style={{ position: 'relative', width: '100%', height: '160px' }}>
+                                <img src={partnerRoute.image} alt={partnerRoute.name} style={{
+                                    width: '100%', height: '100%', objectFit: 'cover',
+                                }} />
+                                <div style={{
+                                    position: 'absolute', inset: 0,
+                                    background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)',
+                                }} />
+                                <div style={{
+                                    position: 'absolute', top: '12px', left: '12px',
+                                    background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                                    padding: '4px 12px', borderRadius: '20px',
+                                    fontSize: '11px', fontWeight: 800, color: 'white',
+                                    letterSpacing: '0.5px', textTransform: 'uppercase',
+                                }}>
+                                    ⭐ Партнёр
+                                </div>
+                            </div>
+
+                            {/* Инфо */}
+                            <div style={{ padding: '16px 18px' }}>
+                                <div style={{
+                                    fontWeight: 800, fontSize: '17px', lineHeight: 1.3,
+                                    color: colors.text, marginBottom: '6px',
+                                }}>
+                                    {partnerRoute.name}
+                                </div>
+                                <div style={{
+                                    fontSize: '13px', color: colors.textMuted,
+                                    lineHeight: 1.5, marginBottom: '12px',
+                                }}>
+                                    {partnerRoute.descriptionShort}
+                                </div>
+                                <div style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                }}>
+                                    <div style={{
+                                        display: 'flex', alignItems: 'center', gap: '12px',
+                                        fontSize: '12px', color: colors.textMuted,
+                                    }}>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            ☕ Кофейня
+                                        </span>
+                                        {partnerRoute.time && (
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                🕐 {partnerRoute.time}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, #10B981, #059669)',
+                                        padding: '8px 16px', borderRadius: '12px',
+                                        fontSize: '13px', fontWeight: 700, color: 'white',
+                                    }}>
+                                        Перейти →
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {!partnerRoute && (
+                        <div style={{
+                            padding: '20px', textAlign: 'center',
+                            background: colors.cardBg, borderRadius: '16px',
+                            border: `1px solid ${colors.border}`,
+                            fontSize: '13px', color: colors.textMuted,
+                        }}>
+                            Партнёры скоро появятся
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }
@@ -1669,92 +2262,540 @@ useEffect(() => {
     }
 
     switch (activeTab) {
-        case 'catalog': {
+            case 'catalog': {
             const catalogTitle = currentView.type === 'subCategories' ? t(currentView.category) : currentView.type === 'subRoutes' ? t(currentView.subCategory) : t('cat');
-            return (<> <CatalogHeader title={catalogTitle} onBack={currentView.type !== 'categories' ? goBack : null} darkMode={darkMode} />
-                {currentView.type === 'categories' && (
-                    <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-                        {Object.keys(CATALOG_STRUCTURE).map(key => {
-                            const categoryData = activeRoutes[key];
-                            const isActive = categoryData && isCategoryActive(categoryData);
-                            return (
-                                <button key={key} onClick={() => isActive && navigate('subCategories', { category: key })} style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.flex, ...S.justifyBetween, ...S.itemsCenter, opacity: isActive ? 1 : 0.5, padding: '1.25rem', cursor: isActive ? 'pointer' : 'default' }} disabled={!isActive}>
-                                    <div style={{ ...S.flex, ...S.itemsCenter, gap: '1rem' }}> {routeIcons[key] || <MapPin style={{ width: '1.5rem', height: '1.5rem', color: S.emerald600 }} />} <span style={{ ...S.fontSemibold, color: C.text, fontSize: '1rem' }}>{t(key)}</span> </div>
-                                    {isActive && <ChevronRight style={{ width: '1.25rem', height: '1.25rem', color: C.textMuted }} />}
+            
+            const catColors = darkMode ? {
+                bg: '#0A0E1A', cardBg: 'rgba(30, 41, 59, 0.8)', border: 'rgba(255,255,255,0.08)',
+                text: '#F1F5F9', textSecondary: '#94A3B8', textMuted: '#64748B',
+                accent: '#10B981',
+            } : {
+                bg: '#F0F4F8', cardBg: 'rgba(255,255,255,0.95)', border: 'rgba(0,0,0,0.06)',
+                text: '#0F172A', textSecondary: '#475569', textMuted: '#94A3B8',
+                accent: '#10B981',
+            };
+
+            const catEmojis = {
+                "Культурные и исторические маршруты": "🏛️",
+                "Природные и активные маршруты": "🌿",
+                "Современные и урбанистические маршруты": "🏙️",
+                "Гастрономические маршруты": "🍽️",
+                "Семейные маршруты": "👨‍👩‍👧",
+                "Альтернативные маршруты": "🔮",
+                "Тематические маршруты": "🎭",
+            };
+
+            return (
+                <div style={{ margin: '-1rem', padding: '0', backgroundColor: catColors.bg, minHeight: '100vh' }}>
+                    
+                    {/* HEADER */}
+                    <div style={{
+                        background: darkMode
+                            ? 'linear-gradient(135deg, #1E3A5F 0%, #0A0E1A 60%)'
+                            : 'linear-gradient(135deg, #DBEAFE 0%, #F0F4F8 60%)',
+                        padding: currentView.type !== 'categories' ? '50px 24px 28px 24px' : '50px 24px 32px 24px',
+                        borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
+                        position: 'relative', overflow: 'hidden',
+                    }}>
+                        <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: darkMode ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.12)' }} />
+                        <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: darkMode ? 'rgba(16, 185, 129, 0.06)' : 'rgba(16, 185, 129, 0.1)' }} />
+                        
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            {currentView.type !== 'categories' && (
+                                <button onClick={goBack} style={{
+                                    background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)',
+                                    border: 'none', borderRadius: '50%', width: '40px', height: '40px',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: catColors.text, cursor: 'pointer', marginBottom: '12px',
+                                }}>
+                                    <ArrowLeft size={20} />
                                 </button>
-                            )
-                        })}
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <div style={{
+                                    width: '52px', height: '52px', borderRadius: '16px',
+                                    background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '24px', boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
+                                }}>
+                                    {currentView.type === 'categories' ? '📚' : currentView.type === 'subCategories' ? (catEmojis[currentView.category] || '📂') : '📍'}
+                                </div>
+                                <div>
+                                    <p style={{ fontSize: '12px', color: catColors.accent, fontWeight: 700, letterSpacing: '0.5px', margin: '0 0 2px 0', textTransform: 'uppercase' }}>
+                                        {t('cat')}
+                                    </p>
+                                    <h1 style={{ fontSize: '22px', fontWeight: 900, margin: 0, color: catColors.text, lineHeight: 1.1 }}>
+                                        {catalogTitle}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                )}
-                {currentView.type === 'subCategories' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        {CATALOG_STRUCTURE[currentView.category].map(subCatKey => {
-                            const routesInSubCat = activeRoutes[currentView.category]?.[subCatKey] || [];
-                            const isActive = routesInSubCat.length > 0;
-                            const style = getCategoryStyle(subCatKey);
-                            return (
-                                <button key={subCatKey} onClick={() => isActive && navigate('subRoutes', { category: currentView.category, subCategory: subCatKey })} style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.flex, ...S.justifyBetween, ...S.itemsCenter, opacity: isActive ? 1 : 0.5, padding: '1rem', cursor: isActive ? 'pointer' : 'default' }} disabled={!isActive}>
-                                    <div style={{ ...S.flex, ...S.itemsCenter, gap: '1rem' }}> {style.iconComp} <span style={{ ...S.fontSemibold, color: C.text, fontSize: '1rem' }}>{t(subCatKey)}</span> </div>
-                                    {isActive && <ChevronRight style={{ width: '1.25rem', height: '1.25rem', color: C.textMuted }} />}
-                                </button>
-                            )
-                        })}
+
+                    {/* КОНТЕНТ */}
+                    <div style={{ padding: '20px 20px 100px 20px' }}>
+
+                        {/* КАТЕГОРИИ */}
+                        {currentView.type === 'categories' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                {Object.keys(CATALOG_STRUCTURE).map(key => {
+                                    const categoryData = activeRoutes[key];
+                                    const isActive = categoryData && isCategoryActive(categoryData);
+                                    const routeCount = isActive ? Object.values(categoryData).flat().length : 0;
+                                    return (
+                                        <div key={key} onClick={() => isActive && navigate('subCategories', { category: key })} style={{
+                                            background: catColors.cardBg, borderRadius: '16px',
+                                            border: `1px solid ${catColors.border}`,
+                                            display: 'flex', alignItems: 'center', gap: '14px',
+                                            padding: '16px', cursor: isActive ? 'pointer' : 'default',
+                                            opacity: isActive ? 1 : 0.4,
+                                            backdropFilter: 'blur(20px)',
+                                        }}>
+                                            <div style={{
+                                                width: '48px', height: '48px', borderRadius: '14px',
+                                                background: darkMode ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.1)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                fontSize: '22px', flexShrink: 0,
+                                            }}>
+                                                {catEmojis[key] || '📂'}
+                                            </div>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontWeight: 700, fontSize: '15px', color: catColors.text }}>
+                                                    {t(key)}
+                                                </div>
+                                                {isActive && (
+                                                    <div style={{ fontSize: '12px', color: catColors.textMuted, marginTop: '2px' }}>
+                                                        {routeCount} маршрутов
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {isActive && (
+                                                <div style={{ color: catColors.accent, fontSize: '18px', fontWeight: 700, flexShrink: 0 }}>→</div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* ПОДКАТЕГОРИИ */}
+                        {currentView.type === 'subCategories' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                {CATALOG_STRUCTURE[currentView.category].map(subCatKey => {
+                                    const routesInSubCat = activeRoutes[currentView.category]?.[subCatKey] || [];
+                                    const isActive = routesInSubCat.length > 0;
+                                    const style = getCategoryStyle(subCatKey);
+                                    return (
+                                        <div key={subCatKey} onClick={() => isActive && navigate('subRoutes', { category: currentView.category, subCategory: subCatKey })} style={{
+                                            background: catColors.cardBg, borderRadius: '16px',
+                                            border: `1px solid ${catColors.border}`,
+                                            display: 'flex', alignItems: 'center', gap: '14px',
+                                            padding: '14px 16px', cursor: isActive ? 'pointer' : 'default',
+                                            opacity: isActive ? 1 : 0.4,
+                                            backdropFilter: 'blur(20px)',
+                                        }}>
+                                            <div style={{
+                                                width: '42px', height: '42px', borderRadius: '12px',
+                                                background: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                flexShrink: 0,
+                                            }}>
+                                                {style.iconComp}
+                                            </div>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontWeight: 700, fontSize: '14px', color: catColors.text }}>
+                                                    {t(subCatKey)}
+                                                </div>
+                                                {isActive && (
+                                                    <div style={{ fontSize: '11px', color: catColors.textMuted, marginTop: '2px' }}>
+                                                        {routesInSubCat.length} маршрутов
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {isActive && (
+                                                <div style={{ color: catColors.accent, fontSize: '16px', fontWeight: 700, flexShrink: 0 }}>→</div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* МАРШРУТЫ В ПОДКАТЕГОРИИ */}
+                        {currentView.type === 'subRoutes' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                {(activeRoutes[currentView.category]?.[currentView.subCategory] || []).map((route) => (
+                                    <div key={route.name} onClick={() => handleNavigateToDetails(route)} style={{
+                                        background: catColors.cardBg, borderRadius: '16px',
+                                        border: `1px solid ${catColors.border}`, overflow: 'hidden',
+                                        display: 'flex', alignItems: 'center',
+                                        cursor: 'pointer', backdropFilter: 'blur(20px)',
+                                    }}>
+                                        {route.image && (
+                                            <img src={route.image} alt={route.name} style={{ width: '80px', height: '80px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
+                                        )}
+                                        <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                                            <div style={{ fontWeight: 700, fontSize: '14px', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: catColors.text }}>
+                                                {route.name}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '10px', marginTop: '6px', fontSize: '12px', color: catColors.textMuted }}>
+                                                {route.distance && <span>📏 {route.distance} {t('dist')}</span>}
+                                                {route.time && <span>🕐 {route.time}</span>}
+                                                {route.audioUrl && <span>🎧</span>}
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingRight: '14px', flexShrink: 0 }}>
+                                            <button onClick={(e) => { e.stopPropagation(); toggleFavorite(route); }} style={{
+                                                background: 'none', border: 'none', padding: '6px', cursor: 'pointer',
+                                                color: isRouteInFavorites(route) ? '#EF4444' : catColors.textMuted,
+                                            }}>
+                                                <Heart size={18} fill={isRouteInFavorites(route) ? '#EF4444' : 'none'} />
+                                            </button>
+                                            <div style={{ color: catColors.accent, fontSize: '16px', fontWeight: 700 }}>→</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                )}
-                {currentView.type === 'subRoutes' && (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {(activeRoutes[currentView.category]?.[currentView.subCategory] || []).map((route) => (<RouteListItem key={route.name} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div>)} </>);
+                </div>
+            );
         }
         
-              case 'recommendations': {
+  case 'recommendations': {
     const cityName = t('city_' + currentCity) || CITIES.find(c => c.id === currentCity)?.name || "City";
-    return (
-        <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: C.text, marginBottom: '0.75rem', marginTop: '0.25rem' }}> 
-                <span style={{ color: S.emerald600 }}>{t('app_name')}</span> {cityName} 
-            </h1>
-            
-            {/* 1. БЛОК "РЯДОМ С ВАМИ" */}
-            {recommendedRoutes.length > 0 && (
-                <div style={{ marginBottom: '1rem' }}> 
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>{t('near')}</h2> 
-                    <div style={{ display: 'flex', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}> 
-                        {recommendedRoutes.map((route, idx) => (
-                            <RecommendationTile key={`rec-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />
-                        ))} 
-                    </div> 
-                </div>
-            )}
-            
-            {/* 2. БЛОК "РЕКЛАМА" */}
-            {promoRoutes.length > 0 && (
-                <div style={{ marginBottom: '1rem' }}> 
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>⭐ Рекомендуем</h2> 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}> 
-                        {promoRoutes.map((route, idx) => (
-                            <RouteListItem key={`promo-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />
-                        ))} 
-                    </div> 
-                </div>
-            )}
+    
+    const recColors = darkMode ? {
+        bg: '#0A0E1A', cardBg: 'rgba(30, 41, 59, 0.8)', border: 'rgba(255,255,255,0.08)',
+        text: '#F1F5F9', textSecondary: '#94A3B8', textMuted: '#64748B',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.3)',
+    } : {
+        bg: '#F0F4F8', cardBg: 'rgba(255,255,255,0.95)', border: 'rgba(0,0,0,0.06)',
+        text: '#0F172A', textSecondary: '#475569', textMuted: '#94A3B8',
+        accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.15)',
+    };
 
-            {/* 3. БЛОК "ИССЛЕДУЙ" */}
-            {exploreRoutes.length > 0 && (
-                <div style={{ marginBottom: '1rem' }}> 
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: C.text }}>🔍 Исследуй</h2> 
-                    <div style={{ display: 'flex', gap: '0.6rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}> 
-                        {exploreRoutes.map((route, idx) => (
-                            <RecommendationTile key={`explore-${idx}`} route={route} onClick={handleNavigateToDetails} formatDistance={formatDistance} userLocation={userLocation} C={C} lang={currentLang} />
-                        ))} 
-                    </div> 
+   const partnerRouteRec = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
+
+    return (
+        <div style={{ margin: '-1rem', padding: '0', backgroundColor: recColors.bg, minHeight: '100vh' }}>
+            
+            {/* HEADER с градиентом — как на дашборде */}
+            <div style={{
+                background: darkMode
+                    ? 'linear-gradient(135deg, #064E3B 0%, #0A0E1A 60%)'
+                    : 'linear-gradient(135deg, #D1FAE5 0%, #F0F4F8 60%)',
+                padding: '50px 24px 32px 24px',
+                borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
+                position: 'relative', overflow: 'hidden',
+            }}>
+                {/* Декоративные круги */}
+                <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: darkMode ? 'rgba(16, 185, 129, 0.08)' : 'rgba(16, 185, 129, 0.12)' }} />
+                <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: darkMode ? 'rgba(245, 158, 11, 0.06)' : 'rgba(245, 158, 11, 0.1)' }} />
+
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <p style={{ fontSize: '14px', color: recColors.accent, fontWeight: 700, letterSpacing: '0.5px', margin: '0 0 4px 0', textTransform: 'uppercase' }}>
+                        {t('app_name')} 🗺️
+                    </p>
+                    <h1 style={{ fontSize: '28px', fontWeight: 900, margin: '0', letterSpacing: '-0.5px', lineHeight: 1.1, color: recColors.text }}>
+                        {cityName}
+                    </h1>
                 </div>
-            )}
+            </div>
+
+            {/* КОНТЕНТ */}
+            <div style={{ padding: '20px 20px 120px 20px' }}>
+
+                {/* 1. РЯДОМ С ВАМИ */}
+                {recommendedRoutes.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #10B981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>📍</div>
+                            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>{t('near')}</h2>
+                        </div>
+                        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
+                            {recommendedRoutes.map((route, idx) => (
+                                <div key={`rec-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
+                                    minWidth: '160px', height: '200px', borderRadius: '20px',
+                                    position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
+                                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                                }}>
+                                    <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)' }} />
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
+                                        <div style={{ color: '#10B981', fontWeight: 700, fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                            {t(route.subCategory) || route.subCategory}
+                                        </div>
+                                        <div style={{ color: 'white', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                            {route.name}
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <div style={{ background: 'rgba(16, 185, 129, 0.3)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '20px', fontSize: '10px', color: 'white', fontWeight: 600 }}>
+                                                👣 {Math.floor(route.distance * 1250)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* 2. РЕКЛАМА — КОФЕЙНЫЙ ПРИВАЛ */}
+                {partnerRouteRec && (
+                    <div style={{ marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>☕</div>
+                            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>⭐ Рекомендуем</h2>
+                        </div>
+                        <div onClick={() => handleNavigateToDetails(partnerRouteRec)} style={{
+                            background: recColors.cardBg, borderRadius: '20px',
+                            border: `1px solid ${recColors.border}`, overflow: 'hidden',
+                            cursor: 'pointer',
+                            boxShadow: darkMode ? '0 8px 32px rgba(245,158,11,0.1)' : '0 8px 32px rgba(245,158,11,0.15)',
+                        }}>
+                            <div style={{ position: 'relative', width: '100%', height: '160px' }}>
+                                <img src={partnerRouteRec.image} alt={partnerRouteRec.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)' }} />
+                                <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, color: 'white', textTransform: 'uppercase' }}>
+                                    ☕ Партнёр
+                                </div>
+                                <div style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', padding: '4px 10px', borderRadius: '20px', fontSize: '10px', color: 'rgba(255,255,255,0.8)' }}>
+                                    Реклама
+                                </div>
+                            </div>
+                            <div style={{ padding: '16px 18px' }}>
+                                <div style={{ fontWeight: 800, fontSize: '17px', color: recColors.text, marginBottom: '6px' }}>
+                                    {partnerRouteRec.name}
+                                </div>
+                                <div style={{ fontSize: '13px', color: recColors.textMuted, lineHeight: 1.5, marginBottom: '12px' }}>
+                                    {partnerRouteRec.descriptionShort}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: recColors.textMuted }}>
+                                        <span>☕ Кофейня</span>
+                                        {partnerRouteRec.time && <span>🕐 {partnerRouteRec.time}</span>}
+                                        {partnerRouteRec.distance && <span>📏 {partnerRouteRec.distance} км</span>}
+                                    </div>
+                                    <div style={{ background: 'linear-gradient(135deg, #10B981, #059669)', padding: '8px 16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, color: 'white' }}>
+                                        Перейти →
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* 3. ИССЛЕДУЙ */}
+                {exploreRoutes.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #6366F1, #4F46E5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🔍</div>
+                            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>Исследуй</h2>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {exploreRoutes.map((route, idx) => (
+                                <div key={`explore-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
+                                    background: recColors.cardBg, borderRadius: '16px',
+                                    border: `1px solid ${recColors.border}`, overflow: 'hidden',
+                                    display: 'flex', alignItems: 'center', gap: '0',
+                                    cursor: 'pointer', backdropFilter: 'blur(20px)',
+                                }}>
+                                    {route.image && (
+                                        <img src={route.image} alt={route.name} style={{ width: '80px', height: '80px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
+                                    )}
+                                    <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                                        <div style={{ fontWeight: 700, fontSize: '14px', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: recColors.text }}>
+                                            {route.name}
+                                        </div>
+                                        {route.subCategory && (
+                                            <div style={{ fontSize: '11px', color: recColors.accent, fontWeight: 600, marginTop: '2px' }}>
+                                                {t(route.subCategory) || route.subCategory}
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '6px', fontSize: '12px', color: recColors.textMuted }}>
+                                            {route.distance && <span>📏 {route.distance} км</span>}
+                                            {route.time && <span>🕐 {route.time}</span>}
+                                        </div>
+                                    </div>
+                                    <div style={{ paddingRight: '14px', color: recColors.accent, fontSize: '18px', fontWeight: 700, flexShrink: 0 }}>→</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* 4. РЕКОМЕНДУЕМ (promoRoutes) */}
+                {promoRoutes.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #EF4444, #DC2626)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🎯</div>
+                            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>Интересное</h2>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {promoRoutes.map((route, idx) => (
+                                <div key={`promo-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
+                                    background: recColors.cardBg, borderRadius: '16px',
+                                    border: `1px solid ${recColors.border}`, overflow: 'hidden',
+                                    display: 'flex', alignItems: 'center',
+                                    cursor: 'pointer', backdropFilter: 'blur(20px)',
+                                }}>
+                                    {route.image && (
+                                        <img src={route.image} alt={route.name} style={{ width: '80px', height: '80px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
+                                    )}
+                                    <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                                        <div style={{ fontWeight: 700, fontSize: '14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: recColors.text }}>
+                                            {route.name}
+                                        </div>
+                                        {route.subCategory && (
+                                            <div style={{ fontSize: '11px', color: recColors.accent, fontWeight: 600, marginTop: '2px' }}>
+                                                {t(route.subCategory) || route.subCategory}
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '6px', fontSize: '12px', color: recColors.textMuted }}>
+                                            {route.distance && <span>📏 {route.distance} км</span>}
+                                            {route.time && <span>🕐 {route.time}</span>}
+                                        </div>
+                                    </div>
+                                    <div style={{ paddingRight: '14px', color: recColors.accent, fontSize: '18px', fontWeight: 700, flexShrink: 0 }}>→</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+            </div>
+        </div>
+    );
+}  
+        case 'favorites': {
+    const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
+   const partnerRoute2 = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
+
+    const colors2 = darkMode ? {
+        bg: '#0A0E1A', cardBg: 'rgba(30, 41, 59, 0.8)', border: 'rgba(255,255,255,0.08)',
+        text: '#F1F5F9', textSecondary: '#94A3B8', textMuted: '#64748B',
+        accent: '#10B981',
+    } : {
+        bg: '#F0F4F8', cardBg: 'rgba(255,255,255,0.95)', border: 'rgba(0,0,0,0.06)',
+        text: '#0F172A', textSecondary: '#475569', textMuted: '#94A3B8',
+        accent: '#10B981',
+    };
+
+    return (
+        <div style={{
+            backgroundColor: colors2.bg, minHeight: '100vh',
+            margin: '-1rem', padding: '0',
+        }}>
+            <div style={{
+                background: darkMode 
+                    ? 'linear-gradient(135deg, #7C2D12 0%, #0A0E1A 60%)' 
+                    : 'linear-gradient(135deg, #FEF3C7 0%, #F0F4F8 60%)',
+                padding: '50px 24px 32px 24px',
+                borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
+                position: 'relative', overflow: 'hidden',
+            }}>
+                <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.08)' }} />
+                
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{
+                            width: '56px', height: '56px', borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #EF4444, #F59E0B)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '28px', boxShadow: '0 8px 24px rgba(239, 68, 68, 0.3)',
+                        }}>❤️</div>
+                        <div>
+                            <p style={{ fontSize: '14px', color: colors2.accent, fontWeight: 700, letterSpacing: '0.5px', margin: '0 0 2px 0', textTransform: 'uppercase' }}>{t('fav')}</p>
+                            <h1 style={{ fontSize: '26px', fontWeight: 900, margin: 0, color: colors2.text }}>
+                                {currentCityFavorites.length > 0 
+                                    ? `${currentCityFavorites.length} ${currentCityFavorites.length === 1 ? 'место' : currentCityFavorites.length < 5 ? 'места' : 'мест'}`
+                                    : t('empty_list')
+                                }
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ padding: '20px 20px 0 20px' }}>
+                {currentCityFavorites.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
+                        {currentCityFavorites.map((route) => (
+                            <div key={route.name} onClick={() => handleNavigateToDetails(route)} style={{
+                                background: colors2.cardBg, borderRadius: '16px',
+                                border: `1px solid ${colors2.border}`, overflow: 'hidden',
+                                display: 'flex', alignItems: 'center', gap: '12px',
+                                padding: '0', cursor: 'pointer',
+                            }}>
+                                {route.image ? (
+                                    <img src={route.image} alt={route.name} style={{ width: '76px', height: '76px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
+                                ) : (
+                                    <div style={{ width: '76px', height: '76px', flexShrink: 0, background: 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', borderRadius: '16px 0 0 16px' }}>❤️</div>
+                                )}
+                                <div style={{ flex: 1, padding: '12px 4px 12px 0', minWidth: 0 }}>
+                                    <div style={{ fontWeight: 700, fontSize: '14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: colors2.text }}>{route.name}</div>
+                                    {route.subCategory && <div style={{ fontSize: '11px', color: colors2.accent, fontWeight: 600, marginTop: '2px' }}>{t(route.subCategory) || route.subCategory}</div>}
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '4px', fontSize: '12px', color: colors2.textMuted }}>
+                                        {route.distance && <span>📏 {route.distance} {t('dist')}</span>}
+                                        {route.time && <span>🕐 {route.time}</span>}
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '12px', flexShrink: 0 }}>
+                                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(route); }} style={{ background: 'none', border: 'none', padding: '6px', cursor: 'pointer', color: '#EF4444' }}><Heart size={20} fill="#EF4444" /></button>
+                                    <div style={{ color: colors2.accent, fontSize: '16px', fontWeight: 700 }}>→</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{ padding: '40px 24px', textAlign: 'center', background: colors2.cardBg, borderRadius: '20px', border: `1px solid ${colors2.border}`, marginBottom: '28px' }}>
+                        <div style={{ fontSize: '48px', marginBottom: '12px' }}>💫</div>
+                        <div style={{ fontSize: '16px', fontWeight: 700, color: colors2.text }}>{t('empty_list')}</div>
+                        <div style={{ fontSize: '13px', color: colors2.textMuted, marginTop: '4px' }}>Добавляйте маршруты нажатием ❤️</div>
+                    </div>
+                )}
+
+                {/* НАШИ ПАРТНЁРЫ */}
+                <div style={{ marginBottom: '100px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                        <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>🤝</div>
+                        <h3 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: colors2.text }}>Наши партнёры</h3>
+                    </div>
+                    {partnerRoute2 && (
+                        <div onClick={() => handleNavigateToDetails(partnerRoute2)} style={{
+                            background: colors2.cardBg, borderRadius: '20px', border: `1px solid ${colors2.border}`,
+                            overflow: 'hidden', cursor: 'pointer',
+                            boxShadow: darkMode ? '0 8px 32px rgba(245, 158, 11, 0.1)' : '0 8px 32px rgba(245, 158, 11, 0.15)',
+                        }}>
+                            <div style={{ position: 'relative', width: '100%', height: '160px' }}>
+                                <img src={partnerRoute2.image} alt={partnerRoute2.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)' }} />
+                                <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, color: 'white', textTransform: 'uppercase' }}>⭐ Партнёр</div>
+                            </div>
+                            <div style={{ padding: '16px 18px' }}>
+                                <div style={{ fontWeight: 800, fontSize: '17px', color: colors2.text, marginBottom: '6px' }}>{partnerRoute2.name}</div>
+                                <div style={{ fontSize: '13px', color: colors2.textMuted, lineHeight: 1.5, marginBottom: '12px' }}>{partnerRoute2.descriptionShort}</div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: colors2.textMuted }}>
+                                        <span>☕ Кофейня</span>
+                                        {partnerRoute2.time && <span>🕐 {partnerRoute2.time}</span>}
+                                    </div>
+                                    <div style={{ background: 'linear-gradient(135deg, #10B981, #059669)', padding: '8px 16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, color: 'white' }}>Перейти →</div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {!partnerRoute2 && (
+                        <div style={{ padding: '20px', textAlign: 'center', background: colors2.cardBg, borderRadius: '16px', border: `1px solid ${colors2.border}`, fontSize: '13px', color: colors2.textMuted }}>
+                            Партнёры скоро появятся
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
-        
-        case 'favorites': {
-            const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
-            return (<div> <CatalogHeader title={t('fav')} onBack={null} darkMode={darkMode} /> {currentCityFavorites.length > 0 ? (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {currentCityFavorites.map((route) => (<RouteListItem key={route.name} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={true} isCompleted={completedRoutes.some(c => c.name === route.name)} userLocation={userLocation} formatDistance={formatDistance} C={C} lang={currentLang} />))} </div>) : (<div style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.textCenter, padding: '3rem 1rem' }}> <p style={{ color: C.text, fontWeight: 600 }}>{t('empty_list')}</p> </div>)} </div>);
-        }
         
         case 'map': { 
             const center = CITIES.find(c => c.id === currentCity); 
@@ -1918,10 +2959,31 @@ const AgreementScreen = ({ onAccept, darkMode }) => {
     const C = darkMode ? S.dark : S.light;
     return (<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box' }}> <div style={{ padding: '2rem', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)', width: '100%', maxWidth: '30rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}` }}> <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>Лицензионное соглашение</h2> <div style={{ height: '50vh', overflowY: 'auto', border: `1px solid ${C.cardBorder}`, padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}> <p><strong>1. Общие положения</strong></p><p>1.1. Используя Приложение, вы принимаете условия настоящего Соглашения.</p> <p><strong>2. Геолокация и Уведомления</strong></p><p>2.1. Приложение использует данные о вашем местоположении для уведомления о близости достопримечательностей (в радиусе 20 метров).</p><p>2.2. Данные обрабатываются локально на устройстве.</p><p>2.3. Приложение может отправлять уведомления об обновлениях и интересных местах.</p> <p><strong>3. Ответственность</strong></p><p>3.1. Разработчик не несет ответственности за актуальность маршрутов.</p> </div> <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}> <input type="checkbox" id="agreement-checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> <label htmlFor="agreement-checkbox" style={{ fontSize: '0.875rem' }}>Я принимаю условия соглашения и политику конфиденциальности.</label> </div> <button onClick={onAccept} disabled={!isChecked} style={{ width: '100%', backgroundColor: S.emerald600, color: 'white', fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: 'none', cursor: 'pointer', fontSize: '1rem', opacity: isChecked ? 1 : 0.5, transition: 'opacity 0.2s' }}>Принять и продолжить</button> </div> </div>);
 };
-
 export default function App() {
-    const [phase, setPhase] = useState('loading');
-    const loadFromStorage = (key, defaultValue) => { try { const saved = localStorage.getItem(key); return saved ? JSON.parse(saved) : defaultValue; } catch (error) { console.error(`Ошибка загрузки из localStorage для ключа ${key}:`, error); return defaultValue; } };
+    const [phase, setPhase] = useState(() => {
+    try {
+        const accepted = localStorage.getItem('agreementAccepted');
+        return accepted ? 'mainApp' : 'agreement';
+    } catch {
+        return 'agreement';
+    }
+}); 
+    const [showDashboard, setShowDashboard] = useState(false);
+    
+    const loadFromStorage = (key, defaultValue) => { 
+        try { const saved = localStorage.getItem(key); return saved ? JSON.parse(saved) : defaultValue; } 
+        catch (error) { return defaultValue; } 
+    };
+
+    const [realSteps, setRealSteps] = useState(0);
+    const [realCalories, setRealCalories] = useState(0);
+    const [realWeather, setRealWeather] = useState({ temp: '...°C', desc: 'Загрузка погоды...' });
+    const [currentPosition, setCurrentPosition] = useState(null);
+    const [filteredLocations, setFilteredLocations] = useState([]);
+    
+    const stepCountRef = useRef(0);
+    const lastAccMagnitudeRef = useRef(0);
+    const stepCooldownRef = useRef(false);
 
     const [favs, setFavs] = useState(() => loadFromStorage('app-favs', []));
     const [completed, setCompleted] = useState(() => loadFromStorage('app-completed', []));
@@ -1933,12 +2995,232 @@ export default function App() {
     const [rewardModal, setRewardModal] = useState(false);
     const [rewardMsg, setRewardMsg] = useState("");
     const [showContactModal, setShowContactModal] = useState(false);
-
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
-    const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.14", date: "16.05.2026" }; 
-    const routeIcons = { "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> };
 
+    const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
+    const buildInfo = { version: "2.16", date: "21.05.2026" }; 
+    const routeIcons = { 
+        "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, 
+        "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, 
+        "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, 
+        "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, 
+        "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, 
+        "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, 
+        "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> 
+    };
+
+    // Глобальный метод для показа дашборда из настроек
+    useEffect(() => {
+        window.__showDashboard = () => { setShowDashboard(true); };
+        return () => { delete window.__showDashboard; };
+    }, []);
+
+    // === 1. ГЕОЛОКАЦИЯ ===
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            const cityCoords = CITIES.find(c => c.id === currentCity);
+            if (cityCoords) setCurrentPosition({ lat: cityCoords.lat, lng: cityCoords.lon });
+            return;
+        }
+        const geoSuccess = (position) => {
+            setCurrentPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+        };
+        const geoError = () => {
+            const cityCoords = CITIES.find(c => c.id === currentCity);
+            if (cityCoords) setCurrentPosition({ lat: cityCoords.lat, lng: cityCoords.lon });
+        };
+        navigator.geolocation.getCurrentPosition(geoSuccess, geoError, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
+    }, [currentCity]);
+
+    // === 2. ПОГОДА ===
+    useEffect(() => {
+        if (!currentPosition) return;
+        const weatherCodes = {
+            0: 'Ясно', 1: 'Преимущественно ясно', 2: 'Переменная облачность', 3: 'Пасмурно',
+            45: 'Туман', 48: 'Изморозь', 51: 'Лёгкая морось', 53: 'Морось', 55: 'Сильная морось',
+            61: 'Лёгкий дождь', 63: 'Дождь', 65: 'Сильный дождь', 71: 'Лёгкий снег', 73: 'Снег', 75: 'Сильный снег',
+            80: 'Ливень', 81: 'Сильный ливень', 95: 'Гроза', 96: 'Гроза с градом'
+        };
+        const getAdvice = (temp, code) => {
+            if (code >= 95) return 'Гроза. Лучше остаться дома.';
+            if (code >= 61 && code <= 82) return 'Дождь. Возьмите зонт.';
+            if (code >= 71 && code <= 75) return 'Снег. Одевайтесь теплее.';
+            if (temp >= 20 && temp <= 28 && code <= 3) return 'Идеально для прогулки! ☀️';
+            if (temp > 28) return 'Жарко. Берите воду.';
+            if (temp < 0) return 'Мороз. Тепло одевайтесь.';
+            if (temp < 10) return 'Прохладно. Наденьте куртку.';
+            return 'Хорошая погода для прогулки.';
+        };
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${currentPosition.lat}&longitude=${currentPosition.lng}&current_weather=true&timezone=auto`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.current_weather) {
+                    const temp = Math.round(data.current_weather.temperature);
+                    const code = data.current_weather.weathercode;
+                    const wind = Math.round(data.current_weather.windspeed);
+                    const desc = weatherCodes[code] || 'Переменная облачность';
+                    setRealWeather({ temp: `${temp}°C`, desc: `${desc}. Ветер ${wind} км/ч. ${getAdvice(temp, code)}` });
+                }
+            })
+            .catch(() => { setRealWeather({ temp: '—°C', desc: 'Не удалось загрузить погоду.' }); });
+    }, [currentPosition]);
+
+    // === 3. ШАГОМЕР ===
+    // === ШАГОМЕР ===
+    useEffect(() => {
+        const today = new Date().toDateString();
+        let nativeAvailable = false;
+        let StepPluginRef = null;
+
+        const getFromNative = async () => {
+            try {
+                if (!StepPluginRef) {
+                    const { registerPlugin } = await import('@capacitor/core');
+                    StepPluginRef = registerPlugin('StepPlugin');
+                }
+                const result = await StepPluginRef.getSteps();
+
+                if (result && result.steps !== undefined && result.steps > 0) {
+                    nativeAvailable = true;
+                    const steps = result.steps;
+                    const cal = result.calories || Math.round(steps * 0.04);
+                    
+                    stepCountRef.current = steps;
+                    setRealSteps(steps);
+                    setRealCalories(cal);
+
+                    localStorage.setItem('steps-data', JSON.stringify({
+                        date: today, count: steps, calories: cal, source: 'native'
+                    }));
+                    return true;
+                } else if (result && result.available === false) {
+                    console.log('Датчик шагов отсутствует');
+                    return false;
+                }
+                // steps === 0 — может быть начало дня, не ошибка
+                if (result && result.steps === 0 && result.available) {
+                    nativeAvailable = true;
+                    setRealSteps(0);
+                    setRealCalories(0);
+                    return true;
+                }
+            } catch (e) {
+                console.log('StepPlugin недоступен:', e.message);
+            }
+            return false;
+        };
+
+        const loadSaved = () => {
+            const saved = loadFromStorage('steps-data', { date: '', count: 0, calories: 0 });
+            if (saved.date === today && saved.count > 0) {
+                stepCountRef.current = saved.count;
+                setRealSteps(saved.count);
+                setRealCalories(saved.calories || Math.round(saved.count * 0.04));
+            }
+        };
+
+        const startAccelerometer = () => {
+            if (!('DeviceMotionEvent' in window)) return;
+
+            const handleMotion = (event) => {
+                // Не перезаписываем нативные данные акселерометром
+                if (nativeAvailable) return;
+                
+                const acc = event.accelerationIncludingGravity;
+                if (!acc) return;
+                const mag = Math.sqrt((acc.x||0)**2 + (acc.y||0)**2 + (acc.z||0)**2);
+                const delta = Math.abs(mag - lastAccMagnitudeRef.current);
+                lastAccMagnitudeRef.current = mag;
+                if (delta > 3.5 && mag > 11 && !stepCooldownRef.current) {
+                    stepCooldownRef.current = true;
+                    stepCountRef.current += 1;
+                    const s = stepCountRef.current;
+                    const c = Math.round(s * 0.04);
+                    setRealSteps(s);
+                    setRealCalories(c);
+                    if (s % 10 === 0) {
+                        localStorage.setItem('steps-data', JSON.stringify({
+                            date: today, count: s, calories: c, source: 'accelerometer'
+                        }));
+                    }
+                    setTimeout(() => { stepCooldownRef.current = false; }, 300);
+                }
+            };
+
+            const startAcc = async () => {
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    try {
+                        const p = await DeviceMotionEvent.requestPermission();
+                        if (p === 'granted') window.addEventListener('devicemotion', handleMotion);
+                    } catch { window.addEventListener('devicemotion', handleMotion); }
+                } else {
+                    window.addEventListener('devicemotion', handleMotion);
+                }
+            };
+            startAcc();
+        };
+
+        const init = async () => {
+            // Сначала показываем сохранённые данные (мгновенно)
+            loadSaved();
+
+            // Потом пробуем нативный датчик
+            const ok = await getFromNative();
+            
+            // Если нативный не сработал — запускаем акселерометр
+            if (!ok) {
+                startAccelerometer();
+            }
+
+            // Повторная попытка через 2 секунды (датчик может не успеть)
+            if (!ok) {
+                setTimeout(async () => {
+                    await getFromNative();
+                }, 2000);
+            }
+        };
+
+        init();
+
+        // Обновляем каждые 15 секунд
+        const interval = setInterval(() => { 
+            getFromNative(); 
+        }, 15000);
+
+        const save = () => {
+            localStorage.setItem('steps-data', JSON.stringify({
+                date: today,
+                count: stepCountRef.current,
+                calories: Math.round(stepCountRef.current * 0.04),
+                source: nativeAvailable ? 'native' : 'accelerometer'
+            }));
+        };
+        window.addEventListener('beforeunload', save);
+        window.addEventListener('pagehide', save);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('beforeunload', save);
+            window.removeEventListener('pagehide', save);
+        };
+    }, []);
+
+    // === 4. БЛИЖАЙШИЕ ЛОКАЦИИ ===
+    useEffect(() => {
+        if (!currentPosition) { setFilteredLocations([]); return; }
+        const allRoutes = getRoutesData(currentCity, currentLang);
+        const allFlat = Object.values(allRoutes).flatMap(cat => Object.values(cat).flat());
+        const uniqueMap = new Map();
+        allFlat.forEach(route => {
+            if (!route.location || uniqueMap.has(route.name)) return;
+            const distKm = calculateDistance(currentPosition.lat, currentPosition.lng, route.location.lat, route.location.lon);
+            uniqueMap.set(route.name, { ...route, dist: Math.round(distKm * 1000) });
+        });
+        const nearby = Array.from(uniqueMap.values()).sort((a, b) => a.dist - b.dist).slice(0, 5);
+        setFilteredLocations(nearby);
+    }, [currentPosition, currentCity, currentLang]);
+
+    // === СОХРАНЕНИЕ ===
     useEffect(() => { localStorage.setItem('app-favs', JSON.stringify(favs)); }, [favs]);
     useEffect(() => { localStorage.setItem('app-completed', JSON.stringify(completed)); }, [completed]);
     useEffect(() => { localStorage.setItem('app-account', JSON.stringify(account)); }, [account]);
@@ -1947,125 +3229,121 @@ export default function App() {
     useEffect(() => { localStorage.setItem('app-lang', JSON.stringify(currentLang)); }, [currentLang]);
     useEffect(() => { localStorage.setItem('app-city', JSON.stringify(currentCity)); }, [currentCity]);
 
+    // === УВЕДОМЛЕНИЯ ===
+    useEffect(() => {
+        const check = async () => {
+            try {
+                const result = await LocalNotifications.checkPermissions();
+                if (result.display === 'granted') return;
+                const lastAsked = parseInt(localStorage.getItem('notifPermissionAskedAt') || '0');
+                if (Date.now() - lastAsked < 86400000) return;
+                setTimeout(() => setShowNotifPermissionModal(true), 3000);
+            } catch (e) {}
+        };
+        if (phase === 'mainApp') check();
+    }, [phase]);
 
-useEffect(() => {
-    const checkNotifPermissions = async () => {
-        try {
-            const result = await LocalNotifications.checkPermissions();
-            if (result.display === 'granted') return;
-            
-            const lastAsked = parseInt(localStorage.getItem('notifPermissionAskedAt') || '0');
-            const dayInMs = 24 * 60 * 60 * 1000;
-            const now = Date.now();
-            
-            if (now - lastAsked < dayInMs) return;
-            
-            setTimeout(() => {
-                setShowNotifPermissionModal(true);
-            }, 3000);
-        } catch (e) {
-            console.error('Ошибка проверки разрешений:', e);
-        }
-    };
-    
-    if (phase === 'mainApp') {
-        checkNotifPermissions();
-    }
-}, [phase]);
+    useEffect(() => { 
+        const C = darkMode ? S.dark : S.light; 
+        document.body.style.backgroundColor = C.bg; 
+        const styleTag = document.createElement('style'); 
+        styleTag.innerHTML = `html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; box-sizing: border-box; }`; 
+        document.head.appendChild(styleTag); 
+        return () => { document.head.removeChild(styleTag); document.body.style.backgroundColor = ''; }; 
+    }, [darkMode]);
 
-    useEffect(() => { const C = darkMode ? S.dark : S.light; document.body.style.backgroundColor = C.bg; const styleTag = document.createElement('style'); styleTag.innerHTML = `html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; box-sizing: border-box; }`; document.head.appendChild(styleTag); return () => { document.head.removeChild(styleTag); document.body.style.backgroundColor = ''; }; }, [darkMode]);
-
-    
-
-
-
-const handleAcceptAgreement = () => { 
-    localStorage.setItem('agreementAccepted', JSON.stringify(true)); 
-    setPhase('mainApp'); 
-};
+    const handleAcceptAgreement = () => { localStorage.setItem('agreementAccepted', JSON.stringify(true)); setPhase('mainApp'); };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
     const handleAllowNotifications = async () => {
-    setShowNotifPermissionModal(false);
-    try {
-        const result = await LocalNotifications.requestPermissions();
-        if (result.display === 'granted') {
-            alert('Уведомления включены! 🎉');
-        }
-    } catch (e) {
-        console.error('Ошибка запроса разрешений:', e);
-    }
-};
+        setShowNotifPermissionModal(false);
+        try { const result = await LocalNotifications.requestPermissions(); if (result.display === 'granted') alert('Уведомления включены! 🎉'); } catch (e) {}
+    };
+    const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
 
-const handleLaterNotifications = () => {
-    setShowNotifPermissionModal(false);
-    localStorage.setItem('notifPermissionAskedAt', Date.now().toString());
-};
+    const handleComplete = useCallback((route) => { 
+        if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } 
+        const date = new Date(); 
+        const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; 
+        setCompleted(newCompleted); 
+        const newCount = newCompleted.length; 
+        setAccount(prevAccount => { 
+            const n = { ...prevAccount, completedRoutesCount: newCount }; 
+            const tier = rewardTiers.find(t => t.count === newCount); 
+            if (tier && !prevAccount.rewards.includes(tier.title)) { 
+                n.level = tier.title; n.rewards.push(tier.title); 
+                setRewardMsg(`Поздравляем! Вы получили новое звание: «${tier.title}»!`); 
+                setRewardModal(true); 
+            } 
+            return n; 
+        }); 
+    }, [completed, rewardTiers]);
 
-    const handleComplete = useCallback((route) => { if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } const date = new Date(); const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; setCompleted(newCompleted); const newCount = newCompleted.length; setAccount(prevAccount => { const newAccountState = { ...prevAccount, completedRoutesCount: newCount }; const tier = rewardTiers.find(t => t.count === newCount); if (tier && !prevAccount.rewards.includes(tier.title)) { newAccountState.level = tier.title; newAccountState.rewards.push(tier.title); setRewardMsg(`Поздравляем! Вы получили новое звание: «${tier.title}»!`); setRewardModal(true); } return newAccountState; }); }, [completed, rewardTiers]);
     const isFav = useCallback((route) => favs.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))), [favs, currentCity]);
-    const toggleFavorite = useCallback((route) => { setFavs(prev => { const isCurrentlyFav = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); if (isCurrentlyFav) { return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); } else { return [...prev, { ...route, cityId: currentCity }]; } }); }, [currentCity]);
+    const toggleFavorite = useCallback((route) => { 
+        setFavs(prev => { 
+            const is = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); 
+            if (is) return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); 
+            else return [...prev, { ...route, cityId: currentCity }]; 
+        }); 
+    }, [currentCity]);
 
     const appRootStyle = { minHeight: '100vh', width: '100%', backgroundColor: darkMode ? S.dark.bg : S.light.bg, boxSizing: 'border-box' };
-const handleLoadingComplete = () => {
-    const hasAccepted = loadFromStorage('agreementAccepted', false);
-    if (!hasAccepted) {
-        setPhase('agreement');
-    } else {
-        setPhase('mainApp');
-    }
-};
-// Автопереход через 4 секунды (страховка для Android)
 
     const renderContent = () => {
-    switch (phase) {
-        case 'loading': 
-            return <LoadingScreen darkMode={darkMode} onComplete={handleLoadingComplete} />;
-        case 'agreement': 
-            return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
-        case 'mainApp': 
-            return (
-                <MainRouteApp 
-                    onExit={handleExitApp} 
-                    favoriteRoutes={favs} 
-                    completedRoutes={completed} 
-                    handleRouteCompletionGlobal={handleComplete} 
-                    isRouteInFavorites={isFav} 
-                    toggleFavorite={toggleFavorite} 
-                    account={account} 
-                    darkMode={darkMode} 
-                    setDarkMode={setDarkMode} 
-                    units={units} 
-                    setUnits={setUnits} 
-                    routeIcons={routeIcons} 
-                    buildInfo={buildInfo} 
-                    setShowContactModal={setShowContactModal} 
-                    setAccount={setAccount} 
-                    currentLang={currentLang} 
-                    setCurrentLang={setCurrentLang} 
-                    currentCity={currentCity} 
-                    setCurrentCity={setCurrentCity} 
-                />
-            );
-        default:
-            return <LoadingScreen darkMode={darkMode} onComplete={handleLoadingComplete} />;
-    }
-};
-
+        switch (phase) {
+                        case 'mainApp': 
+                if (showDashboard) {
+                    return (
+                        <>
+                            <HealthDashboardScreen 
+                                darkMode={darkMode} lang={currentLang} 
+                                locations={filteredLocations} currentPosition={currentPosition}
+                                steps={realSteps} calories={realCalories} weather={realWeather}
+                                onComplete={() => setShowDashboard(false)} 
+                            />
+                            <LiquidMenu 
+                                activeTab="dashboard" 
+                                onTabChange={(tabId) => { setShowDashboard(false); }} 
+                                onSearchClick={() => {}} 
+                                darkMode={darkMode} 
+                                lang={currentLang} 
+                            />
+                        </>
+                    );
+                }
+                return (
+                    <MainRouteApp 
+                        onExit={() => { setShowDashboard(true); handleExitApp(); }} 
+                        favoriteRoutes={favs} completedRoutes={completed} 
+                        handleRouteCompletionGlobal={handleComplete} 
+                        isRouteInFavorites={isFav} toggleFavorite={toggleFavorite} 
+                        account={account} darkMode={darkMode} setDarkMode={setDarkMode} 
+                        units={units} setUnits={setUnits} routeIcons={routeIcons} 
+                        buildInfo={buildInfo} setShowContactModal={setShowContactModal} 
+                        setAccount={setAccount} currentLang={currentLang} setCurrentLang={setCurrentLang} 
+                        currentCity={currentCity} setCurrentCity={setCurrentCity} 
+                    />
+                );
+            case 'agreement': 
+                return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
+            default:
+                return (
+                    <HealthDashboardScreen 
+                        darkMode={darkMode} lang={currentLang} locations={[]} currentPosition={null}
+                        steps={0} calories={0} weather={{ temp: '...°C', desc: 'Загрузка...' }}
+                        onComplete={() => setShowDashboard(false)} 
+                    />
+                );
+        }
+    };
+   
     return (
-    <div style={appRootStyle}>
-        {renderContent()}
-        <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
-        <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
-        
-        {/* Модалка разрешений на уведомления */}
-        <NotificationPermissionModal 
-            show={showNotifPermissionModal} 
-            onAllow={handleAllowNotifications} 
-            onLater={handleLaterNotifications} 
-            darkMode={darkMode} 
-            lang={currentLang} 
-        />
-    </div>
-);
+        <div style={appRootStyle}>
+            {renderContent()}
+            <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
+            <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
+            <NotificationPermissionModal show={showNotifPermissionModal} onAllow={handleAllowNotifications} onLater={handleLaterNotifications} darkMode={darkMode} lang={currentLang} />
+        </div>
+    );
 }
