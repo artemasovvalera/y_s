@@ -970,16 +970,16 @@ const getRoutesData = (cityId, lang) => {
         
        } else if (cityId === 'yerevan') {
         const cascadeRoute = { name: "Каскад — самостоятельная прогулка с аудиогидом", distance: 1.2, time: "40 мин", difficulty: "Средняя", image: "https://archive.org/download/kaskad/photo_2026-05-21_01-55-03%20%282%29.jpg", audioUrl: "https://archive.org/download/kaskad/kaskad.MP3", videoUrl: "https://rutube.ru/video/3e9045ab4ca1d7ace838324c173e2b98/", geoUrl: "https://yandex.ru/maps/-/CCUiaMXrtB", location: { lat: 40.1919, lon: 44.5153 }, descriptionShort: "Каскад — монументальная лестница из белого туфа с фонтанами, скульптурами и смотровыми площадками. Внутри — Центр искусств Гафесчяна с коллекцией современного искусства. С вершины открывается панорама Еревана и вид на Арарат.", subCategory: "Архитектурные достопримечательности" };
-
+        const erevFountains = { name: "Питьевые фонтанчики", distance: 0.1, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_pu/1212111.png", audioUrl: "https://archive.org/download/er_pu/er_pu.MP3", location: { lat: 40.16119950780383, lon: 44.51159737974957 }, videoUrl: "https://youtu.be/P9JKqs3vl7o", geoUrl: "https://maps.app.goo.gl/pCFG6dqXqrH1xNF9A", descriptionShort: "Питьевые фонтанчики Еревана — маленькая традиция большого города.", subCategory: "Ереван" };
         // === Культурные и исторические маршруты ===
-        structure["Культурные и исторические маршруты"]["Набережная"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Набережная"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [erevFountains, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [erevFountains, cascadeRoute];
 
         // === Природные и активные маршруты ===
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [cascadeRoute];
@@ -988,7 +988,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [cascadeRoute];
 
         // === Современные и урбанистические маршруты ===
-        structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [erevFountains, cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [cascadeRoute];
@@ -1015,7 +1015,7 @@ const getRoutesData = (cityId, lang) => {
         // === Тематические маршруты ===
         structure["Тематические маршруты"]["Музыкальные маршруты"] = [cascadeRoute];
         structure["Тематические маршруты"]["Кино и телевидение"] = [cascadeRoute];
-        structure["Тематические маршруты"]["Мифы и легенды"] = [cascadeRoute];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [erevFountains, cascadeRoute];
         structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [cascadeRoute];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [cascadeRoute];
      
