@@ -911,15 +911,17 @@ const getRoutesData = (cityId, lang) => {
         const nabCinema = { name: "Здание старого кинотеатра", distance: 0.5, time: "6 мин", difficulty: "Лёгкая", image: "https://archive.org/download/5fakt-1/kino.jpg", audioUrl: "https://archive.org/download/00vvedenie-naberejnaya/antik.MP3", location: { lat: 55.362439, lon: 86.080820 }, videoUrl: "https://rutube.ru/video/private/8c329af55ade6c069b45d1fdd9f83892/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXZO5T", descriptionShort: "Один из старейших кинотеатров города.", subCategory: "Набережная" };
         const nabHeart = { name: "Арт-обьект Я Люблю Кемерово", distance: 0.2, time: "4 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20251107_20251107_1108/%D1%8F%20%D0%BB%D1%8E%D0%B1%D0%BB%D1%8E%20%D0%BA%D0%B5%D0%BC%D0%B5%D1%80%D0%BE%D0%B2%D0%BE.png", audioUrl: "https://archive.org/download/ograjdenie_end/%D1%81%D0%B5%D1%80%D0%B4%D1%86%D0%B5.MP3", location: { lat: 55.359595, lon: 86.087298 }, videoUrl: "https://rutube.ru/video/a38198ad8df1e004b93c0e56940f331c/?r=wd", geoUrl: "https://yandex.ru/maps/-/CLSXZXIO", descriptionShort: "Популярный арт-объект.", subCategory: "Набережная" };
         const kubizm = { name: "Кубизм", distance: 0.1, time:  "2 мин", difficulty: "Лёгкая", image: "https://archive.org/download/e2_20260602/e2.jpg", audioUrl: "https://archive.org/download/e2_20260602/e2.MP3", location: { lat: 55.301142, lon: 86.257031 }, videoUrl: "https://rutube.ru/video/379b28eb6d97e276c41ccc3bbf8c7f9e/", geoUrl: "https://www.openstreetmap.org/#map=19/55.301142/86.257031", descriptionShort: "Маршрут, который открывает удивительное: как большое искусство живёт среди обычных дворов и огородов — органично, без пафоса, как будто так и было задумано.", subCategory: "Искусство" };
+        const nabOgrazhdenie = { name: "Секреты ограждения набережной", distance: 1, time: "1 мин", difficulty: "Лёгкая", image: "https://archive.org/download/2026-06-05-18.23.12/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-06-05%20%D0%B2%2018.23.12.png", audioUrl: "https://archive.org/download/2026-06-05-18.23.12/nab00.MP3", location: { lat: 55.365018, lon: 86.076736 }, videoUrl: "https://rutube.ru/video/f2d9174628a7edc0e84b5611c0a76870/", geoUrl: "https://yandex.ru/maps/-/CPXD5DYm", descriptionShort: "Интересная легенда, спрятанная советскими инженерами в ограждении набережной Кемерово.", subCategory: "Набережная" };
+
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
-        structure["Культурные и исторические маршруты"]["Набережная"] = [rampa, bezdomniipec, nabIntro, reki, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
+        structure["Культурные и исторические маршруты"]["Набережная"] = [nabOgrazhdenie, rampa, bezdomniipec, nabIntro, reki, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [filar, mmuz, kuzbassMuseum, artMuseum, artCenter, kubizm];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [filar, mmuz, mod, chas_usp, minerRoute, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya, kubizm];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [filar, mmuz, mod, chas_usp, minerRoute, nabOgrazhdenie, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya, kubizm];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [sovKirCrossroadRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [chas_usp, svist];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [reki, rampa, pristan, olenLesnaya, kubizm];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [reki, rampa, pristan, olenLesnaya, kubizm, nabOgrazhdenie];
         
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [reki, s_bor, mod, svist, olenLesnaya, park_pobedi, eli];
         structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [svist, s_bor, eli];
@@ -938,7 +940,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Альтернативные маршруты"]["Урбанистические исследования"] = [reki, mmuz, s_bor, chas_usp, olenLesnaya, oldestHouseRoute, sovKirCrossroadRoute, kubizm];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [pristan, rampa];
         
-        structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, pristan, olenLesnaya];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [rampa, pristan, olenLesnaya, nabOgrazhdenie];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [s_bor];
         structure["Тематические маршруты"]["Музыкальные маршруты"] = [filar];
         
