@@ -973,20 +973,21 @@ const getRoutesData = (cityId, lang) => {
        } else if (cityId === 'yerevan') {
         const cascadeRoute = { name: "Каскад — самостоятельная прогулка с аудиогидом", distance: 1.2, time: "40 мин", difficulty: "Средняя", image: "https://archive.org/download/kaskad/photo_2026-05-21_01-55-03%20%282%29.jpg", audioUrl: "https://archive.org/download/kaskad/kaskad.MP3", videoUrl: "https://rutube.ru/video/3e9045ab4ca1d7ace838324c173e2b98/", geoUrl: "https://yandex.ru/maps/-/CCUiaMXrtB", location: { lat: 40.1919, lon: 44.5153 }, descriptionShort: "Каскад — монументальная лестница из белого туфа с фонтанами, скульптурами и смотровыми площадками. Внутри — Центр искусств Гафесчяна с коллекцией современного искусства. С вершины открывается панорама Еревана и вид на Арарат.", subCategory: "Архитектурные достопримечательности" };
         const erevFountains = { name: "Питьевые фонтанчики", distance: 0.1, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_pu/1212111.png", audioUrl: "https://archive.org/download/er_pu/er_pu.MP3", location: { lat: 40.16119950780383, lon: 44.51159737974957 }, videoUrl: "https://youtu.be/P9JKqs3vl7o", geoUrl: "https://maps.app.goo.gl/pCFG6dqXqrH1xNF9A", descriptionShort: "Питьевые фонтанчики Еревана — маленькая традиция большого города.", subCategory: "Ереван" };
-       const erevFountainRepublic = { name: "Поющий фонтан на площади Республики", distance: 1, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/epf77ipp8usk3kgcsk2ffrivutwqqmkd.webp", audioUrl: "https://archive.org/download/fontan_202606/fontan.MP3", location: { lat: 40.17824217635196, lon: 44.513464698100464 }, videoUrl: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/202606041245%20%281%29.mp4", geoUrl: "https://maps.app.goo.gl/V8dHVqcMNByFWQnx7", descriptionShort: "Поющие фонтаны на площади Республики. Рекомендуется к посещению вечером.", subCategory: "Ереван" };
-       
+        const erevFountainRepublic = { name: "Поющий фонтан на площади Республики", distance: 1, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/epf77ipp8usk3kgcsk2ffrivutwqqmkd.webp", audioUrl: "https://archive.org/download/fontan_202606/fontan.MP3", location: { lat: 40.17824217635196, lon: 44.513464698100464 }, videoUrl: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/202606041245%20%281%29.mp4", geoUrl: "https://maps.app.goo.gl/V8dHVqcMNByFWQnx7", descriptionShort: "Поющие фонтаны на площади Республики. Рекомендуется к посещению вечером.", subCategory: "Ереван" };
+        const erebuniFortress = { name: "Крепость Эребуни", distance: 1, time: "60 мин", difficulty: "Лёгкая", image: "https://archive.org/download/202606041245-1-2/Erebuni_Fortress_21.jpg", audioUrl: "https://archive.org/download/202606041245-1-2/202606041245-_1_.mp3", location: { lat: 40.1406, lon: 44.5381 }, videoUrl: "https://archive.org/download/202606041245-1-2/202606041245%20%281%29%20%282%29.mp4", geoUrl: "https://maps.app.goo.gl/F4aR2Vk22L5HpP9n6", descriptionShort: "Урартская крепость 782 года до н.э. — именно отсюда пошло название Ереван. Основана царём Аргишти I и служила форпостом в Араратской долине.", subCategory: "Ереван" };
+
         // === Культурные и исторические маршруты ===
-        structure["Культурные и исторические маршруты"]["Набережная"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Набережная"] = [erebuniFortress, erevFountains, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [erevFountains, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [erevFountains, erevFountainRepublic, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [erevFountains, cascadeRoute];
 
         // === Природные и активные маршруты ===
-        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [cascadeRoute];
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [erebuniFortress, cascadeRoute];
         structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [cascadeRoute];
         structure["Природные и активные маршруты"]["Активный отдых у воды"] = [cascadeRoute];
         structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [cascadeRoute];
@@ -1011,7 +1012,7 @@ const getRoutesData = (cityId, lang) => {
         structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [cascadeRoute];
 
         // === Альтернативные маршруты ===
-        structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [cascadeRoute];
+        structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [erebuniFortress, cascadeRoute];
         structure["Альтернативные маршруты"]["Урбанистические исследования"] = [cascadeRoute];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [cascadeRoute];
         structure["Альтернативные маршруты"]["Ночные экскурсии"] = [cascadeRoute];
