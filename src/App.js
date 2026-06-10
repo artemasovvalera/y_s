@@ -3718,22 +3718,18 @@ const [audioGuideOpenCount, setAudioGuideOpenCount] = useState(0);
     };
 
     // Глобальный метод для показа дашборда из настроек
-    useEffect(() => {
-        window.__showDashboard = () => { setShowDashboard(true); };
-
-window.__handleLogout = handleLogout;
-
-
-window.__handleAudioGuideOpen = handleAudioGuideOpen;
-        return () => { 
-            delete window.__showDashboard; 
-            delete window.__handleLogout;
-            delete window.__handleAudioGuideOpen;
-        };
-
-delete window.__handleAudioGuideOpen;
-
-    }, []);
+   useEffect(() => {
+  window.__showDashboard = () => { setShowDashboard(true); };
+  window.__handleLogout = handleLogout;
+  window.__handleAudioGuideOpen = handleAudioGuideOpen;
+  
+  return () => {
+    delete window.__showDashboard;
+    delete window.__handleLogout;
+    delete window.__handleAudioGuideOpen;
+  };
+  // Добавили зависимости, чтобы функция всегда была свежей, и удалили лишний мусор
+}, [surveyCompleted, handleLogout, handleAudioGuideOpen]); 
 
     // === 1. ГЕОЛОКАЦИЯ ===
     useEffect(() => {
