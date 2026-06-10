@@ -4008,13 +4008,16 @@ const handleSurveySkip = () => {
 };
 
 const handleAudioGuideOpen = () => {
+    console.log('audioGuideOpen called, surveyCompleted:', surveyCompleted, 'count:', audioGuideOpenCount);
     if (surveyCompleted) return;
     const newCount = audioGuideOpenCount + 1;
     setAudioGuideOpenCount(newCount);
+    console.log('new count:', newCount);
     if (newCount % 3 === 0) {
         setShowSurvey(true);
     }
 };
+
 const handleLogout = () => {
     localStorage.removeItem('app-auth');
     localStorage.removeItem('app-favs');
