@@ -601,7 +601,7 @@ const TRANSLATIONS = {
         search_ph: "Поиск маршрутов...", nothing: "Ничего не найдено",
         steps: "шагов", dist: "км", min: "мин", audio: "Аудио", video: "Видео",
         map_btn: "Карта", about: "О месте", to_fav: "В избранное", visited: "Посещено",
-        profile: "Ваш профиль", save: "Сохранить", cancel: "Отмена", change_photo: "Изменить фото",
+        profile: "Ваш профиль", save: "Сохранить", cancel: "Отмена", change_photo: "Изменить имя",
         routes_done: "Маршрутов пройдено", rewards: "Наград получено",
         new: "Новое", ads: "Реклама", near: "Рядом с вами", empty_list: "Список пуст",
         download: "Скачать",
@@ -3724,11 +3724,11 @@ window.__handleLogout = handleLogout;
 
 
 window.__handleAudioGuideOpen = handleAudioGuideOpen;
-
-        return () => { delete window.__showDashboard; };
-
-delete window.__handleLogout;
-
+        return () => { 
+            delete window.__showDashboard; 
+            delete window.__handleLogout;
+            delete window.__handleAudioGuideOpen;
+        };
 
 delete window.__handleAudioGuideOpen;
 
