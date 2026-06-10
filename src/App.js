@@ -3922,8 +3922,20 @@ const handleGuestSuccess = (hash) => {
     setCurrentUserHash(hash);
     setIsGuest(true);
     const accepted = localStorage.getItem('agreementAccepted');
+    const surveyed = localStorage.getItem('survey-completed') === 'true';
+    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
     setPhase(accepted ? 'mainApp' : 'agreement');
 };
+
+const handleAuthSuccess = (hash) => {
+    setCurrentUserHash(hash);
+    setIsGuest(false);
+    const accepted = localStorage.getItem('agreementAccepted');
+    const surveyed = localStorage.getItem('survey-completed') === 'true';
+    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
+    setPhase(accepted ? 'mainApp' : 'agreement');
+};
+
 
 const handleSurveyComplete = async (answers) => {
     setShowSurvey(false);
