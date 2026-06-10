@@ -3703,7 +3703,7 @@ const [surveyCompleted, setSurveyCompleted] = useState(() => {
         return localStorage.getItem('survey-completed') === 'true';
     } catch { return false; }
 });
-const [audioGuideOpenCount, setAudioGuideOpenCount] = useState(0);
+const audioGuideCountRef = useRef(0);
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
     const buildInfo = { version: "3.0", date: "10.06.2026" }; 
@@ -4005,15 +4005,17 @@ const handleSurveySkip = () => {
 };
 
 const handleAudioGuideOpen = () => {
-    if (surveyCompleted) return;
-    setAudioGuideOpenCount(prev => {
-        const newCount = prev + 1;
-        console.log('audioGuide count:', newCount);
-        if (newCount % 3 === 0) {
-            setShowSurvey(true);
-        }
-        return newCount;
-    });
+  if (surveyCompleted) return;
+  
+  // Увеличиваем счетчик в "сейфе"
+  audioGuideCountRef.current += 1;
+  console.log('audioGuide count:', audioGuideCountRef.current);
+  
+  // Если набрали 3 клика — показываем опрос
+  if (audioGuideCountRef.current % 3 === 0) {
+    setShowSurvey(true);
+    audioGuideCountRef.current = 0; // Сбрасываем счетчик, чтобы цикл повторялся
+  }
 };
 
 const handleLogout = () => {
