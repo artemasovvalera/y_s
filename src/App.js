@@ -1787,6 +1787,19 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
           {t('change_photo')} / {t('profile')}
         </button>
 
+        <button 
+          onClick={() => { if(window.__handleLogout) window.__handleLogout(); }} 
+          style={{ 
+            width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
+            background: 'transparent',
+            color: '#EF4444',
+            fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
+            border: '1.5px solid #EF4444',
+          }}
+        >
+          🚪 Выйти из аккаунта
+        </button>
+
       </div>
       <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} darkMode={darkMode} account={account} setAccount={setAccount} lang={lang} /> 
     </div>

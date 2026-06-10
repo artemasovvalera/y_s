@@ -9,6 +9,41 @@ import {
     Music, Camera, BookOpen, Smile, Bike, Globe, Building, Download, Loader
 } from "lucide-react";
 // ==========================================
+// КОНФИГУРАЦИЯ СЕРВЕРА
+// ==========================================
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVujXF3Sil6nveHdaMks56roSL0t4HejMs65EyoEjfx0a4IFLpIXj61QeMTF1_LV1scg/exec';
+
+const apiCall = async (action, params) => {
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action, ...params })
+        });
+        return await response.json();
+    } catch (e) {
+        return { success: false, error: 'network_error' };
+    }
+};
+
+const hashString = async (str) => {
+    const msgBuffer = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
+const getDeviceData = () => ({
+    os: navigator.userAgent.includes('Android') ? 'Android' :
+        navigator.userAgent.includes('iPhone') ? 'iOS' :
+        navigator.userAgent.includes('Windows') ? 'Windows' : 'Other',
+    browser: navigator.userAgent.includes('Chrome') ? 'Chrome' :
+             navigator.userAgent.includes('Firefox') ? 'Firefox' :
+             navigator.userAgent.includes('Safari') ? 'Safari' : 'Other',
+    language: navigator.language || '',
+    screen: `${window.screen.width}x${window.screen.height}`,
+});
+// ==========================================
 // УЛЬТРАСОВРЕМЕННЫЙ ЭКРАН ЗДОРОВЬЯ (Premium Health UI)
 
 const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = [], currentPosition, steps, calories, weather }) => {
@@ -1568,7 +1603,7 @@ const RouteDetailsPage = ({ route, darkMode, isFavorite, isCompleted, onBack, on
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}> <Activity size={20} color={S.emerald600} style={{ marginBottom: '0.25rem' }} /> <div style={{ fontWeight: 700, color: C.text }}>{steps} <span style={{ fontSize: '0.7rem', color: C.textMuted }}>{t('steps')}</span></div> <div style={{ fontSize: '0.65rem', color: S.emerald600, fontWeight: 600 }}>{percent}%</div> </div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-                    {route.audioUrl && (<button onClick={() => onPlayAudio(route)} style={{ flex: 1, minWidth: '100px', backgroundColor: S.emerald600, color: 'white', border: 'none', padding: '1rem 0.5rem', borderRadius: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)', cursor: 'pointer' }}> <PlayCircle size={20} /> {t('audio')} </button>)}
+                    {route.audioUrl && (<button onClick={() => { onPlayAudio(route); if(window.__handleAudioGuideOpen) window.__handleAudioGuideOpen(); }} style={{ flex: 1, minWidth: '100px', backgroundColor: S.emerald600, color: 'white', border: 'none', padding: '1rem 0.5rem', borderRadius: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)', cursor: 'pointer' }}> <PlayCircle size={20} /> {t('audio')} </button>)}
                     {route.videoUrl && (<button onClick={() => window.open(route.videoUrl, '_system')} style={{ flex: 1, minWidth: '100px', backgroundColor: S.red500, color: 'white', border: 'none', padding: '1rem 0.5rem', borderRadius: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)', cursor: 'pointer' }}> <Clapperboard size={20} /> {t('video')} </button>)}
                     <button onClick={() => window.open(route.geoUrl)} style={{ flex: 1, minWidth: '100px', backgroundColor: C.cardBg, color: C.text, border: `1px solid ${C.cardBorder}`, padding: '1rem 0.5rem', borderRadius: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer' }}> <Navigation size={20} /> {t('map_btn')} </button>
                 </div>
@@ -1673,13 +1708,14 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
         </div>
 
         {/* СЕТКА СТАТИСТИКИ */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {[
-            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6' },
-            { label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B' },
-            { label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6' } // Можно заменить на реальные шаги, если нужно
+            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6', onClick: () => navigate('completed') },
+{ label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B', onClick: null },
+{ label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6', onClick: null },
+{ label: 'Избранное', value: favoriteRoutes?.length || 0, icon: '❤️', color: '#EF4444', onClick: () => navigate('favorites') }
           ].map((stat, idx) => (
-            <div key={idx} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center' }}>
+            <div key={idx} onClick={stat.onClick} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center', cursor: stat.onClick ? 'pointer' : 'default' }}>
               <div style={{ fontSize: '20px', marginBottom: '4px' }}>{stat.icon}</div>
               <div style={{ fontSize: '18px', fontWeight: 800, color: C.text }}>{stat.value}</div>
               <div style={{ fontSize: '10px', color: C.textMuted, fontWeight: 600, textTransform: 'uppercase' }}>{stat.label}</div>
@@ -1749,6 +1785,19 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
           }}
         >
           {t('change_photo')} / {t('profile')}
+        </button>
+
+        <button 
+          onClick={() => { if(window.__handleLogout) window.__handleLogout(); }} 
+          style={{ 
+            width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
+            background: 'transparent',
+            color: '#EF4444',
+            fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
+            border: '1.5px solid #EF4444',
+          }}
+        >
+          🚪 Выйти из аккаунта
         </button>
 
       </div>
@@ -2176,18 +2225,11 @@ useEffect(() => {
             }, 
             icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
         },
-        { type: 'divider' },
-        {    label: t('search'),    action: () => { setShowSearchModal(true); setSettingsOpen(false); },    icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} />},
-        { label: t('exit'), action: onExit, icon: <LogOut style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { 
-            label: `Версия ${buildInfo.version} — обновить`, 
-            action: () => { 
-                setSettingsOpen(false); 
-                window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); 
-            }, 
-            icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
-        }
+       { type: 'divider' },
+        { label: t('search'), action: () => { setShowSearchModal(true); setSettingsOpen(false); }, icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { label: `Версия ${buildInfo.version} — обновить`, action: () => { setSettingsOpen(false); window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); }, icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> }
     ];
+    ;
 
     const handleNavigateToDetails = useCallback((route) => { navigate('routeDetails', { route }); }, [navigate]);
     const renderCurrentView = () => {
@@ -3150,6 +3192,447 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
         </div>
     );
 };
+
+// ==========================================
+// ЭКРАН АВТОРИЗАЦИИ
+// ==========================================
+const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
+    const [mode, setMode] = useState('welcome'); // welcome | login | register | reset
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [resetSent, setResetSent] = useState(false);
+    const C = darkMode ? S.dark : S.light;
+
+    const errMap = {
+        'already_exists': 'Этот email уже зарегистрирован',
+        'not_found': 'Пользователь не найден',
+        'wrong_password': 'Неверный пароль',
+        'network_error': 'Ошибка сети. Проверьте подключение',
+    };
+
+    const handleRegister = async () => {
+        if (!email || !password) { setError('Заполните все поля'); return; }
+        if (password.length < 6) { setError('Пароль минимум 6 символов'); return; }
+        setLoading(true); setError('');
+        const emailHash = await hashString(email.toLowerCase().trim());
+        const passHash = await hashString(password + emailHash);
+        const result = await apiCall('register', {
+            email: email.toLowerCase().trim(),
+            password: password,
+            deviceData: { ...getDeviceData(), isGuest: false }
+        });
+        if (result.success) {
+            localStorage.setItem('app-auth', JSON.stringify({ hash: result.hash, isGuest: false }));
+            onAuthSuccess(result.hash);
+        } else {
+            setError(errMap[result.error] || 'Ошибка регистрации');
+        }
+        setLoading(false);
+    };
+
+    const handleLogin = async () => {
+        if (!email || !password) { setError('Заполните все поля'); return; }
+        setLoading(true); setError('');
+        const result = await apiCall('login', {
+            email: email.toLowerCase().trim(),
+            password: password,
+        });
+        if (result.success) {
+            localStorage.setItem('app-auth', JSON.stringify({ hash: result.hash, isGuest: false }));
+            onAuthSuccess(result.hash);
+        } else {
+            setError(errMap[result.error] || 'Ошибка входа');
+        }
+        setLoading(false);
+    };
+
+    const handleReset = async () => {
+        if (!email) { setError('Введите email'); return; }
+        setLoading(true); setError('');
+        const result = await apiCall('resetPassword', {
+            email: email.toLowerCase().trim(),
+            newPassword: password,
+        });
+        if (result.success) { setResetSent(true); }
+        else { setError(errMap[result.error] || 'Ошибка сброса пароля'); }
+        setLoading(false);
+    };
+
+    const handleGuest = async () => {
+        setLoading(true);
+        const guestHash = await hashString('guest_' + Date.now() + '_' + Math.random());
+        const result = await apiCall('register', {
+            email: 'guest_' + guestHash.slice(0, 8) + '@guest',
+            password: guestHash,
+            deviceData: { ...getDeviceData(), isGuest: true }
+        });
+        const hash = result.hash || guestHash;
+        localStorage.setItem('app-auth', JSON.stringify({ hash, isGuest: true }));
+        onGuestSuccess(hash);
+        setLoading(false);
+    };
+
+    const inputStyle = {
+        width: '100%', padding: '0.875rem 1rem', borderRadius: '0.875rem',
+        border: `1.5px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+        backgroundColor: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)',
+        color: C.text, fontSize: '1rem', boxSizing: 'border-box', outline: 'none',
+        marginBottom: '0.75rem', transition: 'border 0.2s',
+    };
+
+    const btnPrimary = (disabled) => ({
+        width: '100%', backgroundColor: disabled ? '#6b7280' : S.emerald600,
+        color: 'white', fontWeight: 700, padding: '0.875rem', borderRadius: '0.875rem',
+        border: 'none', cursor: disabled ? 'not-allowed' : 'pointer', fontSize: '1rem',
+        marginBottom: '0.75rem', transition: 'all 0.2s',
+        boxShadow: disabled ? 'none' : '0 4px 15px rgba(16,185,129,0.3)',
+    });
+
+    const btnSecondary = {
+        width: '100%', backgroundColor: 'transparent',
+        color: darkMode ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)',
+        fontWeight: 600, padding: '0.875rem', borderRadius: '0.875rem',
+        border: `1.5px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+        cursor: 'pointer', fontSize: '1rem', marginBottom: '0.75rem', transition: 'all 0.2s',
+    };
+
+    const linkStyle = {
+        color: S.emerald600, cursor: 'pointer', fontSize: '0.875rem',
+        textDecoration: 'none', fontWeight: 500,
+    };
+
+    // Экран приветствия
+    if (mode === 'welcome') return (
+        <div style={{
+            minHeight: '100dvh', width: '100%', boxSizing: 'border-box',
+            background: darkMode
+                ? 'linear-gradient(135deg, #0A0E1A 0%, #0d1f15 50%, #0A0E1A 100%)'
+                : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #f0f9ff 100%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'space-between', padding: '3rem 1.5rem 2rem',
+        }}>
+            {/* Верхняя часть — логотип и приветствие */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                    width: '100px', height: '100px', borderRadius: '28px',
+                    background: 'linear-gradient(135deg, #10B981, #059669)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '3rem', marginBottom: '1.5rem',
+                    boxShadow: '0 20px 40px rgba(16,185,129,0.35)',
+                }}>🗺️</div>
+
+                <h1 style={{
+                    fontSize: '3rem', fontWeight: 900, margin: '0 0 0.5rem',
+                    background: 'linear-gradient(135deg, #10B981, #059669)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    letterSpacing: '-1px',
+                }}>Я Сам!</h1>
+
+                <p style={{
+                    fontSize: '1.1rem', color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
+                    textAlign: 'center', maxWidth: '260px', lineHeight: 1.5, margin: '0 0 2.5rem',
+                }}>Открывай города своими глазами</p>
+
+                {/* Три фичи */}
+                {[
+                    { icon: '🎧', text: 'Аудиогиды для самостоятельных прогулок' },
+                    { icon: '🏆', text: 'Достижения и маршруты по городам России' },
+                    { icon: '📊', text: 'Следи за своей активностью' },
+                ].map((item, i) => (
+                    <div key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: '0.75rem',
+                        marginBottom: '0.75rem', width: '100%', maxWidth: '280px',
+                        padding: '0.75rem 1rem', borderRadius: '1rem',
+                        backgroundColor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.8)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                    }}>
+                        <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
+                        <span style={{ fontSize: '0.875rem', color: darkMode ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)', fontWeight: 500 }}>{item.text}</span>
+                    </div>
+                ))}
+            </div>
+
+            {/* Нижняя часть — кнопки */}
+            <div style={{ width: '100%', maxWidth: '360px' }}>
+                <button onClick={() => setMode('register')} style={btnPrimary(false)}>
+                    Создать аккаунт
+                </button>
+                <button onClick={() => setMode('login')} style={btnSecondary}>
+                    Уже есть аккаунт
+                </button>
+                <button onClick={handleGuest} disabled={loading} style={{
+                    ...btnSecondary, marginBottom: 0,
+                    color: darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)',
+                    fontSize: '0.875rem', padding: '0.75rem',
+                }}>
+                    {loading ? 'Загрузка...' : '👤 Продолжить как гость'}
+                </button>
+            </div>
+        </div>
+    );
+
+    // Экраны входа / регистрации / сброса
+    return (
+        <div style={{
+            minHeight: '100dvh', width: '100%', boxSizing: 'border-box',
+            background: darkMode
+                ? 'linear-gradient(135deg, #0A0E1A 0%, #0d1f15 100%)'
+                : 'linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 100%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'center', padding: '1.5rem',
+        }}>
+            <div style={{
+                width: '100%', maxWidth: '380px',
+                backgroundColor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.95)',
+                borderRadius: '1.5rem', padding: '2rem',
+                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
+                boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
+            }}>
+                {/* Заголовок */}
+                <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                        {mode === 'login' ? '👋' : mode === 'register' ? '🎉' : '🔑'}
+                    </div>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.25rem', color: C.text }}>
+                        {mode === 'login' ? 'Добро пожаловать' : mode === 'register' ? 'Создать аккаунт' : 'Сброс пароля'}
+                    </h2>
+                    <p style={{ fontSize: '0.875rem', color: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)', margin: 0 }}>
+                        {mode === 'login' ? 'Войдите чтобы продолжить' : mode === 'register' ? 'Это займёт меньше минуты' : 'Введите новый пароль'}
+                    </p>
+                </div>
+
+                {resetSent ? (
+                    <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+                        <p style={{ color: S.emerald600, fontWeight: 700, marginBottom: '0.5rem' }}>Пароль обновлён!</p>
+                        <p style={{ fontSize: '0.875rem', color: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)', marginBottom: '1.5rem' }}>
+                            Теперь можете войти с новым паролем
+                        </p>
+                        <button onClick={() => { setMode('login'); setResetSent(false); }} style={btnPrimary(false)}>
+                            Войти
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <input type="email" placeholder="Email" value={email}
+                            onChange={e => { setEmail(e.target.value); setError(''); }}
+                            style={inputStyle} />
+
+                        <input type="password"
+                            placeholder={mode === 'reset' ? 'Новый пароль' : 'Пароль'}
+                            value={password}
+                            onChange={e => { setPassword(e.target.value); setError(''); }}
+                            style={inputStyle}
+                            onKeyDown={e => e.key === 'Enter' && (mode === 'login' ? handleLogin() : mode === 'register' ? handleRegister() : handleReset())} />
+
+                        {error && (
+                            <div style={{
+                                color: '#ef4444', fontSize: '0.875rem', marginBottom: '0.75rem',
+                                padding: '0.625rem 0.875rem', backgroundColor: 'rgba(239,68,68,0.08)',
+                                borderRadius: '0.75rem', textAlign: 'center',
+                            }}>{error}</div>
+                        )}
+
+                        <button
+                            onClick={mode === 'login' ? handleLogin : mode === 'register' ? handleRegister : handleReset}
+                            disabled={loading || !email || !password}
+                            style={btnPrimary(loading || !email || !password)}>
+                            {loading ? '...' : mode === 'login' ? 'Войти' : mode === 'register' ? 'Зарегистрироваться' : 'Сохранить пароль'}
+                        </button>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginTop: '0.5rem' }}>
+                            {mode === 'login' && <>
+                                <span style={linkStyle} onClick={() => { setMode('register'); setError(''); }}>Нет аккаунта? Зарегистрироваться</span>
+                                <span style={linkStyle} onClick={() => { setMode('reset'); setError(''); }}>Забыли пароль?</span>
+                            </>}
+                            {mode === 'register' && (
+                                <span style={linkStyle} onClick={() => { setMode('login'); setError(''); }}>Уже есть аккаунт? Войти</span>
+                            )}
+                            {mode === 'reset' && (
+                                <span style={linkStyle} onClick={() => { setMode('login'); setError(''); }}>Вернуться ко входу</span>
+                            )}
+                            <span style={{ ...linkStyle, color: darkMode ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)' }}
+                                onClick={() => setMode('welcome')}>← Назад</span>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+};
+
+
+// ==========================================
+// АНКЕТА
+// ==========================================
+const SurveyModal = ({ darkMode, onComplete, onSkip }) => {
+    const C = darkMode ? S.dark : S.light;
+    const [step, setStep] = useState(-1);
+    const [answers, setAnswers] = useState({
+        age_group: '',
+        gender: '',
+        city: '',
+        walk_frequency: '',
+        goal: ''
+    });
+
+    const questions = [
+        {
+            key: 'age_group',
+            question: 'Ваша возрастная группа?',
+            emoji: '🎂',
+            options: ['18–25', '26–35', '36–45', '46–55', '55+']
+        },
+        {
+            key: 'gender',
+            question: 'Ваш пол?',
+            emoji: '👤',
+            options: ['Мужской', 'Женский', 'Не указан']
+        },
+        {
+            key: 'city',
+            question: 'Ваш город?',
+            emoji: '🏙️',
+            options: ['Кемерово', 'Новосибирск', 'Томск', 'Красноярск', 'Другой']
+        },
+        {
+            key: 'walk_frequency',
+            question: 'Как часто гуляли до установки?',
+            emoji: '🚶',
+            options: ['Редко', 'Иногда', 'Часто', 'Каждый день']
+        },
+        {
+            key: 'goal',
+            question: 'Цель использования приложения?',
+            emoji: '🎯',
+            options: ['Познакомиться с городом', 'Здоровье и активность', 'Интерес к истории', 'Другое']
+        }
+    ];
+
+    const current = questions[step];
+
+if (step === -1) return (
+    <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999,
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        backdropFilter: 'blur(4px)',
+    }}>
+        <div style={{
+            width: '100%', maxWidth: '480px',
+            backgroundColor: C.cardBg,
+            borderRadius: '1.5rem 1.5rem 0 0',
+            padding: '2rem 1.5rem',
+            boxShadow: '0 -20px 60px rgba(0,0,0,0.2)',
+        }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+                <h3 style={{ fontSize: '1.375rem', fontWeight: 800, color: C.text, margin: '0 0 0.75rem' }}>
+                    Помогите нам стать лучше
+                </h3>
+                <p style={{ fontSize: '0.9375rem', color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)', lineHeight: 1.6, margin: 0 }}>
+                    Ответьте на 5 коротких вопросов — это поможет нам улучшить приложение и сделать маршруты интереснее именно для вас. Займёт меньше минуты.
+                </p>
+            </div>
+            <button onClick={() => setStep(0)} style={{
+                width: '100%', backgroundColor: S.emerald600, color: 'white',
+                fontWeight: 700, padding: '0.875rem', borderRadius: '1rem',
+                border: 'none', cursor: 'pointer', fontSize: '1rem',
+                marginBottom: '0.75rem',
+                boxShadow: '0 4px 15px rgba(16,185,129,0.3)',
+            }}>
+                Начать опрос
+            </button>
+            <button onClick={onSkip} style={{
+                width: '100%', padding: '0.75rem', borderRadius: '1rem',
+                border: 'none', backgroundColor: 'transparent',
+                color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                fontSize: '0.875rem', cursor: 'pointer',
+            }}>
+                Пропустить — вернусь позже
+            </button>
+        </div>
+    </div>
+);
+
+    const totalAnswered = Object.values(answers).filter(v => v !== '').length;
+
+    const handleSelect = (value) => {
+        const newAnswers = { ...answers, [current.key]: value };
+        setAnswers(newAnswers);
+        if (step < questions.length - 1) {
+            setTimeout(() => setStep(step + 1), 300);
+        } else {
+            onComplete(newAnswers);
+        }
+    };
+
+    return (
+        <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999,
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            backdropFilter: 'blur(4px)',
+        }}>
+            <div style={{
+                width: '100%', maxWidth: '480px',
+                backgroundColor: C.cardBg,
+                borderRadius: '1.5rem 1.5rem 0 0',
+                padding: '1.5rem',
+                boxShadow: '0 -20px 60px rgba(0,0,0,0.2)',
+            }}>
+                {/* Прогресс */}
+                <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '1.5rem' }}>
+                    {questions.map((_, i) => (
+                        <div key={i} style={{
+                            flex: 1, height: '4px', borderRadius: '2px',
+                            backgroundColor: i <= step ? S.emerald600 : (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'),
+                            transition: 'background 0.3s',
+                        }} />
+                    ))}
+                </div>
+
+                {/* Вопрос */}
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>{current.emoji}</div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: C.text, margin: 0 }}>
+                        {current.question}
+                    </h3>
+                </div>
+
+                {/* Варианты */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginBottom: '1.25rem' }}>
+                    {current.options.map((option) => (
+                        <button key={option} onClick={() => handleSelect(option)} style={{
+                            padding: '0.875rem 1rem', borderRadius: '1rem',
+                            border: `1.5px solid ${answers[current.key] === option ? S.emerald600 : (darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')}`,
+                            backgroundColor: answers[current.key] === option
+                                ? 'rgba(16,185,129,0.1)'
+                                : (darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)'),
+                            color: C.text, fontSize: '1rem', fontWeight: 500,
+                            cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
+                        }}>
+                            {option}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Кнопка пропустить */}
+                <button onClick={onSkip} style={{
+                    width: '100%', padding: '0.75rem', borderRadius: '1rem',
+                    border: 'none', backgroundColor: 'transparent',
+                    color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                    fontSize: '0.875rem', cursor: 'pointer',
+                }}>
+                    Пропустить — вернусь позже
+                </button>
+            </div>
+        </div>
+    );
+};
+
 const AgreementScreen = ({ onAccept, darkMode }) => {
     const [isChecked, setIsChecked] = useState(false);
     const C = darkMode ? S.dark : S.light;
@@ -3158,12 +3641,28 @@ const AgreementScreen = ({ onAccept, darkMode }) => {
 export default function App() {
     const [phase, setPhase] = useState(() => {
     try {
+        const auth = localStorage.getItem('app-auth');
+        if (!auth) return 'auth';
         const accepted = localStorage.getItem('agreementAccepted');
         return accepted ? 'mainApp' : 'agreement';
     } catch {
-        return 'agreement';
+        return 'auth';
     }
-}); 
+});
+
+const [currentUserHash, setCurrentUserHash] = useState(() => {
+    try {
+        const auth = localStorage.getItem('app-auth');
+        return auth ? JSON.parse(auth).hash : null;
+    } catch { return null; }
+});
+
+const [isGuest, setIsGuest] = useState(() => {
+    try {
+        const auth = localStorage.getItem('app-auth');
+        return auth ? JSON.parse(auth).isGuest : false;
+    } catch { return false; }
+});
     const [showDashboard, setShowDashboard] = useState(false);
     
     const loadFromStorage = (key, defaultValue) => { 
@@ -3193,8 +3692,16 @@ export default function App() {
     const [showContactModal, setShowContactModal] = useState(false);
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
 
+    const [showSurvey, setShowSurvey] = useState(false);
+const [surveyCompleted, setSurveyCompleted] = useState(() => {
+    try {
+        return localStorage.getItem('survey-completed') === 'true';
+    } catch { return false; }
+});
+const [audioGuideOpenCount, setAudioGuideOpenCount] = useState(0);
+
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "2.17", date: "02.06.2026" }; 
+    const buildInfo = { version: "3.0", date: "10.06.2026" }; 
     const routeIcons = { 
         "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, 
         "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, 
@@ -3208,7 +3715,19 @@ export default function App() {
     // Глобальный метод для показа дашборда из настроек
     useEffect(() => {
         window.__showDashboard = () => { setShowDashboard(true); };
+
+window.__handleLogout = handleLogout;
+
+
+window.__handleAudioGuideOpen = handleAudioGuideOpen;
+
         return () => { delete window.__showDashboard; };
+
+delete window.__handleLogout;
+
+
+delete window.__handleAudioGuideOpen;
+
     }, []);
 
     // === 1. ГЕОЛОКАЦИЯ ===
@@ -3448,6 +3967,60 @@ export default function App() {
         return () => { document.head.removeChild(styleTag); document.body.style.backgroundColor = ''; }; 
     }, [darkMode]);
 
+
+
+const handleGuestSuccess = (hash) => {
+    setCurrentUserHash(hash);
+    setIsGuest(true);
+    const accepted = localStorage.getItem('agreementAccepted');
+    const surveyed = localStorage.getItem('survey-completed') === 'true';
+    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
+    setPhase(accepted ? 'mainApp' : 'agreement');
+};
+
+const handleAuthSuccess = (hash) => {
+    setCurrentUserHash(hash);
+    setIsGuest(false);
+    const accepted = localStorage.getItem('agreementAccepted');
+    const surveyed = localStorage.getItem('survey-completed') === 'true';
+    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
+    setPhase(accepted ? 'mainApp' : 'agreement');
+};
+
+
+const handleSurveyComplete = async (answers) => {
+    setShowSurvey(false);
+    setSurveyCompleted(true);
+    localStorage.setItem('survey-completed', 'true');
+    if (currentUserHash) {
+        await apiCall('saveSurvey', {
+            hash: currentUserHash,
+            surveyData: answers
+        });
+    }
+};
+
+const handleSurveySkip = () => {
+    setShowSurvey(false);
+};
+
+const handleAudioGuideOpen = () => {
+    if (surveyCompleted) return;
+    const newCount = audioGuideOpenCount + 1;
+    setAudioGuideOpenCount(newCount);
+    if (newCount % 3 === 0) {
+        setShowSurvey(true);
+    }
+};
+
+const handleLogout = () => {
+    localStorage.removeItem('app-auth');
+    localStorage.removeItem('agreementAccepted');
+    setCurrentUserHash(null);
+    setIsGuest(false);
+    setPhase('auth');
+};
+
     const handleAcceptAgreement = () => { localStorage.setItem('agreementAccepted', JSON.stringify(true)); setPhase('mainApp'); };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
@@ -3521,6 +4094,14 @@ export default function App() {
                         currentCity={currentCity} setCurrentCity={setCurrentCity} 
                     />
                 );
+
+case 'auth':
+    return <AuthScreen 
+        darkMode={darkMode} 
+        onAuthSuccess={handleAuthSuccess}
+        onGuestSuccess={handleGuestSuccess}
+    />;
+
             case 'agreement': 
                 return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
             default:
@@ -3534,12 +4115,19 @@ export default function App() {
         }
     };
    
-    return (
-        <div style={appRootStyle}>
-            {renderContent()}
-            <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
-            <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
-            <NotificationPermissionModal show={showNotifPermissionModal} onAllow={handleAllowNotifications} onLater={handleLaterNotifications} darkMode={darkMode} lang={currentLang} />
-        </div>
-    );
+   return (
+    <div style={appRootStyle}>
+        {renderContent()}
+        {showSurvey && (
+            <SurveyModal
+                darkMode={darkMode}
+                onComplete={handleSurveyComplete}
+                onSkip={handleSurveySkip}
+            />
+        )}
+        <Modal show={rewardModal} message={rewardMsg} onClose={() => setRewardModal(false)} darkMode={darkMode} buttonText="Отлично!" lang={currentLang} />
+        <ContactModal show={showContactModal} onClose={() => setShowContactModal(false)} darkMode={darkMode} lang={currentLang} />
+        <NotificationPermissionModal show={showNotifPermissionModal} onAllow={handleAllowNotifications} onLater={handleLaterNotifications} darkMode={darkMode} lang={currentLang} />
+    </div>
+);
 }
