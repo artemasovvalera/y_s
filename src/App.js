@@ -3718,19 +3718,7 @@ const audioGuideCountRef = useRef(0);
     };
 
     // Глобальный метод для показа дашборда из настроек
-   useEffect(() => {
-  window.__showDashboard = () => { setShowDashboard(true); };
-  window.__handleLogout = handleLogout;
-  window.__handleAudioGuideOpen = handleAudioGuideOpen;
   
-  return () => {
-    delete window.__showDashboard;
-    delete window.__handleLogout;
-    delete window.__handleAudioGuideOpen;
-  };
-  // Добавили зависимости, чтобы функция всегда была свежей, и удалили лишний мусор
-}, [surveyCompleted, handleLogout, handleAudioGuideOpen]); 
-
     // === 1. ГЕОЛОКАЦИЯ ===
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -4130,6 +4118,19 @@ case 'auth':
         }
     };
    
+// Глобальные методы для навигации
+useEffect(() => {
+  window.__showDashboard = () => { setShowDashboard(true); };
+  window.__handleLogout = handleLogout;
+  window.__handleAudioGuideOpen = handleAudioGuideOpen;
+  return () => {
+    delete window.__showDashboard;
+    delete window.__handleLogout;
+    delete window.__handleAudioGuideOpen;
+  };
+}, [handleLogout, handleAudioGuideOpen]);
+
+
    return (
     <div style={appRootStyle}>
         {renderContent()}
