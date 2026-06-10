@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, forwardRef, useCallback, useMemo } 
 import { App as CapacitorApp } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import {
-    Settings, Home, ArrowLeft, Clock, MapPin, Leaf, Activity, Landmark,
+    Settings, Home, ArrowLeft, Clock, MapPin, Leaf, Activity, Landmark, ChevronDown,
     ChevronRight, XCircle, Star, Heart, CheckCircle, Navigation, PlayCircle,
     Pause, Monitor, Award, Compass, LogOut, Info, Mail, Bell, Search, Send, Clapperboard,
     Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
@@ -840,13 +840,18 @@ const CATALOG_STRUCTURE = {
 };
 
 // --- ДАННЫЕ МАРШРУТОВ (ГЕНЕРАЦИЯ) ---
-// --- ДАННЫЕ МАРШРУТОВ (ГЕНЕРАЦИЯ) ---
 const getRoutesData = (cityId, lang) => {
-    const t = (txt) => TRANSLATIONS[lang]?.[txt] || txt;
+const t = (txt) => TRANSLATIONS[lang]?.[txt] || txt;
 
-    // 1. Создаем пустую структуру каталога (скелет)
-    // Это гарантирует, что все разделы всегда существуют, даже если они пустые
-    const getEmptyStructure = () => ({
+// === УНИВЕРСАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ ВСЕХ ГОРОДОВ ===
+// Мы просто заполним их внутри блоков if/else для конкретного города
+let curatedRecommended = [];
+let curatedExplore = [];
+let curatedInteresting = [];
+
+// 1. Создаем пустую структуру каталога (скелет)
+// Это гарантирует, что все разделы всегда существуют, даже если они пустые
+const getEmptyStructure = () => ({
         "Культурные и исторические маршруты": {
             "Набережная": [], "Музеи и выставки": [], "Памятники и мемориалы": [], "Архитектурные достопримечательности": [],
             "Городские площади": [], "Исторические кварталы": [], "Церкви и храмы": [], "Легенды и мифы города": []
@@ -913,6 +918,13 @@ const getRoutesData = (cityId, lang) => {
         const kubizm = { name: "Кубизм", distance: 0.1, time:  "2 мин", difficulty: "Лёгкая", image: "https://archive.org/download/e2_20260602/e2.jpg", audioUrl: "https://archive.org/download/e2_20260602/e2.MP3", location: { lat: 55.301142, lon: 86.257031 }, videoUrl: "https://rutube.ru/video/379b28eb6d97e276c41ccc3bbf8c7f9e/", geoUrl: "https://www.openstreetmap.org/#map=19/55.301142/86.257031", descriptionShort: "Маршрут, который открывает удивительное: как большое искусство живёт среди обычных дворов и огородов — органично, без пафоса, как будто так и было задумано.", subCategory: "Искусство" };
         const nabOgrazhdenie = { name: "Секреты ограждения набережной", distance: 1, time: "1 мин", difficulty: "Лёгкая", image: "https://archive.org/download/2026-06-05-18.23.12/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-06-05%20%D0%B2%2018.23.12.png", audioUrl: "https://archive.org/download/2026-06-05-18.23.12/nab00.MP3", location: { lat: 55.365018, lon: 86.076736 }, videoUrl: "https://rutube.ru/video/f2d9174628a7edc0e84b5611c0a76870/", geoUrl: "https://yandex.ru/maps/-/CPXD5DYm", descriptionShort: "Интересная легенда, спрятанная советскими инженерами в ограждении набережной Кемерово.", subCategory: "Набережная" };
 
+// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ КЕМЕРОВО ===
+// Просто перечисляем переменные маршрутов через запятую!
+curatedRecommended = [pcoff, fiveFacts];
+curatedExplore = [s_bor, mmuz];
+curatedInteresting = [reki, rampa];
+
+
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [nabOgrazhdenie, rampa, bezdomniipec, nabIntro, reki, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [filar, mmuz, kuzbassMuseum, artMuseum, artCenter, kubizm];
@@ -963,13 +975,23 @@ const getRoutesData = (cityId, lang) => {
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [baba];
         structure["Семейные маршруты"]["Пикники на природе"] = [arambolBeach, rocks];
 
+// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ АРАМБОЛЯ ===
+curatedRecommended = [arambolBeach]; // ← Замени на свои переменные
+curatedExplore = [baba, rocks];                 // ← Замени на свои переменные
+curatedInteresting = [baba];               // ← Замени на свои переменные
+
     } else if (cityId === 'moscow') {
         const redSquare = { name: t("Red Square"), distance: 0.5, time: "10 min", image: "https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1200", location: { lat: 55.7539, lon: 37.6208 }, descriptionShort: "Heart of Moscow.", subCategory: "Памятники и мемориалы" };
         const zaryadye = { name: t("Zaryadye"), distance: 0.8, time: "15 min", image: "https://images.unsplash.com/photo-1520106212299-d99c443e4568?w=1200", location: { lat: 55.7511, lon: 37.6287 }, descriptionShort: "Modern park.", subCategory: "Природные зоны и парки" };
         
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [redSquare];
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [zaryadye];
-        
+
+// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ МОСКВЫ ===
+curatedRecommended = [redSquare, zaryadye]; // ← Замени на свои переменные
+curatedExplore = [zaryadye];        // ← Замени на свои переменные
+curatedInteresting = [zaryadye]; // ← Замени на свои переменные
+
        } else if (cityId === 'yerevan') {
         const cascadeRoute = { name: "Каскад — самостоятельная прогулка с аудиогидом", distance: 1.2, time: "40 мин", difficulty: "Средняя", image: "https://archive.org/download/kaskad/photo_2026-05-21_01-55-03%20%282%29.jpg", audioUrl: "https://archive.org/download/kaskad/kaskad.MP3", videoUrl: "https://rutube.ru/video/3e9045ab4ca1d7ace838324c173e2b98/", geoUrl: "https://yandex.ru/maps/-/CCUiaMXrtB", location: { lat: 40.1919, lon: 44.5153 }, descriptionShort: "Каскад — монументальная лестница из белого туфа с фонтанами, скульптурами и смотровыми площадками. Внутри — Центр искусств Гафесчяна с коллекцией современного искусства. С вершины открывается панорама Еревана и вид на Арарат.", subCategory: "Архитектурные достопримечательности" };
         const erevFountains = { name: "Питьевые фонтанчики", distance: 0.1, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_pu/1212111.png", audioUrl: "https://archive.org/download/er_pu/er_pu.MP3", location: { lat: 40.16119950780383, lon: 44.51159737974957 }, videoUrl: "https://youtu.be/P9JKqs3vl7o", geoUrl: "https://maps.app.goo.gl/pCFG6dqXqrH1xNF9A", descriptionShort: "Питьевые фонтанчики Еревана — маленькая традиция большого города.", subCategory: "Ереван" };
@@ -979,9 +1001,9 @@ const getRoutesData = (cityId, lang) => {
 
 // === КУРИРУЕМЫЕ РАЗДЕЛЫ ДЛЯ ЕРЕВАНА ===
 // Просто добавляй сюда имена переменных маршрутов через запятую
-const yerevanRecommended = [cascadeRoute, erevFountainRepublic];
-const yerevanExplore = [erevFountains, erebuniFortress];
-const yerevanInteresting = [cascadeRoute];
+curatedRecommended = [erevFountains];
+curatedExplore = [erevFountainRepublic, erebuniFortress];
+curatedInteresting = [cascadeRoute];
 
 
 
@@ -1035,19 +1057,22 @@ const yerevanInteresting = [cascadeRoute];
      
         
     } else if (cityId === 'dusseldorf') {
-        const tower = { name: t("Rheinturm"), distance: 0.2, time: "10 min", image: "https://images.unsplash.com/photo-1555818671-55b35242735a?w=1200", location: { lat: 51.2179, lon: 6.7617 }, descriptionShort: "Telecommunications tower.", subCategory: "Архитектурные достопримечательности" };
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [tower];
-    }
+const tower = { name: t("Rheinturm"), distance: 0.2, time: "10 min", image: "https://images.unsplash.com/photo-1555818671-55b35242735a?w=1200", location: { lat: 51.2179, lon: 6.7617 }, descriptionShort: "Telecommunications tower.", subCategory: "Архитектурные достопримечательности" };
+structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [tower];
 
-    return {
-    structure: structure,
-    curated: {
-      recommended: cityId === 'yerevan' ? yerevanRecommended : [],
-      explore: cityId === 'yerevan' ? yerevanExplore : [],
-      interesting: cityId === 'yerevan' ? yerevanInteresting : []
-
-    }
-  };
+// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ДЮССЕЛЬДОРФА ===
+curatedRecommended = [tower];
+curatedExplore = [tower];
+curatedInteresting = [tower];
+}
+return {
+  structure: structure,
+  curated: {
+    recommended: curatedRecommended,
+    explore: curatedExplore,
+    interesting: curatedInteresting
+  }
+};
 };
 
 const Modal = ({ show, message, onClose, darkMode, buttonText, lang }) => {
@@ -1560,7 +1585,178 @@ const RouteDetailsPage = ({ route, darkMode, isFavorite, isCompleted, onBack, on
 
 // ... (EditProfileModal, AccountPage, CatalogHeader - no changes needed, keeping compact)
 const EditProfileModal = ({ show, onClose, darkMode, account, setAccount, lang }) => { const [newName, setNewName] = useState(account.name); const C = darkMode ? S.dark : S.light; const t = (k) => TRANSLATIONS[lang]?.[k] || k; if (!show) return null; return (<div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 160, padding: '1rem' }} onClick={onClose}> <div style={{ borderRadius: '0.75rem', padding: '1.5rem', width: '100%', maxWidth: '24rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, color: C.text }} onClick={e => e.stopPropagation()}> <h3 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1.5rem', textAlign: 'center' }}>{t('profile')}</h3> <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: `1px solid ${C.cardBorder}`, backgroundColor: C.bg, color: C.text, marginBottom: '1.5rem' }} placeholder="Имя" /> <div style={{ ...S.flex, gap: '0.5rem' }}> <button onClick={() => { if(newName.trim()) setAccount(prev => ({...prev, name: newName.trim()})); onClose(); }} style={{ flex: 1, backgroundColor: S.emerald600, color: 'white', padding: '0.75rem', borderRadius: '0.75rem', border: 'none' }}>{t('save')}</button> <button onClick={onClose} style={{ flex: 1, backgroundColor: C.cardBorder, color: C.text, padding: '0.75rem', borderRadius: '0.75rem', border: 'none' }}>{t('cancel')}</button> </div> </div> </div>); };
-const AccountPage = ({ account, onBack, darkMode, setAccount, lang }) => { const C = darkMode ? S.dark : S.light; const t = (k) => TRANSLATIONS[lang]?.[k] || k; const [showEditModal, setShowEditModal] = useState(false); return (<> <CatalogHeader title={t('profile')} onBack={onBack} darkMode={darkMode} /> <div style={{ ...S.flex, flexDirection: 'column', ...S.itemsCenter, padding: '1.5rem', backgroundColor: C.cardBg, borderRadius: S.roundedXl.borderRadius, border: `1px solid ${C.cardBorder}`, marginBottom: '2rem' }}> <div style={{ width: '6rem', height: '6rem', borderRadius: '50%', backgroundColor: S.emerald600, ...S.flex, ...S.itemsCenter, ...S.justifyCenter, color: 'white', fontSize: '2.5rem' }}><User size={40} /></div> <h3 style={{ ...S.textXl, ...S.fontBold, marginTop: '1rem' }}>{account.name}</h3> <p style={{ color: S.emerald600, ...S.fontSemibold }}>{account.level}</p> <button onClick={() => setShowEditModal(true)} style={{ marginTop: '1rem', backgroundColor: S.sky600, color: 'white', padding: '0.5rem 1rem', borderRadius: '1rem', border: 'none' }}>{t('profile')}</button> </div> <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} darkMode={darkMode} account={account} setAccount={setAccount} lang={lang} /> </>); };
+
+const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRoutes }) => { 
+  const C = darkMode ? S.dark : S.light; 
+  const t = (k) => TRANSLATIONS[lang]?.[k] || k; 
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // 1. ЛОГИКА ГЕЙМИФИКАЦИИ: Расчет текущего и следующего уровня
+  const rewardTiers = [
+    { count: 1, title: "Начинающий", icon: "🌱" }, 
+    { count: 3, title: "Исследователь", icon: "🧭" }, 
+    { count: 5, title: "Магистр", icon: "👑" },
+    { count: 10, title: "Легенда города", icon: "🏆" }
+  ];
+  
+  let currentTier = rewardTiers[0];
+  let nextTier = rewardTiers[1];
+  for (let i = rewardTiers.length - 1; i >= 0; i--) {
+    if (account.completedRoutesCount >= rewardTiers[i].count) {
+      currentTier = rewardTiers[i];
+      nextTier = rewardTiers[i + 1] || null;
+      break;
+    }
+  }
+  
+  const progressPercent = nextTier 
+    ? Math.min(((account.completedRoutesCount - currentTier.count) / (nextTier.count - currentTier.count)) * 100, 100) 
+    : 100;
+  const routesToNext = nextTier ? nextTier.count - account.completedRoutesCount : 0;
+
+  // 2. ЛОГИКА ГРАФИКА: Активность за последние 7 дней
+  const activityData = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const count = completedRoutes.filter(r => r.isoDate && r.isoDate.startsWith(dateStr)).length;
+    activityData.push({ 
+      day: d.toLocaleDateString('ru-RU', { weekday: 'short' }), 
+      count 
+    });
+  }
+  const maxCount = Math.max(...activityData.map(d => d.count), 1);
+
+  return (
+    <div style={{ padding: '0 0 120px 0', minHeight: '100vh', backgroundColor: C.bg, color: C.text }}>
+      {/* HEADER */}
+      <div style={{ padding: '50px 20px 20px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <button onClick={onBack} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: C.text }}>
+          <ArrowLeft size={20} />
+        </button>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0 }}>{t('profile')}</h2>
+      </div>
+
+      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        
+        {/* КАРТОЧКА ПОЛЬЗОВАТЕЛЯ И УРОВНЯ */}
+        <div style={{ background: C.cardBg, borderRadius: '24px', border: `1px solid ${C.border}`, padding: '24px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          {/* Фоновый градиент для красоты */}
+          <div style={{ position: 'absolute', top: '-50%', right: '-20%', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', filter: 'blur(40px)' }} />
+          
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #10B981, #059669)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', color: 'white', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)' }}>
+              <User size={40} />
+            </div>
+            <h3 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0' }}>{account.name}</h3>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.15)', color: '#10B981', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 700 }}>
+              <span>{currentTier.icon}</span> {currentTier.title}
+            </div>
+
+            {/* ПРОГРЕСС-БАР ГЕЙМИФИКАЦИИ */}
+            {nextTier && (
+              <div style={{ marginTop: '20px', textAlign: 'left' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: C.textMuted, marginBottom: '6px', fontWeight: 600 }}>
+                  <span>Прогресс до «{nextTier.title}»</span>
+                  <span>{account.completedRoutesCount} / {nextTier.count}</span>
+                </div>
+                <div style={{ height: '8px', background: C.border, borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${progressPercent}%`, background: 'linear-gradient(90deg, #10B981, #34D399)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
+                </div>
+                <p style={{ fontSize: '12px', color: '#10B981', marginTop: '8px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  🔥 Пройдите ещё {routesToNext} маршрута{routesToNext === 1 ? '' : routesToNext < 5 ? 'а' : 'ов'}, чтобы повысить уровень!
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* СЕТКА СТАТИСТИКИ */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+          {[
+            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6' },
+            { label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B' },
+            { label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6' } // Можно заменить на реальные шаги, если нужно
+          ].map((stat, idx) => (
+            <div key={idx} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center' }}>
+              <div style={{ fontSize: '20px', marginBottom: '4px' }}>{stat.icon}</div>
+              <div style={{ fontSize: '18px', fontWeight: 800, color: C.text }}>{stat.value}</div>
+              <div style={{ fontSize: '10px', color: C.textMuted, fontWeight: 600, textTransform: 'uppercase' }}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+       {/* ГРАФИК АКТИВНОСТИ */}
+<div style={{ background: C.cardBg, borderRadius: '24px', border: `1px solid ${C.border}`, padding: '20px', position: 'relative', overflow: 'hidden' }}>
+  
+  {/* ФОНОВАЯ СЕТКА И "ПРИЗРАЧНЫЕ" ГРАФИКИ */}
+  <div style={{
+    position: 'absolute', inset: 0, opacity: 0.15, pointerEvents: 'none',
+    backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 19px, ${C.textMuted} 20px)`,
+  }} />
+  <svg style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '80px', opacity: 0.1, pointerEvents: 'none' }} viewBox="0 0 100 40" preserveAspectRatio="none">
+    <path d="M0,30 Q15,10 30,25 T60,15 T100,30 L100,40 L0,40 Z" fill="#10B981" />
+    <path d="M0,35 Q20,5 40,20 T80,10 T100,35 L100,40 L0,40 Z" fill="#10B981" opacity="0.5" />
+  </svg>
+
+  <h4 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+    <Activity size={16} color="#10B981" /> Активность за 7 дней
+  </h4>
+  <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '80px', gap: '8px', position: 'relative', zIndex: 1 }}>
+    {activityData.map((day, idx) => (
+      <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+        <div style={{ 
+          width: '100%', maxWidth: '24px', 
+          height: `${Math.max((day.count / maxCount) * 60, 4)}px`, 
+          background: day.count > 0 ? 'linear-gradient(to top, #10B981, #34D399)' : C.border,
+          borderRadius: '6px',
+          transition: 'height 0.5s ease',
+          boxShadow: day.count > 0 ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
+        }} />
+        <span style={{ fontSize: '11px', color: C.textMuted, fontWeight: 600 }}>{day.day}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+        {/* ДОСТИЖЕНИЯ / НАГРАДЫ */}
+        {account.rewards.length > 0 && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 12px 0', paddingLeft: '4px' }}>Ваши достижения</h4>
+            <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
+              {account.rewards.map((reward, idx) => (
+                <div key={idx} style={{ 
+                  minWidth: '120px', background: C.cardBg, border: `1px solid ${C.border}`, 
+                  borderRadius: '16px', padding: '16px', textAlign: 'center', flexShrink: 0 
+                }}>
+                  <div style={{ fontSize: '24px', marginBottom: '8px' }}>🏆</div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: C.text }}>{reward}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* КНОПКА РЕДАКТИРОВАНИЯ */}
+        <button 
+          onClick={() => setShowEditModal(true)} 
+          style={{ 
+            width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
+            background: 'linear-gradient(135deg, #3B82F6, #2563EB)', color: 'white', 
+            fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
+            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
+          }}
+        >
+          {t('change_photo')} / {t('profile')}
+        </button>
+
+      </div>
+      <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} darkMode={darkMode} account={account} setAccount={setAccount} lang={lang} /> 
+    </div>
+  ); 
+};
+
 const CatalogHeader = ({ title, onBack, darkMode }) => { const C = darkMode ? S.dark : S.light; return (<div style={{ ...S.flex, ...S.itemsCenter, marginBottom: '1.5rem' }}> <h2 style={{ ...S.textXl, ...S.fontBold, textAlign: 'center', flex: 1 }}>{title}</h2> </div>); };
 
 const RouteListItem = React.memo(({ route, onNavigate, onPlayAudio, onToggleFavorite, isFavorite, userLocation, formatDistance, C, isCompleted, subtitle, lang }) => {
@@ -1997,7 +2193,8 @@ useEffect(() => {
     const renderCurrentView = () => {
     if (!currentView) return null;
     if (currentView.type === 'favorites') {
-    const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
+    
+        const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
     const partnerRoute = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
 
     const colors = darkMode ? {
@@ -2245,9 +2442,9 @@ useEffect(() => {
     if (currentView.type === 'routeDetails') {
         return <RouteDetailsPage route={currentView.route} darkMode={darkMode} isFavorite={isRouteInFavorites(currentView.route)} isCompleted={completedRoutes.some(c => c.name === currentView.route.name)} onBack={goBack} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} onMarkCompleted={handleRouteCompletionGlobal} lang={currentLang} />;
     }
-    if (currentView.type === 'account') { 
-        return <AccountPage account={account} onBack={goBack} darkMode={darkMode} setAccount={setAccount} lang={currentLang} />; 
-    }
+   if (currentView.type === 'account') {
+  return <AccountPage account={account} onBack={goBack} darkMode={darkMode} setAccount={setAccount} lang={currentLang} completedRoutes={completedRoutes} />;
+}
     if (currentView.type === 'progress') {
         return (<div> <CatalogHeader title={t('completed')} onBack={goBack} darkMode={darkMode} /> {completedRoutes.length > 0 ? (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {completedRoutes.map((route, idx) => (<RouteListItem key={`comp-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={true} userLocation={userLocation} formatDistance={formatDistance} C={C} subtitle={`${t('visited')}: ${route.date}`} lang={currentLang} />))} </div>) : (<div style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.textCenter, padding: '2rem' }}> <p style={{ color: C.text }}>{t('empty_list')}</p> </div>)} </div>);
     }
@@ -2487,14 +2684,31 @@ useEffect(() => {
                 <div style={{ position: 'absolute', top: '-40px', right: '-30px', width: '160px', height: '160px', borderRadius: '50%', background: darkMode ? 'rgba(16, 185, 129, 0.08)' : 'rgba(16, 185, 129, 0.12)' }} />
                 <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: darkMode ? 'rgba(245, 158, 11, 0.06)' : 'rgba(245, 158, 11, 0.1)' }} />
 
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                    <p style={{ fontSize: '14px', color: recColors.accent, fontWeight: 700, letterSpacing: '0.5px', margin: '0 0 4px 0', textTransform: 'uppercase' }}>
-                        {t('app_name')} 🗺️
-                    </p>
-                    <h1 style={{ fontSize: '28px', fontWeight: 900, margin: '0', letterSpacing: '-0.5px', lineHeight: 1.1, color: recColors.text }}>
-                        {cityName}
-                    </h1>
-                </div>
+               <div style={{ position: 'relative', zIndex: 1 }}>
+  <p style={{ fontSize: '14px', color: recColors.accent, fontWeight: 700, letterSpacing: '0.5px', margin: '0 0 8px 0', textTransform: 'uppercase' }}>
+    {t('app_name')} 🗺️
+  </p>
+  
+  {/* КНОПКА ВЫБОРА ГОРОДА */}
+  <button 
+    onClick={() => setShowCityModal(true)}
+    style={{
+      display: 'flex', alignItems: 'center', gap: '8px',
+      background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)',
+      border: `1px solid ${recColors.border}`,
+      borderRadius: '12px', padding: '8px 16px',
+      cursor: 'pointer', backdropFilter: 'blur(10px)',
+      transition: 'all 0.2s ease',
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)'}
+    onMouseLeave={(e) => e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)'}
+  >
+    <h1 style={{ fontSize: '24px', fontWeight: 800, margin: '0', letterSpacing: '-0.5px', lineHeight: 1.1, color: recColors.text }}>
+      {cityName}
+    </h1>
+    <ChevronDown size={20} color={recColors.text} style={{ opacity: 0.7 }} />
+  </button>
+</div>
             </div>
 
             {/* КОНТЕНТ */}
@@ -2510,7 +2724,7 @@ useEffect(() => {
                         <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
                             {nearbyRoutesForHome.map((route, idx) => (
                                 <div key={`rec-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
-                                    minWidth: '160px', height: '200px', borderRadius: '20px',
+                                    minWidth: '120px', height: '150px', borderRadius: '20px',
                                     position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
                                     boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                                 }}>
@@ -2535,38 +2749,35 @@ useEffect(() => {
                     </div>
                 )}
 
-               {/* 2. РЕКОМЕНДУЕМ */}
+{/* 2. РЕКОМЕНДУЕМ (КРУПНЫЕ КАРТОЧКИ КАК В "РЯДОМ С ВАМИ") */}
 {recommendedCurated.length > 0 && (
   <div style={{ marginBottom: '24px' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
       <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>⭐</div>
       <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>Рекомендуем</h2>
     </div>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
       {recommendedCurated.map((route, idx) => (
-        <div key={`rec-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
-          background: recColors.cardBg, borderRadius: '16px',
-          border: `1px solid ${recColors.border}`, overflow: 'hidden',
-          display: 'flex', alignItems: 'center', cursor: 'pointer', backdropFilter: 'blur(20px)',
+        <div key={`rec-large-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
+          minWidth: '240px', height: '200px', borderRadius: '20px',
+          position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
         }}>
-          {route.image && (
-            <img src={route.image} alt={route.name} style={{ width: '80px', height: '80px', objectFit: 'cover', flexShrink: 0, borderRadius: '16px 0 0 16px' }} />
-          )}
-          <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: '14px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: recColors.text }}>
+          <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
+            <div style={{ color: '#F59E0B', fontWeight: 700, fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}>
+              {t(route.subCategory) || route.subCategory}
+            </div>
+            <div style={{ color: 'white', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {route.name}
             </div>
-            {route.subCategory && (
-              <div style={{ fontSize: '11px', color: recColors.accent, fontWeight: 600, marginTop: '2px' }}>
-                {t(route.subCategory) || route.subCategory}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ background: 'rgba(245, 158, 11, 0.3)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '20px', fontSize: '10px', color: 'white', fontWeight: 600 }}>
+                👣 {Math.floor(route.distance * 1250)}
               </div>
-            )}
-            <div style={{ display: 'flex', gap: '10px', marginTop: '6px', fontSize: '12px', color: recColors.textMuted }}>
-              {route.distance && <span>📏 {route.distance} км</span>}
-              {route.time && <span>🕐 {route.time}</span>}
             </div>
           </div>
-          <div style={{ paddingRight: '14px', color: recColors.accent, fontSize: '18px', fontWeight: 700, flexShrink: 0 }}>→</div>
         </div>
       ))}
     </div>
@@ -2648,8 +2859,12 @@ useEffect(() => {
       ))}
     </div>
   </div>
-)}  
-        case 'favorites': {
+)}
+        </div>
+      </div>
+    );
+  }
+case 'favorites': {
     const currentCityFavorites = favoriteRoutes.filter(r => r.cityId === currentCity || (!r.cityId && currentCity === 'kemerovo'));
    const partnerRoute2 = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
 
