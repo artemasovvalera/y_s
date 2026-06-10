@@ -1621,7 +1621,7 @@ const RouteDetailsPage = ({ route, darkMode, isFavorite, isCompleted, onBack, on
 // ... (EditProfileModal, AccountPage, CatalogHeader - no changes needed, keeping compact)
 const EditProfileModal = ({ show, onClose, darkMode, account, setAccount, lang }) => { const [newName, setNewName] = useState(account.name); const C = darkMode ? S.dark : S.light; const t = (k) => TRANSLATIONS[lang]?.[k] || k; if (!show) return null; return (<div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 160, padding: '1rem' }} onClick={onClose}> <div style={{ borderRadius: '0.75rem', padding: '1.5rem', width: '100%', maxWidth: '24rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, color: C.text }} onClick={e => e.stopPropagation()}> <h3 style={{ ...S.textXl, ...S.fontBold, marginBottom: '1.5rem', textAlign: 'center' }}>{t('profile')}</h3> <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: `1px solid ${C.cardBorder}`, backgroundColor: C.bg, color: C.text, marginBottom: '1.5rem' }} placeholder="Имя" /> <div style={{ ...S.flex, gap: '0.5rem' }}> <button onClick={() => { if(newName.trim()) setAccount(prev => ({...prev, name: newName.trim()})); onClose(); }} style={{ flex: 1, backgroundColor: S.emerald600, color: 'white', padding: '0.75rem', borderRadius: '0.75rem', border: 'none' }}>{t('save')}</button> <button onClick={onClose} style={{ flex: 1, backgroundColor: C.cardBorder, color: C.text, padding: '0.75rem', borderRadius: '0.75rem', border: 'none' }}>{t('cancel')}</button> </div> </div> </div>); };
 
-const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRoutes, favoriteRoutes, navigate }) => {
+const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRoutes, favoriteRoutes, navigate, isGuest, currentUserHash }) => {
   const C = darkMode ? S.dark : S.light; 
   const t = (k) => TRANSLATIONS[lang]?.[k] || k; 
   const [showEditModal, setShowEditModal] = useState(false);
@@ -1684,7 +1684,9 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
             <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #10B981, #059669)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', color: 'white', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)' }}>
               <User size={40} />
             </div>
-            <h3 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0' }}>{account.name}</h3>
+            <h3 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0' }}>
+    {isGuest ? 'Гость' : (account.name === 'Гость' && currentUserHash ? currentUserHash.slice(0, 8) + '...' : account.name)}
+</h3>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.15)', color: '#10B981', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 700 }}>
               <span>{currentTier.icon}</span> {currentTier.title}
             </div>
@@ -1776,8 +1778,10 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
 
         {/* КНОПКА РЕДАКТИРОВАНИЯ */}
         <button 
-          onClick={() => setShowEditModal(true)} 
+          onClick={() => { if(!isGuest) setShowEditModal(true); }}
           style={{ 
+            opacity: isGuest ? 0.4 : 1,
+            cursor: isGuest ? 'not-allowed' : 'pointer',
             width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
             background: 'linear-gradient(135deg, #3B82F6, #2563EB)', color: 'white', 
             fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
@@ -1790,14 +1794,14 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
         <button 
           onClick={() => { if(window.__handleLogout) window.__handleLogout(); }} 
           style={{ 
-            width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
+            width: '100%', padding: '16px', borderRadius: '16px',
             background: 'transparent',
-            color: '#EF4444',
+            color: isGuest ? S.emerald600 : '#EF4444',
             fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
-            border: '1.5px solid #EF4444',
+            border: `1.5px solid ${isGuest ? S.emerald600 : '#EF4444'}`,
           }}
         >
-          🚪 Выйти из аккаунта
+          {isGuest ? '👤 Зарегистрироваться' : '🚪 Выйти из аккаунта'}
         </button>
 
       </div>
@@ -1943,7 +1947,7 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
 };
 
 function MainRouteApp({ onExit, setAccount, ...props }) {
-    const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity } = props;
+    const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
     const [navigationStack, setNavigationStack] = useState([{ type: 'home' }]);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
@@ -2485,7 +2489,7 @@ useEffect(() => {
         return <RouteDetailsPage route={currentView.route} darkMode={darkMode} isFavorite={isRouteInFavorites(currentView.route)} isCompleted={completedRoutes.some(c => c.name === currentView.route.name)} onBack={goBack} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} onMarkCompleted={handleRouteCompletionGlobal} lang={currentLang} />;
     }
    if (currentView.type === 'account') {
-  return <AccountPage account={account} onBack={goBack} darkMode={darkMode} setAccount={setAccount} lang={currentLang} completedRoutes={completedRoutes} favoriteRoutes={favoriteRoutes} navigate={navigate} />;
+  return <AccountPage account={account} onBack={goBack} darkMode={darkMode} setAccount={setAccount} lang={currentLang} completedRoutes={completedRoutes} favoriteRoutes={favoriteRoutes} navigate={navigate} isGuest={isGuest} currentUserHash={currentUserHash} />;
 }
     if (currentView.type === 'progress') {
         return (<div> <CatalogHeader title={t('completed')} onBack={goBack} darkMode={darkMode} /> {completedRoutes.length > 0 ? (<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> {completedRoutes.map((route, idx) => (<RouteListItem key={`comp-${idx}`} route={route} onNavigate={handleNavigateToDetails} onPlayAudio={playAudio} onToggleFavorite={toggleFavorite} isFavorite={isRouteInFavorites(route)} isCompleted={true} userLocation={userLocation} formatDistance={formatDistance} C={C} subtitle={`${t('visited')}: ${route.date}`} lang={currentLang} />))} </div>) : (<div style={{ ...cardStyle, backgroundColor: C.cardBg, borderColor: C.cardBorder, ...S.textCenter, padding: '2rem' }}> <p style={{ color: C.text }}>{t('empty_list')}</p> </div>)} </div>);
@@ -3983,10 +3987,9 @@ const handleAuthSuccess = (hash) => {
     setIsGuest(false);
     const accepted = localStorage.getItem('agreementAccepted');
     const surveyed = localStorage.getItem('survey-completed') === 'true';
-    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
     setPhase(accepted ? 'mainApp' : 'agreement');
+    if (!surveyed) setTimeout(() => setShowSurvey(true), 2000);
 };
-
 
 const handleSurveyComplete = async (answers) => {
     setShowSurvey(false);
@@ -4012,15 +4015,19 @@ const handleAudioGuideOpen = () => {
         setShowSurvey(true);
     }
 };
-
 const handleLogout = () => {
     localStorage.removeItem('app-auth');
-    localStorage.removeItem('agreementAccepted');
+    localStorage.removeItem('app-favs');
+    localStorage.removeItem('app-completed');
+    localStorage.removeItem('app-account');
+    localStorage.removeItem('survey-completed');
     setCurrentUserHash(null);
     setIsGuest(false);
+    setFavs([]);
+    setCompleted([]);
+    setAccount({ name: 'Гость', level: 'Новичок', rewards: [], completedRoutesCount: 0 });
     setPhase('auth');
 };
-
     const handleAcceptAgreement = () => { localStorage.setItem('agreementAccepted', JSON.stringify(true)); setPhase('mainApp'); };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
@@ -4092,6 +4099,8 @@ const handleLogout = () => {
                         buildInfo={buildInfo} setShowContactModal={setShowContactModal} 
                         setAccount={setAccount} currentLang={currentLang} setCurrentLang={setCurrentLang} 
                         currentCity={currentCity} setCurrentCity={setCurrentCity} 
+                        isGuest={isGuest}
+currentUserHash={currentUserHash}
                     />
                 );
 
