@@ -2169,6 +2169,12 @@ useEffect(() => {
 }, []);
 
     const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
+    // Пауза аудио при открытии опроса
+useEffect(() => {
+  if (props.showSurvey && currentPlayingRoute) {
+    stopAudio();
+  }
+}, [props.showSurvey, currentPlayingRoute, stopAudio]);
     const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
     const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
     const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route); } else { setModalMessage("Нет аудиогида"); setShowModal(true); } }, []);
@@ -4085,6 +4091,7 @@ const handleLogout = () => {
                 return (
                     <MainRouteApp 
                         onExit={() => { setShowDashboard(true); handleExitApp(); }} 
+                        showSurvey={showSurvey}
                         favoriteRoutes={favs} completedRoutes={completed} 
                         handleRouteCompletionGlobal={handleComplete} 
                         isRouteInFavorites={isFav} toggleFavorite={toggleFavorite} 
