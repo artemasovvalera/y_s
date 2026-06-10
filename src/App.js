@@ -26,6 +26,28 @@ const apiCall = async (action, params) => {
     }
 };
 
+
+// === СИНХРОНИЗАЦИЯ ДАННЫХ С СЕРВЕРОМ ===
+const saveUserDataToServer = async (hash, userData) => {
+  try {
+    await apiCall('saveUserData', { hash, userData });
+  } catch (e) {
+    console.log('Не удалось сохранить данные на сервер:', e);
+  }
+};
+
+const loadUserDataFromServer = async (hash) => {
+  try {
+    const result = await apiCall('loadUserData', { hash });
+    if (result.success && result.data) {
+      return result.data;
+    }
+  } catch (e) {
+    console.log('Не удалось загрузить данные с сервера:', e);
+  }
+  return null;
+};
+
 const hashString = async (str) => {
     const msgBuffer = new TextEncoder().encode(str);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
