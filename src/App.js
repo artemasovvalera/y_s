@@ -1708,13 +1708,14 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
         </div>
 
         {/* СЕТКА СТАТИСТИКИ */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {[
-            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6' },
-            { label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B' },
-            { label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6' } // Можно заменить на реальные шаги, если нужно
+            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6', onClick: () => navigate('completed') },
+{ label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B', onClick: null },
+{ label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6', onClick: null },
+{ label: 'Избранное', value: favoriteRoutes?.length || 0, icon: '❤️', color: '#EF4444', onClick: () => navigate('favorites') }
           ].map((stat, idx) => (
-            <div key={idx} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center' }}>
+            <div key={idx} onClick={stat.onClick} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center', cursor: stat.onClick ? 'pointer' : 'default' }}>
               <div style={{ fontSize: '20px', marginBottom: '4px' }}>{stat.icon}</div>
               <div style={{ fontSize: '18px', fontWeight: 800, color: C.text }}>{stat.value}</div>
               <div style={{ fontSize: '10px', color: C.textMuted, fontWeight: 600, textTransform: 'uppercase' }}>{stat.label}</div>
@@ -2211,19 +2212,11 @@ useEffect(() => {
             }, 
             icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
         },
-        { type: 'divider' },
-        {    label: t('search'),    action: () => { setShowSearchModal(true); setSettingsOpen(false); },    icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} />},
-       { label: t('exit'), action: onExit, icon: <LogOut style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-{ label: 'Выйти из аккаунта', action: () => { setSettingsOpen(false); if(window.__handleLogout) window.__handleLogout(); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { 
-            label: `Версия ${buildInfo.version} — обновить`, 
-            action: () => { 
-                setSettingsOpen(false); 
-                window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); 
-            }, 
-            icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
-        }
+       { type: 'divider' },
+        { label: t('search'), action: () => { setShowSearchModal(true); setSettingsOpen(false); }, icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        { label: `Версия ${buildInfo.version} — обновить`, action: () => { setSettingsOpen(false); window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); }, icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> }
     ];
+    ;
 
     const handleNavigateToDetails = useCallback((route) => { navigate('routeDetails', { route }); }, [navigate]);
     const renderCurrentView = () => {
@@ -3463,7 +3456,7 @@ const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
 // ==========================================
 const SurveyModal = ({ darkMode, onComplete, onSkip }) => {
     const C = darkMode ? S.dark : S.light;
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(-1);
     const [answers, setAnswers] = useState({
         age_group: '',
         gender: '',
@@ -3506,6 +3499,51 @@ const SurveyModal = ({ darkMode, onComplete, onSkip }) => {
     ];
 
     const current = questions[step];
+
+if (step === -1) return (
+    <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999,
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        backdropFilter: 'blur(4px)',
+    }}>
+        <div style={{
+            width: '100%', maxWidth: '480px',
+            backgroundColor: C.cardBg,
+            borderRadius: '1.5rem 1.5rem 0 0',
+            padding: '2rem 1.5rem',
+            boxShadow: '0 -20px 60px rgba(0,0,0,0.2)',
+        }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+                <h3 style={{ fontSize: '1.375rem', fontWeight: 800, color: C.text, margin: '0 0 0.75rem' }}>
+                    Помогите нам стать лучше
+                </h3>
+                <p style={{ fontSize: '0.9375rem', color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)', lineHeight: 1.6, margin: 0 }}>
+                    Ответьте на 5 коротких вопросов — это поможет нам улучшить приложение и сделать маршруты интереснее именно для вас. Займёт меньше минуты.
+                </p>
+            </div>
+            <button onClick={() => setStep(0)} style={{
+                width: '100%', backgroundColor: S.emerald600, color: 'white',
+                fontWeight: 700, padding: '0.875rem', borderRadius: '1rem',
+                border: 'none', cursor: 'pointer', fontSize: '1rem',
+                marginBottom: '0.75rem',
+                boxShadow: '0 4px 15px rgba(16,185,129,0.3)',
+            }}>
+                Начать опрос
+            </button>
+            <button onClick={onSkip} style={{
+                width: '100%', padding: '0.75rem', borderRadius: '1rem',
+                border: 'none', backgroundColor: 'transparent',
+                color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                fontSize: '0.875rem', cursor: 'pointer',
+            }}>
+                Пропустить — вернусь позже
+            </button>
+        </div>
+    </div>
+);
+
     const totalAnswered = Object.values(answers).filter(v => v !== '').length;
 
     const handleSelect = (value) => {
