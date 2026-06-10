@@ -3647,7 +3647,8 @@ export default function App() {
     try {
         const auth = localStorage.getItem('app-auth');
         if (!auth) return 'auth';
-        const accepted = localStorage.getItem('agreementAccepted');
+        const { hash } = JSON.parse(auth);
+        const accepted = localStorage.getItem(`agreementAccepted_${hash}`);
         return accepted ? 'mainApp' : 'agreement';
     } catch {
         return 'auth';
@@ -3976,7 +3977,7 @@ delete window.__handleAudioGuideOpen;
 const handleGuestSuccess = (hash) => {
     setCurrentUserHash(hash);
     setIsGuest(true);
-    const accepted = localStorage.getItem('agreementAccepted');
+    const accepted = localStorage.getItem(`agreementAccepted_${hash}`);
     const surveyed = localStorage.getItem('survey-completed') === 'true';
     if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
     setPhase(accepted ? 'mainApp' : 'agreement');
@@ -4008,14 +4009,15 @@ const handleSurveySkip = () => {
 };
 
 const handleAudioGuideOpen = () => {
-    console.log('audioGuideOpen called, surveyCompleted:', surveyCompleted, 'count:', audioGuideOpenCount);
     if (surveyCompleted) return;
-    const newCount = audioGuideOpenCount + 1;
-    setAudioGuideOpenCount(newCount);
-    console.log('new count:', newCount);
-    if (newCount % 3 === 0) {
-        setShowSurvey(true);
-    }
+    setAudioGuideOpenCount(prev => {
+        const newCount = prev + 1;
+        console.log('audioGuide count:', newCount);
+        if (newCount % 3 === 0) {
+            setShowSurvey(true);
+        }
+        return newCount;
+    });
 };
 
 const handleLogout = () => {
@@ -4031,7 +4033,10 @@ const handleLogout = () => {
     setAccount({ name: 'Гость', level: 'Новичок', rewards: [], completedRoutesCount: 0 });
     setPhase('auth');
 };
-    const handleAcceptAgreement = () => { localStorage.setItem('agreementAccepted', JSON.stringify(true)); setPhase('mainApp'); };
+   const handleAcceptAgreement = () => { 
+    localStorage.setItem(`agreementAccepted_${currentUserHash}`, 'true'); 
+    setPhase('mainApp'); 
+};
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
     const handleAllowNotifications = async () => {
