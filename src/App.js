@@ -2193,6 +2193,19 @@ useEffect(() => {
 }, []);
 
     const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
+
+// Глобальный метод для показа промпта регистрации
+useEffect(() => {
+  window.__showRegistrationPrompt = () => {
+    setModalMessage('Вам нравится приложение? 💚\nСоздайте аккаунт, чтобы сохранять маршруты в избранное, отмечать прогресс и синхронизировать данные между устройствами.');
+    setShowModal(true);
+  };
+  
+  return () => {
+    delete window.__showRegistrationPrompt;
+  };
+}, []);
+
     // Пауза аудио при открытии опроса
 useEffect(() => {
   if (props.showSurvey && currentPlayingRoute) {
@@ -2201,8 +2214,22 @@ useEffect(() => {
 }, [props.showSurvey, currentPlayingRoute, stopAudio]);
     const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
     const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
-    const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route); } else { setModalMessage("Нет аудиогида"); setShowModal(true); } }, []);
-    const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId === 'catalog') { setNavigationStack([{ type: 'categories' }]); } else { setNavigationStack([{ type: 'home' }]); } }, []);
+   const playAudio = useCallback((route) => { 
+  if (route && route.audioUrl) { 
+    setCurrentPlayingRoute(route); 
+    
+    // 👇 ДОБАВЛЯЕМ ЭТУ ПРОВЕРКУ: считаем каждое успешное включение аудио
+    if (window.__trackAudioInteraction) {
+      window.__trackAudioInteraction();
+    }
+  } else { 
+    setModalMessage("Нет аудиогида"); 
+    setShowModal(true); 
+  } 
+}, []);
+
+
+const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId === 'catalog') { setNavigationStack([{ type: 'categories' }]); } else { setNavigationStack([{ type: 'home' }]); } }, []);
 
     useEffect(() => { 
     let listener = null;
@@ -3674,15 +3701,13 @@ const AgreementScreen = ({ onAccept, darkMode }) => {
 };
 export default function App() {
     const [phase, setPhase] = useState(() => {
-    try {
-        const auth = localStorage.getItem('app-auth');
-        if (!auth) return 'auth';
-        const { hash } = JSON.parse(auth);
-        const accepted = localStorage.getItem(`agreementAccepted_${hash}`);
-        return accepted ? 'mainApp' : 'agreement';
-    } catch {
-        return 'auth';
-    }
+  try {
+    const auth = localStorage.getItem('app-auth');
+    if (!auth) return 'auth'; // Показываем только приветствие
+    return 'mainApp'; // Если уже авторизован - сразу в приложение
+  } catch {
+    return 'auth';
+  }
 });
 
 const [currentUserHash, setCurrentUserHash] = useState(() => {
@@ -3734,6 +3759,9 @@ const [surveyCompleted, setSurveyCompleted] = useState(() => {
     } catch { return false; }
 });
 const audioGuideCountRef = useRef(0);
+
+const interactionCountRef = useRef(0);
+const regPromptShownRef = useRef(false);
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
     const buildInfo = { version: "3.0", date: "10.06.2026" }; 
@@ -4083,21 +4111,15 @@ useEffect(() => {
 
 
 const handleGuestSuccess = (hash) => {
-    setCurrentUserHash(hash);
-    setIsGuest(true);
-    const accepted = localStorage.getItem(`agreementAccepted_${hash}`);
-    const surveyed = localStorage.getItem('survey-completed') === 'true';
-    if (!surveyed) setTimeout(() => setShowSurvey(true), 1000);
-    setPhase(accepted ? 'mainApp' : 'agreement');
+  setCurrentUserHash(hash);
+  setIsGuest(true);
+  setPhase('mainApp'); // Сразу в приложение, без анкеты и лицензии
 };
 
 const handleAuthSuccess = (hash) => {
-    setCurrentUserHash(hash);
-    setIsGuest(false);
-    const accepted = localStorage.getItem('agreementAccepted');
-    const surveyed = localStorage.getItem('survey-completed') === 'true';
-    setPhase(accepted ? 'mainApp' : 'agreement');
-    if (!surveyed) setTimeout(() => setShowSurvey(true), 2000);
+  setCurrentUserHash(hash);
+  setIsGuest(false);
+  setPhase('mainApp'); // Сразу в приложение
 };
 
 const handleSurveyComplete = async (answers) => {
@@ -4114,6 +4136,15 @@ const handleSurveyComplete = async (answers) => {
 
 const handleSurveySkip = () => {
     setShowSurvey(false);
+};
+
+const promptRegistrationIfNeeded = () => {
+  if (regPromptShownRef.current || !isGuest) return;
+  regPromptShownRef.current = true;
+  // Вызываем глобальный метод, который покажет модалку в MainRouteApp
+  if (window.__showRegistrationPrompt) {
+    window.__showRegistrationPrompt();
+  }
 };
 
 const handleAudioGuideOpen = () => {
@@ -4248,13 +4279,22 @@ useEffect(() => {
   window.__showDashboard = () => { setShowDashboard(true); };
   window.__handleLogout = handleLogout;
   window.__handleAudioGuideOpen = handleAudioGuideOpen;
+  
+  // 👇 ДОБАВЛЯЕМ СЧЕТЧИК ДЛЯ ПРЕДЛОЖЕНИЯ РЕГИСТРАЦИИ (на 2-й раз)
+  window.__trackAudioInteraction = () => {
+    interactionCountRef.current += 1;
+    if (interactionCountRef.current === 2) {
+      promptRegistrationIfNeeded();
+    }
+  };
+
   return () => {
     delete window.__showDashboard;
     delete window.__handleLogout;
     delete window.__handleAudioGuideOpen;
+    delete window.__trackAudioInteraction;
   };
-}, [handleLogout, handleAudioGuideOpen]);
-
+}, [handleLogout, handleAudioGuideOpen, promptRegistrationIfNeeded]);
 
    return (
     <div style={appRootStyle}>
