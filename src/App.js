@@ -8,6 +8,8 @@ import {
     Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
     Music, Camera, BookOpen, Smile, Bike, Globe, Building, Download, Loader
 } from "lucide-react";
+
+
 // ==========================================
 // КОНФИГУРАЦИЯ СЕРВЕРА
 // ==========================================
@@ -3745,6 +3747,50 @@ const audioGuideCountRef = useRef(0);
         "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> 
     };
 
+// === 1. ССЫЛКА НА ТАЙМЕР (чтобы он не сбрасывался при перерисовке) ===
+const saveTimeoutRef = useRef(null);
+
+// === 2. ФУНКЦИЯ ДЛЯ МГНОВЕННОГО СОХРАНЕНИЯ НА СЕРВЕР ===
+const saveUserDataToServer = async (hash, userData) => {
+  try {
+    await apiCall('saveUserData', { hash, userData });
+    console.log('✅ Данные успешно синхронизированы с сервером');
+  } catch (e) {
+    console.log('⚠️ Не удалось сохранить данные на сервер (офлайн режим?):', e);
+  }
+};
+
+// === 3. ФУНКЦИЯ С ЗАДЕРЖКОЙ (DEBOUNCE) ===
+const debouncedSaveToServer = (hash, userData) => {
+  if (!hash) return; // Не сохраняем, если нет хеша пользователя
+  
+  // Если таймер уже запущен — отменяем его
+  if (saveTimeoutRef.current) {
+    clearTimeout(saveTimeoutRef.current);
+  }
+  //__________________________испр
+// === 3. ФУНКЦИЯ С ЗАДЕРЖКОЙ (DEBOUNCE) ===
+const debouncedSaveToServer = (hash, userData) => {
+  if (!hash) return;
+  
+  if (saveTimeoutRef.current) {
+    clearTimeout(saveTimeoutRef.current);
+  }
+  
+  saveTimeoutRef.current = setTimeout(() => {
+    saveUserDataToServer(hash, userData);
+  }, 2000);
+};
+
+  //_________________________
+
+
+  // Запускаем новый таймер на 2000 мс (2 секунды)
+  saveTimeoutRef.current = setTimeout(() => {
+    saveUserDataToServer(hash, userData);
+  }, 2000);
+};
+
     // Глобальный метод для показа дашборда из настроек
   
     // === 1. ГЕОЛОКАЦИЯ ===
@@ -3797,6 +3843,56 @@ const audioGuideCountRef = useRef(0);
             .catch(() => { setRealWeather({ temp: '—°C', desc: 'Не удалось загрузить погоду.' }); });
     }, [currentPosition]);
 
+//_______________________ херь
+// === ЕДИНЫЙ ЭФФЕКТ ДЛЯ СОХРАНЕНИЯ ДАННЫХ (LocalStorage + Сервер) ===
+useEffect(() => {
+  // 1. МГНОВЕННО сохраняем в LocalStorage (чтобы работало без интернета)
+  localStorage.setItem('app-favs', JSON.stringify(favs));
+  localStorage.setItem('app-completed', JSON.stringify(completed));
+  localStorage.setItem('app-account', JSON.stringify(account));
+  localStorage.setItem('app-darkMode', JSON.stringify(darkMode));
+  localStorage.setItem('app-units', JSON.stringify(units));
+  localStorage.setItem('app-lang', JSON.stringify(currentLang));
+  localStorage.setItem('app-city', JSON.stringify(currentCity));
+  
+  if (currentUserHash) {
+    const isAgreed = localStorage.getItem(`agreementAccepted_${currentUserHash}`) === 'true';
+    
+    // 2. ЗАПУСКАЕМ ТАЙМЕР на сохранение в облако
+    debouncedSaveToServer(currentUserHash, {
+      favs,
+      completed,
+      account,
+      settings: {
+        darkMode,
+        units,
+        lang: currentLang,
+        city: currentCity
+      },
+      surveyCompleted,
+      agreementAccepted: isAgreed
+    });
+  }
+
+  // 3. ОЧИСТКА: если компонент удаляется, отменяем таймер, чтобы не было ошибок
+  return () => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+  };
+}, [
+  // Этот эффект сработает, если изменится ЛЮБОЕ из этих значений:
+  favs, 
+  completed, 
+  account,
+  darkMode, 
+  units, 
+  currentLang, 
+  currentCity,
+  surveyCompleted, 
+  currentUserHash
+]);
+//_______________________
     // === 3. ШАГОМЕР ===
     // === ШАГОМЕР ===
     useEffect(() => {
