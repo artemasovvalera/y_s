@@ -3265,7 +3265,7 @@ const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
     const [error, setError] = useState('');
     const [resetSent, setResetSent] = useState(false);
     const C = darkMode ? S.dark : S.light;
-
+const [showLicense, setShowLicense] = useState(false);
     const errMap = {
         'already_exists': 'Этот email уже зарегистрирован',
         'not_found': 'Пользователь не найден',
@@ -3503,6 +3503,17 @@ const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
                             {loading ? '...' : mode === 'login' ? 'Войти' : mode === 'register' ? 'Зарегистрироваться' : 'Сохранить пароль'}
                         </button>
 
+{mode === 'register' && (
+    <p style={{ fontSize: '0.75rem', textAlign: 'center', color: darkMode ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)', marginTop: '0.5rem' }}>
+        Регистрируясь, вы принимаете{' '}
+        <span 
+            onClick={() => setShowLicense(true)}
+            style={{ color: S.emerald600, cursor: 'pointer', textDecoration: 'underline' }}>
+            условия использования
+        </span>
+    </p>
+)}
+
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginTop: '0.5rem' }}>
                             {mode === 'login' && <>
                                 <span style={linkStyle} onClick={() => { setMode('register'); setError(''); }}>Нет аккаунта? Зарегистрироваться</span>
@@ -3520,6 +3531,50 @@ const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
                     </>
                 )}
             </div>
+
+{showLicense && (
+    <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 9999,
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+    }}>
+        <div style={{
+            width: '100%', maxWidth: '480px',
+            backgroundColor: darkMode ? S.dark.cardBg : S.light.cardBg,
+            borderRadius: '1.5rem 1.5rem 0 0',
+            padding: '1.5rem',
+            maxHeight: '80vh', overflow: 'hidden',
+            display: 'flex', flexDirection: 'column',
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontWeight: 800, fontSize: '1.25rem', color: darkMode ? S.dark.text : S.light.text, margin: 0 }}>
+                    Условия использования
+                </h3>
+                <button onClick={() => setShowLicense(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: darkMode ? S.dark.textMuted : S.light.textMuted }}>
+                    ✕
+                </button>
+            </div>
+            <div style={{ overflowY: 'auto', flex: 1, fontSize: '0.875rem', color: darkMode ? S.dark.textMuted : S.light.textMuted, lineHeight: 1.6 }}>
+                <p><strong>1. Общие положения</strong></p>
+                <p>Используя приложение "Я Сам!", вы принимаете настоящие условия.</p>
+                <p><strong>2. Контент</strong></p>
+                <p>Все аудиогиды, маршруты и материалы принадлежат разработчику. Запрещено копирование и распространение без разрешения.</p>
+                <p><strong>3. Ответственность</strong></p>
+                <p>Разработчик не несёт ответственности за актуальность маршрутов и точность описаний.</p>
+                <p><strong>4. Данные</strong></p>
+                <p>Приложение собирает анонимную статистику использования для улучшения сервиса. Персональные данные не хранятся.</p>
+            </div>
+            <button onClick={() => setShowLicense(false)} style={{
+                marginTop: '1rem', width: '100%', padding: '0.875rem',
+                backgroundColor: S.emerald600, color: 'white',
+                fontWeight: 700, borderRadius: '1rem', border: 'none', cursor: 'pointer',
+            }}>
+                Понятно
+            </button>
+        </div>
+    </div>
+)}
+
         </div>
     );
 };
@@ -3703,10 +3758,10 @@ export default function App() {
     const [phase, setPhase] = useState(() => {
   try {
     const auth = localStorage.getItem('app-auth');
-    if (!auth) return 'auth'; // Показываем только приветствие
-    return 'mainApp'; // Если уже авторизован - сразу в приложение
+    if (!auth) return 'mainApp';
+    return 'mainApp';
   } catch {
-    return 'auth';
+    return 'mainApp';
   }
 });
 
@@ -3720,8 +3775,9 @@ const [currentUserHash, setCurrentUserHash] = useState(() => {
 const [isGuest, setIsGuest] = useState(() => {
     try {
         const auth = localStorage.getItem('app-auth');
+        if (!auth) return true;
         return auth ? JSON.parse(auth).isGuest : false;
-    } catch { return false; }
+    } catch { return true; }
 });
     const [showDashboard, setShowDashboard] = useState(false);
     
@@ -4087,11 +4143,6 @@ useEffect(() => {
 
 
 
-const handleGuestSuccess = (hash) => {
-  setCurrentUserHash(hash);
-  setIsGuest(true);
-  setPhase('mainApp'); // Сразу в приложение, без анкеты и лицензии
-};
 
 const handleAuthSuccess = async (hash) => {
   setCurrentUserHash(hash);
@@ -4113,7 +4164,11 @@ const handleAuthSuccess = async (hash) => {
   }
   setPhase('mainApp');
 };
-
+const handleGuestSuccess = (hash) => {
+  setCurrentUserHash(hash);
+  setIsGuest(true);
+  setPhase('mainApp');
+};
 const handleSurveyComplete = async (answers) => {
     setShowSurvey(false);
     setSurveyCompleted(true);
@@ -4260,8 +4315,6 @@ case 'auth':
         onGuestSuccess={handleGuestSuccess}
     />;
 
-            case 'agreement': 
-                return <AgreementScreen onAccept={handleAcceptAgreement} darkMode={darkMode} />;
             default:
                 return (
                     <HealthDashboardScreen 
