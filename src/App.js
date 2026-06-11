@@ -1998,11 +1998,18 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
 
 function MainRouteApp({ onExit, setAccount, ...props }) {
     const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
+    
+    // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
+    // Проверяем, запущено ли приложение как нативное (Capacitor на Android/iOS)
+    const isNative = window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' 
+        ? window.Capacitor.isNativePlatform() 
+        : false;
+
     const [navigationStack, setNavigationStack] = useState([{ type: 'home' }]);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [modalAction, setModalAction] = useState(null);
-const [modalActionText, setModalActionText] = useState('');
+    const [modalActionText, setModalActionText] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [currentPlayingRoute, setCurrentPlayingRoute] = useState(null);
     const [activeTab, setActiveTab] = useState('recommendations');
@@ -2014,15 +2021,16 @@ const [modalActionText, setModalActionText] = useState('');
     const [appNotifications, setAppNotifications] = useState([]);
     const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const routesData = useMemo(() => getRoutesData(currentCity, currentLang), [currentCity, currentLang]);
-const activeRoutes = routesData.structure;
-const curatedRoutes = routesData.curated || { recommended: [], explore: [], interesting: [] };
+    const activeRoutes = routesData.structure;
+    const curatedRoutes = routesData.curated || { recommended: [], explore: [], interesting: [] };
     const audioPlayerRef = useRef(null);
     const settingsRef = useRef(null);
     const C = darkMode ? S.dark : S.light;
     const currentView = navigationStack[navigationStack.length - 1];
     const t = (k) => TRANSLATIONS[currentLang]?.[k] || k;
 
-    useEffect(() => {
+    // ... (далее идет ваш существующий код useEffect и логики) ...
+        useEffect(() => {
         const handleSystemChecks = async () => {
             try {
                 const response = await fetch(VERSION_CHECK_URL);
@@ -2292,7 +2300,7 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
     useEffect(() => { const handleClickOutside = (event) => { if (settingsRef.current && !settingsRef.current.contains(event.target)) { setSettingsOpen(false); } }; if (settingsOpen) { document.addEventListener("mousedown", handleClickOutside); } return () => { document.removeEventListener("mousedown", handleClickOutside); }; }, [settingsOpen]);
     const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${t('dist')}`, [units, currentLang]);
 
-       const settingsItems = [
+      const settingsItems = [
         { label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
@@ -2303,23 +2311,24 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
         { label: t('lang'), action: () => { setShowLangModal(true); setSettingsOpen(false); }, icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: darkMode ? t('theme_light') : t('theme_dark'), action: () => { setDarkMode(!darkMode); setSettingsOpen(false); }, icon: darkMode ? <Sun style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> : <Moon style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { type: 'divider' },
-        { 
-            label: "Дашборд активности", 
-            action: () => { 
-                setSettingsOpen(false); 
+        {
+            label: "Дашборд активности",
+            action: () => {
+                setSettingsOpen(false);
                 if (window.__showDashboard) window.__showDashboard();
-            }, 
-            icon: <Activity style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
+            },
+            icon: <Activity style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} />
         },
-        { 
-            label: "Веб-версия", 
-            action: () => { 
-                setSettingsOpen(false); 
-                window.open('https://artemasovvalera.github.io/y_s/', '_system'); 
-            }, 
-            icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> 
-        },
-       { type: 'divider' },
+        // Показываем "Веб-версию" только если это нативное приложение (телефон)
+        ...(isNative ? [{
+            label: "Веб-версия",
+            action: () => {
+                setSettingsOpen(false);
+                window.open('https://artemasovvalera.github.io/y_s/', '_system');
+            },
+            icon: <Globe style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} />
+        }] : []),
+        { type: 'divider' },
         { label: t('search'), action: () => { setShowSearchModal(true); setSettingsOpen(false); }, icon: <Search style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: `Версия ${buildInfo.version} — обновить`, action: () => { setSettingsOpen(false); window.open('https://www.rustore.ru/catalog/app/com.yasam.app', '_system'); }, icon: <Download style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> }
     ];
