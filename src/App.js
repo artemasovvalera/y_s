@@ -2215,33 +2215,52 @@ if (nearbyRoutes.length > 0) {
 
     const allRoutesFlat = useMemo(() => { return Object.keys(activeRoutes).flatMap(topCat => Object.keys(activeRoutes[topCat]).flatMap(subCat => activeRoutes[topCat][subCat])); }, [activeRoutes]);
 
-       // 1. РЯДОМ С ВАМИ (сортировка по расстоянию)
-const nearbyRoutesForHome = useMemo(() => {
-  if (!allRoutesFlat.length || !userLocation) return [];
-  const city = CITIES.find(c => c.id === currentCity);
-  const loc = userLocation || (city ? { lat: city.lat, lon: city.lon } : null);
-  if (!loc) return [];
-  
-  const uniqueRoutes = new Map();
-  allRoutesFlat.forEach(route => {
-    if (!uniqueRoutes.has(route.name)) {
-      uniqueRoutes.set(route.name, {
-        ...route,
-        calculatedDistance: calculateDistance(loc.lat, loc.lon || loc.lng, route.location?.lat, route.location?.lon)
-      });
-    }
-  });
-  return Array.from(uniqueRoutes.values()).sort((a, b) => a.calculatedDistance - b.calculatedDistance).slice(0, 5);
-}, [userLocation, allRoutesFlat, currentCity]);
+    // 1. РЯДОМ С ВАМИ (сортировка по расстоянию, топ-5)
+    const nearbyRoutesForHome = useMemo(() => {
+        if (!allRoutesFlat.length || !userLocation) return [];
+        const city = CITIES.find(c => c.id === currentCity);
+        const loc = userLocation || (city ? { lat: city.lat, lon: city.lon } : null);
+        if (!loc) return [];
+        const uniqueRoutes = new Map();
+        allRoutesFlat.forEach(route => {
+            if (!uniqueRoutes.has(route.name)) {
+                uniqueRoutes.set(route.name, {
+                    ...route,
+                    calculatedDistance: calculateDistance(loc.lat, loc.lon || loc.lng, route.location?.lat, route.location?.lon)
+                });
+            }
+        });
+        return Array.from(uniqueRoutes.values()).sort((a, b) => a.calculatedDistance - b.calculatedDistance).slice(0, 5);
+    }, [userLocation, allRoutesFlat, currentCity]);
 
-// 2. РЕКОМЕНДУЕМ (берем из простого списка переменных)
-const recommendedCurated = useMemo(() => curatedRoutes.recommended || [], [curatedRoutes]);
+    // Собираем имена маршрутов, которые УЖЕ показаны в "Рядом с вами"
+    const nearbyRouteNames = useMemo(() => {
+        const names = new Set();
+        nearbyRoutesForHome.forEach(r => names.add(r.name));
+        return names;
+    }, [nearbyRoutesForHome]);
 
-// 3. ИССЛЕДУЙ (берем из простого списка переменных)
-const exploreCurated = useMemo(() => curatedRoutes.explore || [], [curatedRoutes]);
+    // 2. РЕКОМЕНДУЕМ (НЕЗАВИСИМЫЙ БЛОК: без проверок, без фильтров, как вы и просили)
+    const recommendedCurated = useMemo(() => {
+        return curatedRoutes.recommended || [];
+    }, [curatedRoutes.recommended]);
 
-// 4. ИНТЕРЕСНОЕ (берем из простого списка переменных)
-const interestingCurated = useMemo(() => curatedRoutes.interesting || [], [curatedRoutes]);
+    // 3. ИССЛЕДУЙ (исключаем только те маршруты, что уже есть в "Рядом с вами")
+    const exploreCurated = useMemo(() => {
+        return (curatedRoutes.explore || []).filter(r => !nearbyRouteNames.has(r.name));
+    }, [curatedRoutes.explore, nearbyRouteNames]);
+
+    // Собираем имена маршрутов, которые уже есть в "Рядом с вами" И в "Исследуй"
+    const nearbyAndExploreNames = useMemo(() => {
+        const names = new Set(nearbyRouteNames);
+        exploreCurated.forEach(r => names.add(r.name));
+        return names;
+    }, [nearbyRouteNames, exploreCurated]);
+
+    // 4. ИНТЕРЕСНОЕ (исключаем те, что уже в "Рядом" и "Исследуй")
+    const interestingCurated = useMemo(() => {
+        return (curatedRoutes.interesting || []).filter(r => !nearbyAndExploreNames.has(r.name));
+    }, [curatedRoutes.interesting, nearbyAndExploreNames]);
 // Обработка нажатия на уведомление
 useEffect(() => {
     let listener = null;
