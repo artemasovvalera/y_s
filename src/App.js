@@ -1134,12 +1134,38 @@ return {
 };
 };
 
-const Modal = ({ show, message, onClose, darkMode, buttonText, lang }) => {
+const Modal = ({ show, message, onClose, darkMode, buttonText, lang, onAction, actionButtonText }) => {
     if (!show) return null;
     const C = darkMode ? S.dark : S.light;
     const t = (k) => TRANSLATIONS[lang]?.[k] || k;
     const btnTxt = buttonText || t('close');
-    return (<div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 150, padding: '1rem' }}> <div style={{ borderRadius: '0.75rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', padding: '1.5rem', position: 'relative', width: '100%', maxWidth: '24rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, color: C.text }}> <button onClick={onClose} style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', padding: '0.25rem', borderRadius: '9999px', color: C.textMuted, background: 'none', border: 'none', cursor: 'pointer' }}><XCircle style={{ width: '1.5rem', height: '1.5rem' }} /></button> <p style={{ fontSize: '1.125rem', fontWeight: 600, textAlign: 'center', marginTop: '1rem', marginBottom: '1.5rem' }}>{message}</p> <button onClick={onClose} style={{ width: '100%', backgroundColor: S.emerald600, color: 'white', fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: 'none', cursor: 'pointer' }}>{btnTxt}</button> </div> </div>);
+    
+    return (
+        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 150, padding: '1rem' }}> 
+            <div style={{ borderRadius: '0.75rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', padding: '1.5rem', position: 'relative', width: '100%', maxWidth: '24rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, color: C.text }}> 
+                <button onClick={onClose} style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', padding: '0.25rem', borderRadius: '9999px', color: C.textMuted, background: 'none', border: 'none', cursor: 'pointer' }}>
+                    <XCircle style={{ width: '1.5rem', height: '1.5rem' }} />
+                </button> 
+                
+                {/* Добавили whiteSpace: 'pre-line' для корректного отображения \n */}
+                <p style={{ fontSize: '1.125rem', fontWeight: 600, textAlign: 'center', marginTop: '1rem', marginBottom: '1.5rem', whiteSpace: 'pre-line' }}>
+                    {message}
+                </p> 
+
+                {/* Новая кнопка действия (появляется только если передана) */}
+                {onAction && actionButtonText && (
+                    <button onClick={onAction} style={{ width: '100%', backgroundColor: S.emerald600, color: 'white', fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: 'none', cursor: 'pointer', marginBottom: '0.75rem' }}>
+                        {actionButtonText}
+                    </button>
+                )}
+
+                {/* Кнопка закрытия (теперь вторичная) */}
+                <button onClick={onClose} style={{ width: '100%', backgroundColor: 'transparent', color: C.textMuted, fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: `1px solid ${C.cardBorder}`, cursor: 'pointer' }}>
+                    {btnTxt}
+                </button> 
+            </div> 
+        </div>
+    );
 };
 
 const ContactModal = ({ show, onClose, darkMode, lang }) => {
@@ -1975,6 +2001,8 @@ function MainRouteApp({ onExit, setAccount, ...props }) {
     const [navigationStack, setNavigationStack] = useState([{ type: 'home' }]);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+    const [modalAction, setModalAction] = useState(null);
+const [modalActionText, setModalActionText] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [currentPlayingRoute, setCurrentPlayingRoute] = useState(null);
     const [activeTab, setActiveTab] = useState('recommendations');
@@ -2196,10 +2224,15 @@ useEffect(() => {
 
 // Глобальный метод для показа промпта регистрации
 useEffect(() => {
-  window.__showRegistrationPrompt = () => {
+ window.__showRegistrationPrompt = () => {
     setModalMessage('Вам нравится приложение? 💚\nСоздайте аккаунт, чтобы сохранять маршруты в избранное, отмечать прогресс и синхронизировать данные между устройствами.');
+    setModalActionText('Создать аккаунт');
+    setModalAction(() => {
+        setShowModal(false); // Закрываем модалку
+        if (props.onGoToRegister) props.onGoToRegister(); // Вызываем переход из App
+    });
     setShowModal(true);
-  };
+};
   
   return () => {
     delete window.__showRegistrationPrompt;
@@ -3257,8 +3290,12 @@ const LoadingScreen = ({ darkMode, onComplete }) => {
 // ==========================================
 // ЭКРАН АВТОРИЗАЦИИ
 // ==========================================
-const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess }) => {
+const AuthScreen = ({ darkMode, onAuthSuccess, onGuestSuccess, initialMode }) => {
     const [mode, setMode] = useState('welcome'); // welcome | login | register | reset
+    // Добавляем useEffect, чтобы режим обновлялся, если мы переходим из главного экрана
+    useEffect(() => {
+    if (initialMode) setMode(initialMode); // Добавил проверку, чтобы не было undefined
+  }, [initialMode]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -3755,6 +3792,15 @@ const AgreementScreen = ({ onAccept, darkMode }) => {
     return (<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box' }}> <div style={{ padding: '2rem', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)', width: '100%', maxWidth: '30rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}` }}> <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>Лицензионное соглашение</h2> <div style={{ height: '50vh', overflowY: 'auto', border: `1px solid ${C.cardBorder}`, padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}> <p><strong>1. Общие положения</strong></p><p>1.1. Используя Приложение, вы принимаете условия настоящего Соглашения.</p> <p><strong>2. Геолокация и Уведомления</strong></p><p>2.1. Приложение использует данные о вашем местоположении для уведомления о близости достопримечательностей (в радиусе 20 метров).</p><p>2.2. Данные обрабатываются локально на устройстве.</p><p>2.3. Приложение может отправлять уведомления об обновлениях и интересных местах.</p> <p><strong>3. Ответственность</strong></p><p>3.1. Разработчик не несет ответственности за актуальность маршрутов.</p> </div> <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}> <input type="checkbox" id="agreement-checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> <label htmlFor="agreement-checkbox" style={{ fontSize: '0.875rem' }}>Я принимаю условия соглашения и политику конфиденциальности.</label> </div> <button onClick={onAccept} disabled={!isChecked} style={{ width: '100%', backgroundColor: S.emerald600, color: 'white', fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: 'none', cursor: 'pointer', fontSize: '1rem', opacity: isChecked ? 1 : 0.5, transition: 'opacity 0.2s' }}>Принять и продолжить</button> </div> </div>);
 };
 export default function App() {
+    
+    // Добавьте рядом с другими useState
+const [authInitialMode, setAuthInitialMode] = useState('welcome');
+
+// Добавьте функцию перехода к регистрации
+const handleGoToRegister = () => {
+    setAuthInitialMode('register');
+    setPhase('auth');
+     }; 
     const [phase, setPhase] = useState(() => {
   try {
     const auth = localStorage.getItem('app-auth');
@@ -4305,6 +4351,7 @@ const handleLogout = () => {
                         currentCity={currentCity} setCurrentCity={setCurrentCity} 
                         isGuest={isGuest}
 currentUserHash={currentUserHash}
+onGoToRegister={handleGoToRegister}
                     />
                 );
 
@@ -4313,6 +4360,7 @@ case 'auth':
         darkMode={darkMode} 
         onAuthSuccess={handleAuthSuccess}
         onGuestSuccess={handleGuestSuccess}
+        initialMode={authInitialMode}
     />;
 
             default:
