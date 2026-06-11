@@ -3788,32 +3788,9 @@ const saveUserDataToServer = async (hash, userData) => {
   }
 };
 
-// === 3. ФУНКЦИЯ С ЗАДЕРЖКОЙ (DEBOUNCE) ===
-const debouncedSaveToServer = (hash, userData) => {
-  if (!hash) return; // Не сохраняем, если нет хеша пользователя
-  
-  // Если таймер уже запущен — отменяем его
-  if (saveTimeoutRef.current) {
-    clearTimeout(saveTimeoutRef.current);
-  }
-  //__________________________испр
-// === 3. ФУНКЦИЯ С ЗАДЕРЖКОЙ (DEBOUNCE) ===
 const debouncedSaveToServer = (hash, userData) => {
   if (!hash) return;
-  
-  if (saveTimeoutRef.current) {
-    clearTimeout(saveTimeoutRef.current);
-  }
-  
-  saveTimeoutRef.current = setTimeout(() => {
-    saveUserDataToServer(hash, userData);
-  }, 2000);
-};
-
-  //_________________________
-
-
-  // Запускаем новый таймер на 2000 мс (2 секунды)
+  if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
   saveTimeoutRef.current = setTimeout(() => {
     saveUserDataToServer(hash, userData);
   }, 2000);
@@ -4116,10 +4093,27 @@ const handleGuestSuccess = (hash) => {
   setPhase('mainApp'); // Сразу в приложение, без анкеты и лицензии
 };
 
-const handleAuthSuccess = (hash) => {
+const handleAuthSuccess = async (hash) => {
   setCurrentUserHash(hash);
   setIsGuest(false);
-  setPhase('mainApp'); // Сразу в приложение
+  const serverData = await loadUserDataFromServer(hash);
+  if (serverData) {
+    if (serverData.favs) setFavs(serverData.favs);
+    if (serverData.completed) setCompleted(serverData.completed);
+    if (serverData.account) setAccount(serverData.account);
+    if (serverData.settings) {
+      if (serverData.settings.darkMode !== undefined) setDarkMode(serverData.settings.darkMode);
+      if (serverData.settings.lang) setCurrentLang(serverData.settings.lang);
+      if (serverData.settings.city) setCurrentCity(serverData.settings.city);
+    }
+    if (serverData.surveyCompleted === 'true' || serverData.surveyCompleted === true) {
+      setSurveyCompleted(true);
+      localStorage.setItem('survey-completed', 'true');
+    }
+  }
+  const surveyed = localStorage.getItem('survey-completed') === 'true';
+  if (!surveyed) setTimeout(() => setShowSurvey(true), 2000);
+  setPhase('mainApp');
 };
 
 const handleSurveyComplete = async (answers) => {
@@ -4187,6 +4181,10 @@ const handleLogout = () => {
     const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
 
     const handleComplete = useCallback((route) => { 
+        if (isGuest) {
+        if (window.__showRegistrationPrompt) window.__showRegistrationPrompt();
+        return;
+    }
         if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } 
         const date = new Date(); 
         const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; 
@@ -4205,14 +4203,17 @@ const handleLogout = () => {
     }, [completed, rewardTiers]);
 
     const isFav = useCallback((route) => favs.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))), [favs, currentCity]);
-    const toggleFavorite = useCallback((route) => { 
-        setFavs(prev => { 
-            const is = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); 
-            if (is) return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); 
-            else return [...prev, { ...route, cityId: currentCity }]; 
-        }); 
-    }, [currentCity]);
-
+    const toggleFavorite = useCallback((route) => {
+    if (isGuest) {
+        if (window.__showRegistrationPrompt) window.__showRegistrationPrompt();
+        return;
+    }
+    setFavs(prev => { 
+        const is = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); 
+        if (is) return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); 
+        else return [...prev, { ...route, cityId: currentCity }]; 
+    }); 
+}, [currentCity, isGuest]);
     const appRootStyle = { minHeight: '100vh', width: '100%', backgroundColor: darkMode ? S.dark.bg : S.light.bg, boxSizing: 'border-box' };
 
     const renderContent = () => {
