@@ -1736,9 +1736,9 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
         {/* СЕТКА СТАТИСТИКИ */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {[
-            { label: 'Маршрутов', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6', onClick: () => navigate('completed') },
+            { label: 'Маршрутов прройдено', value: account.completedRoutesCount, icon: '🗺️', color: '#3B82F6', onClick: () => navigate('progress') },
 { label: 'Наград', value: account.rewards.length, icon: '🏅', color: '#F59E0B', onClick: null },
-{ label: 'Дней в приложении', value: '7+', icon: '📅', color: '#8B5CF6', onClick: null },
+{ label: 'Дней в приложении', value: isGuest ? '—' : '7+', icon: '📅', color: '#8B5CF6', onClick: null },
 { label: 'Избранное', value: favoriteRoutes?.length || 0, icon: '❤️', color: '#EF4444', onClick: () => navigate('favorites') }
           ].map((stat, idx) => (
             <div key={idx} onClick={stat.onClick} style={{ background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '16px 8px', textAlign: 'center', cursor: stat.onClick ? 'pointer' : 'default' }}>
@@ -4111,8 +4111,6 @@ const handleAuthSuccess = async (hash) => {
       localStorage.setItem('survey-completed', 'true');
     }
   }
-  const surveyed = localStorage.getItem('survey-completed') === 'true';
-  if (!surveyed) setTimeout(() => setShowSurvey(true), 2000);
   setPhase('mainApp');
 };
 
