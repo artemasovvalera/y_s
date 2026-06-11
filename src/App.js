@@ -1860,8 +1860,54 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
   ); 
 };
 
-const CatalogHeader = ({ title, onBack, darkMode }) => { const C = darkMode ? S.dark : S.light; return (<div style={{ ...S.flex, ...S.itemsCenter, marginBottom: '1.5rem' }}> <h2 style={{ ...S.textXl, ...S.fontBold, textAlign: 'center', flex: 1 }}>{title}</h2> </div>); };
-
+const CatalogHeader = ({ title, onBack, darkMode }) => { 
+    const C = darkMode ? S.dark : S.light; 
+    return (
+        <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            marginBottom: '1.5rem', 
+            position: 'relative',
+            minHeight: '40px'
+        }}> 
+            {onBack ? (
+                <button 
+                    onClick={onBack} 
+                    style={{ 
+                        background: C.cardBg, 
+                        border: `1px solid ${C.cardBorder}`, 
+                        borderRadius: '50%', 
+                        width: '40px', 
+                        height: '40px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        cursor: 'pointer', 
+                        color: C.text,
+                        marginRight: '0.75rem',
+                        flexShrink: 0,
+                        boxShadow: C.shadow
+                    }}
+                >
+                    <ArrowLeft size={20} />
+                </button>
+            ) : <div style={{ width: '40px', flexShrink: 0 }} />}
+            <h2 style={{ 
+                fontSize: '1.25rem', 
+                lineHeight: '1.75rem',
+                fontWeight: 800, 
+                textAlign: 'center', 
+                flex: 1, 
+                margin: 0,
+                color: C.text
+            }}>
+                {title}
+            </h2>
+            {/* Пустой блок справа для симметрии, чтобы заголовок оставался по центру */}
+            <div style={{ width: '40px', flexShrink: 0 }} />
+        </div>
+    ); 
+};
 const RouteListItem = React.memo(({ route, onNavigate, onPlayAudio, onToggleFavorite, isFavorite, userLocation, formatDistance, C, isCompleted, subtitle, lang }) => {
     const distance = userLocation ? calculateDistance(userLocation.lat, userLocation.lon, route.location?.lat, route.location?.lon) : 0;
     const steps = Math.floor(route.distance * 1250);
@@ -2301,8 +2347,8 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
     const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${t('dist')}`, [units, currentLang]);
 
       const settingsItems = [
-        { label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
-        { label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        //{ label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
+        //{ label: t('fav'), action: () => { setActiveTab('favorites'); navigate('favorites'); setSettingsOpen(false); }, icon: <Star style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('account'), action: () => { navigate('account'); setSettingsOpen(false); }, icon: <User style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('contact'), action: () => { setShowContactModal(true); setSettingsOpen(false); }, icon: <Mail style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
         { label: t('notif'), action: () => { setActiveTab('notifications'); navigate('notifications'); setSettingsOpen(false); }, icon: <Bell style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
