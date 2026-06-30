@@ -979,9 +979,9 @@ const getEmptyStructure = () => ({
 
 // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ КЕМЕРОВО ===
 // Просто перечисляем переменные маршрутов через запятую!
-curatedRecommended = [pcoff, fiveFacts];
-curatedExplore = [s_bor, mmuz];
-curatedInteresting = [reki, rampa];
+curatedRecommended = [pcoff];
+curatedExplore = [s_bor, mmuz, svist];
+curatedInteresting = [nabOgrazhdenie, reki, rampa];
 
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
