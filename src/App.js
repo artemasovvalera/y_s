@@ -608,11 +608,12 @@ const LANGUAGES = [
 ];
 
 const CITIES = [
-    { id: 'kemerovo', lat: 55.3533, lon: 86.0883 },
-    { id: 'moscow', lat: 55.7558, lon: 37.6173 },
-    { id: 'yerevan', lat: 40.1872, lon: 44.5152 },
-    { id: 'dusseldorf', lat: 51.2277, lon: 6.7735 },
-    { id: 'arambol', lat: 15.6861, lon: 73.7144 },
+{ id: 'kemerovo', lat: 55.3533, lon: 86.0883 },
+{ id: 'moscow', lat: 55.7558, lon: 37.6173 },
+{ id: 'yerevan', lat: 40.1872, lon: 44.5152 },
+{ id: 'dusseldorf', lat: 51.2277, lon: 6.7735 },
+{ id: 'arambol', lat: 15.6861, lon: 73.7144 },
+{ id: 'pitsunda', lat: 43.165, lon: 40.335 },
 ];
 
 const TRANSLATIONS = {
@@ -634,7 +635,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Мы будем уведомлять вас о:\n• Интересных маршрутах поблизости\n• Новых аудиогидах\n• Обновлениях приложения\n\nЭто поможет не пропустить ничего важного!",
         notif_allow: "Разрешить",
         notif_later: "Позже",
-        city_kemerovo: "Кемерово", city_moscow: "Москва", city_yerevan: "Ереван", city_dusseldorf: "Дюссельдорф", city_arambol: "Арамболь",
+       city_kemerovo: "Кемерово", city_moscow: "Москва", city_yerevan: "Ереван", city_dusseldorf: "Дюссельдорф", city_arambol: "Арамболь", city_pitsunda: "Пицунда",
 
         "Культурные и исторические маршруты": "Культурные и исторические",
         "Природные и активные маршруты": "Природные и активные",
@@ -693,7 +694,7 @@ const TRANSLATIONS = {
         notif_allow: "Allow",
         notif_later: "Later",
     
-        city_kemerovo: "Kemerovo", city_moscow: "Moscow", city_yerevan: "Yerevan", city_dusseldorf: "Dusseldorf", city_arambol: "Arambol",
+        city_kemerovo: "Kemerovo", city_moscow: "Moscow", city_yerevan: "Yerevan", city_dusseldorf: "Dusseldorf", city_arambol: "Arambol", city_pitsunda: "Pitsunda",
 
         "Культурные и исторические маршруты": "Cultural & Historical",
         "Природные и активные маршруты": "Nature & Active",
@@ -750,7 +751,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Wir benachrichtigen Sie über:\n• Routen in der Nähe\n• Neue Audioguides\n• App-Updates\n\nVerpassen Sie nichts Wichtiges!",
         notif_allow: "Erlauben",
         notif_later: "Später",
-        city_kemerovo: "Kemerowo", city_moscow: "Moskau", city_yerevan: "Eriwan", city_dusseldorf: "Düsseldorf", city_arambol: "Arambol",
+        city_kemerovo: "Kemerowo", city_moscow: "Moskau", city_yerevan: "Eriwan", city_dusseldorf: "Düsseldorf", city_arambol: "Arambol", city_pitsunda: "Pizunda",
 
         "Культурные и исторические маршруты": "Kultur & Geschichte",
         "Природные и активные маршруты": "Natur & Aktiv",
@@ -799,7 +800,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Մենք կծանուցենք ձեզ՝\n• Մոտակա երթուղիների մասին\n• Նոր աուդիոուղեցույցների\n• Թարմացումների\n\nՄի՛ բաց թողեք կարևորը!",
         notif_allow: "Թույլատրել",
         notif_later: "Ավելի ուշ",
-        city_kemerovo: "Կեմերովո", city_moscow: "Մոսկվա", city_yerevan: "Երևան", city_dusseldorf: "Դյուսելդորֆ", city_arambol: "Արամբոլ",
+        city_kemerovo: "Կեմերովո", city_moscow: "Մոսկվա", city_yerevan: "Երևան", city_dusseldorf: "Դյուսելդորֆ", city_arambol: "Արամբոլ", city_pitsunda: "Պիցունդա",
 
         "Культурные и исторические маршруты": "Մշակութային",
         "Природные и активные маршруты": "Բնություն",
@@ -1115,14 +1116,83 @@ curatedInteresting = [cascadeRoute];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [cascadeRoute];
      
         
-    } else if (cityId === 'dusseldorf') {
+   } else if (cityId === 'dusseldorf') {
 const tower = { name: t("Rheinturm"), distance: 0.2, time: "10 min", image: "https://images.unsplash.com/photo-1555818671-55b35242735a?w=1200", location: { lat: 51.2179, lon: 6.7617 }, descriptionShort: "Telecommunications tower.", subCategory: "Архитектурные достопримечательности" };
 structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [tower];
-
 // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ДЮССЕЛЬДОРФА ===
 curatedRecommended = [tower];
 curatedExplore = [tower];
 curatedInteresting = [tower];
+
+} else if (cityId === 'pitsunda') {
+// --- ПЕРЕМЕННЫЕ ПИЦУНДЫ ---
+const petushok = { 
+    name: "Остановка Петушок", 
+    distance: 0.1, 
+    time: "5 мин", 
+    difficulty: "Лёгкая", 
+    image: "https://archive.org/download/pet-abh/2024_05_29-11_35_49.JPG", 
+    audioUrl: "https://archive.org/download/pet-abh/Pet_ABH.MP3", 
+    videoUrl: "https://youtu.be/579zdxuMx1g", 
+    geoUrl: "https://maps.app.goo.gl/e2McWrWLpQws84No9", 
+    location: { lat: 43.182452, lon: 40.292597 }, 
+    descriptionShort: "Одна из немногих остановок Церетели в Абхазии — уникальный памятник советского монументального искусства на побережье Чёрного моря.", 
+    subCategory: "Скульптуры и уличное искусство" 
+};
+
+// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ПИЦУНДЫ ===
+curatedRecommended = [petushok];
+curatedExplore = [petushok];
+curatedInteresting = [petushok];
+
+// --- ЗАПОЛНЕНИЕ КАТАЛОГА ПИЦУНДЫ ---
+// === Культурные и исторические маршруты ===
+structure["Культурные и исторические маршруты"]["Набережная"] = [petushok];
+structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [petushok];
+structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [petushok];
+structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [petushok];
+structure["Культурные и исторические маршруты"]["Городские площади"] = [petushok];
+structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [petushok];
+structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [petushok];
+structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [petushok];
+
+// === Природные и активные маршруты ===
+structure["Природные и активные маршруты"]["Природные зоны и парки"] = [petushok];
+structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [petushok];
+structure["Природные и активные маршруты"]["Активный отдых у воды"] = [petushok];
+structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [petushok];
+
+// === Современные и урбанистические маршруты ===
+structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [petushok];
+structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [petushok];
+structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [petushok];
+structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [petushok];
+
+// === Гастрономические маршруты ===
+structure["Гастрономические маршруты"]["Кофе"] = [petushok];
+structure["Гастрономические маршруты"]["Уличная еда"] = [petushok];
+structure["Гастрономические маршруты"]["Традиционные рестораны"] = [petushok];
+structure["Гастрономические маршруты"]["Гастрономические мастер-классы"] = [petushok];
+
+// === Семейные маршруты ===
+structure["Семейные маршруты"]["Парки аттракционы и детские площадки"] = [petushok];
+structure["Семейные маршруты"]["Зоопарки"] = [petushok];
+structure["Семейные маршруты"]["Музеи для детей"] = [petushok];
+structure["Семейные маршруты"]["Пикники на природе"] = [petushok];
+structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [petushok];
+
+// === Альтернативные маршруты ===
+structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [petushok];
+structure["Альтернативные маршруты"]["Урбанистические исследования"] = [petushok];
+structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [petushok];
+structure["Альтернативные маршруты"]["Ночные экскурсии"] = [petushok];
+
+// === Тематические маршруты ===
+structure["Тематические маршруты"]["Музыкальные маршруты"] = [petushok];
+structure["Тематические маршруты"]["Кино и телевидение"] = [petushok];
+structure["Тематические маршруты"]["Мифы и легенды"] = [petushok];
+structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [petushok];
+structure["Тематические маршруты"]["Спортивные маршруты"] = [petushok];
 }
 return {
   structure: structure,
