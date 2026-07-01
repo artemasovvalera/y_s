@@ -1171,7 +1171,7 @@ const octopusStop = {
     };
 
 // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ПИЦУНДЫ ===
-curatedRecommended = [petushok, ritsaLake];
+curatedRecommended = [ritsaLake];
 curatedExplore = [petushok, octopusStop];
 curatedInteresting = [petushok];
 
