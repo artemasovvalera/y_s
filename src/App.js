@@ -1139,7 +1139,22 @@ const petushok = {
     descriptionShort: "Одна из немногих остановок Церетели в Абхазии — уникальный памятник советского монументального искусства на побережье Чёрного моря.", 
     subCategory: "Скульптуры и уличное искусство" 
 };
- const octopusStop = { 
+
+const ritsaLake = {
+    name: "Озеро Рица",
+    distance: 0.5,
+    time: "5 мин",
+    difficulty: "Лёгкая",
+    image: "https://archive.org/download/11876545678/11876545678.jpg",
+    audioUrl: "https://archive.org/download/11876545678/RIZA_abh.MP3",
+    videoUrl: "https://youtu.be/Yoieim_2rU8",
+    geoUrl: "https://maps.app.goo.gl/TKdQodrsp23CgKy5A",
+    location: { lat: 43.477987, lon: 40.536329 },
+    descriptionShort: "Жемчужина Абхазии — высокогорное озеро Рица с кристально чистой водой бирюзового цвета, окружённое величественными горами и реликтовыми лесами. Одно из самых красивых мест Кавказа.",
+    subCategory: "Природные зоны и парки"
+};
+
+const octopusStop = { 
         name: "Остановка Осминог", 
         author: "Церителли",
         distance: 0.5, 
@@ -1156,7 +1171,7 @@ const petushok = {
     };
 
 // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ПИЦУНДЫ ===
-curatedRecommended = [petushok];
+curatedRecommended = [petushok, ritsaLake];
 curatedExplore = [petushok, octopusStop];
 curatedInteresting = [petushok];
 
@@ -1172,9 +1187,9 @@ structure["Культурные и исторические маршруты"]["
 structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [petushok, octopusStop];
 
 // === Природные и активные маршруты ===
-structure["Природные и активные маршруты"]["Природные зоны и парки"] = [petushok];
-structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [petushok];
-structure["Природные и активные маршруты"]["Активный отдых у воды"] = [petushok];
+structure["Природные и активные маршруты"]["Природные зоны и парки"] = [petushok, ritsaLake];
+structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [ritsaLake];
+structure["Природные и активные маршруты"]["Активный отдых у воды"] = [ritsaLake, petushok];
 structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [petushok];
 
 // === Современные и урбанистические маршруты ===
@@ -1199,13 +1214,13 @@ structure["Семейные маршруты"]["Игровые центры и �
 // === Альтернативные маршруты ===
 structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [petushok];
 structure["Альтернативные маршруты"]["Урбанистические исследования"] = [petushok, octopusStop];
-structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [petushok];
+structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [ritsaLake, petushok];
 structure["Альтернативные маршруты"]["Ночные экскурсии"] = [petushok];
 
 // === Тематические маршруты ===
 structure["Тематические маршруты"]["Музыкальные маршруты"] = [petushok];
 structure["Тематические маршруты"]["Кино и телевидение"] = [petushok];
-structure["Тематические маршруты"]["Мифы и легенды"] = [petushok, octopusStop];
+structure["Тематические маршруты"]["Мифы и легенды"] = [ritsaLake, petushok, octopusStop];
 structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [petushok];
 structure["Тематические маршруты"]["Спортивные маршруты"] = [petushok];
 }
