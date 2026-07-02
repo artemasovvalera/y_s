@@ -1057,11 +1057,11 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const erevFountains = { name: "Питьевые фонтанчики", distance: 0.1, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_pu/1212111.png", audioUrl: "https://archive.org/download/er_pu/er_pu.MP3", location: { lat: 40.16119950780383, lon: 44.51159737974957 }, videoUrl: "https://youtu.be/P9JKqs3vl7o", geoUrl: "https://maps.app.goo.gl/pCFG6dqXqrH1xNF9A", descriptionShort: "Питьевые фонтанчики Еревана — маленькая традиция большого города.", subCategory: "Ереван" };
         const erevFountainRepublic = { name: "Поющий фонтан на площади Республики", distance: 1, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/epf77ipp8usk3kgcsk2ffrivutwqqmkd.webp", audioUrl: "https://archive.org/download/fontan_202606/fontan.MP3", location: { lat: 40.17824217635196, lon: 44.513464698100464 }, videoUrl: "https://archive.org/download/epf77ipp8usk3kgcsk2ffrivutwqqmkd/202606041245%20%281%29.mp4", geoUrl: "https://maps.app.goo.gl/V8dHVqcMNByFWQnx7", descriptionShort: "Поющие фонтаны на площади Республики. Рекомендуется к посещению вечером.", subCategory: "Ереван" };
         const erebuniFortress = { name: "Крепость Эребуни", distance: 1, time: "60 мин", difficulty: "Лёгкая", image: "https://archive.org/download/202606041245-1-2/Erebuni_Fortress_21.jpg", audioUrl: "https://archive.org/download/202606041245-1-2/202606041245-_1_.mp3", location: { lat: 40.1406, lon: 44.5381 }, videoUrl: "https://archive.org/download/202606041245-1-2/202606041245%20%281%29%20%282%29.mp4", geoUrl: "https://maps.app.goo.gl/F4aR2Vk22L5HpP9n6", descriptionShort: "Урартская крепость 782 года до н.э. — именно отсюда пошло название Ереван. Основана царём Аргишти I и служила форпостом в Араратской долине.", subCategory: "Ереван" };
-
+        const khorVirap = {  name: "Хор Вирап — древний монастырь с видом на Арарат",  distance: 40,   time: "40 мин",   difficulty: "Средняя",   image: "https://archive.org/download/202607011908/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-07-02%20%D0%B2%2017.11.36.png",   audioUrl: "https://archive.org/download/202607011908/202607011908.mp3",   videoUrl: "https://youtu.be/IDGqDOTTmo4",   geoUrl: "https://maps.app.goo.gl/kXHjT9GScBkZ165Y9",   location: { lat: 39.8782917, lon: 44.5764714 },   descriptionShort: "Древний монастырь в 40 км к югу от Еревана у границы с Турцией. Стоит на холме у горы Арарат с лучшим видом на святыню. Название переводится как «глубокая темница». Поездка занимает около 40 минут.",   subCategory: "Церкви и храмы",  explicitDate: "2026-07-02"};
 
 // === КУРИРУЕМЫЕ РАЗДЕЛЫ ДЛЯ ЕРЕВАНА ===
 // Просто добавляй сюда имена переменных маршрутов через запятую
-curatedRecommended = [erevFountains];
+curatedRecommended = [khorVirap, erevFountains];
 curatedExplore = [erevFountainRepublic, erebuniFortress];
 curatedInteresting = [cascadeRoute];
 
@@ -1074,11 +1074,11 @@ curatedInteresting = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [khorVirap, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [khorVirap, erevFountains, cascadeRoute];
 
         // === Природные и активные маршруты ===
-        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [erebuniFortress, cascadeRoute];
+        structure["Природные и активные маршруты"]["Природные зоны и парки"] = [khorVirap, erebuniFortress, cascadeRoute];
         structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [cascadeRoute];
         structure["Природные и активные маршруты"]["Активный отдых у воды"] = [cascadeRoute];
         structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [cascadeRoute];
@@ -1111,7 +1111,7 @@ curatedInteresting = [cascadeRoute];
         // === Тематические маршруты ===
         structure["Тематические маршруты"]["Музыкальные маршруты"] = [erevFountainRepublic, cascadeRoute];
         structure["Тематические маршруты"]["Кино и телевидение"] = [cascadeRoute];
-        structure["Тематические маршруты"]["Мифы и легенды"] = [erevFountains, cascadeRoute];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [khorVirap, erevFountains, cascadeRoute];
         structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [erevFountainRepublic, cascadeRoute];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [cascadeRoute];
      
@@ -4040,7 +4040,7 @@ const interactionCountRef = useRef(0);
 const regPromptShownRef = useRef(false);
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "3.0", date: "10.06.2026" }; 
+    const buildInfo = { version: "3.2", date: "02.07.2026" }; 
     const routeIcons = { 
         "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, 
         "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, 
