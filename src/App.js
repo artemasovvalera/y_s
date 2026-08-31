@@ -1125,7 +1125,7 @@ structure["Культурные и исторические маршруты"]["
 curatedRecommended = [tower];
 curatedExplore = [tower];
 curatedInteresting = [tower];
-
+}
  } else if (cityId === 'dortmund') {
     // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
     const dortmundFacts = { 
