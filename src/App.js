@@ -22,6 +22,8 @@ const apiCall = async (action, params) => {
             body: JSON.stringify({ action, ...params })
         });
         return await response.json();
+        console.log('📥 сервер ответил:', action, result);  // ← ДОБАВЬ ЭТО
+        return result;
     } catch (e) {
         return { success: false, error: 'network_error' };
     }
