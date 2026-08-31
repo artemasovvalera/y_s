@@ -4293,7 +4293,6 @@ const logEvent = useCallback((type, data = {}) => {
   }, [currentCity, currentLang, currentUserHash]);
 
 
-}, [currentCity, currentLang]);
 
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
