@@ -21,10 +21,11 @@ const apiCall = async (action, params) => {
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ action, ...params })
         });
-        return await response.json();
-        console.log('📥 сервер ответил:', action, result);  // ← ДОБАВЬ ЭТО
+        const result = await response.json();  // ← ВОТ ЭТА СТРОКА ДОЛЖНА БЫТЬ ПЕРЕД console.log
+        console.log('📥 сервер ответил:', action, result);
         return result;
     } catch (e) {
+        console.error('💥 ошибка сети:', e);
         return { success: false, error: 'network_error' };
     }
 };
