@@ -3,12 +3,11 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import {
     Settings, Home, ArrowLeft, Clock, MapPin, Leaf, Activity, Landmark, ChevronDown,
-    ChevronRight, XCircle, Star, Heart, CheckCircle, Navigation, PlayCircle,
-    Pause, Monitor, Award, Compass, LogOut, Info, Mail, Bell, Search, Send, Clapperboard,
+    XCircle, Star, Heart, CheckCircle, Navigation, PlayCircle,
+    Pause, Monitor, Award, Compass, Mail, Bell, Search, Send, Clapperboard,
     Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
-    Music, Camera, BookOpen, Smile, Bike, Globe, Building, Download, Loader
+    Music, BookOpen, Smile, Bike, Globe, Building, Download, Loader
 } from "lucide-react";
-
 
 // ==========================================
 // КОНФИГУРАЦИЯ СЕРВЕРА
@@ -31,14 +30,6 @@ const apiCall = async (action, params) => {
 
 // === СИНХРОНИЗАЦИЯ ДАННЫХ С СЕРВЕРОМ ===
 const saveUserDataToServer = async (hash, userData) => {
-  try {
-    await apiCall('saveUserData', { hash, userData });
-  } catch (e) {
-    console.log('Не удалось сохранить данные на сервер:', e);
-  }
-};
-
-const loadUserDataFromServer = async (hash) => {
   try {
     const result = await apiCall('loadUserData', { hash });
     if (result.success && result.data) {
