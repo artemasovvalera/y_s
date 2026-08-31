@@ -4270,6 +4270,7 @@ const [eventLog, setEventLog] = useState(() => {
 });
 
 const logEvent = useCallback((type, data = {}) => {
+    console.log('🔥 logEvent called:', type, data);
   const event = {
     type,
     timestamp: new Date().toISOString(),
