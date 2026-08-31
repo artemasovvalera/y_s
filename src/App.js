@@ -617,6 +617,26 @@ const CITIES = [
 { id: 'dortmund', lat: 51.5135, lon: 7.4658 },
 ];
 
+const COUNTRY_GROUPS = [
+    { id: 'ru', label: 'Россия', flag: '🇷🇺', cities: [
+        { id: 'kemerovo', label: 'Кемерово' },
+        { id: 'moscow', label: 'Москва' },
+    ]},
+    { id: 'am', label: 'Армения', flag: '🇦🇲', cities: [
+        { id: 'yerevan', label: 'Ереван' },
+    ]},
+    { id: 'de', label: 'Германия', flag: '🇩🇪', cities: [
+        { id: 'dusseldorf', label: 'Дюссельдорф' },
+        { id: 'dortmund', label: 'Дортмунд' },
+    ]},
+    { id: 'in', label: 'Индия', flag: '🇮🇳', cities: [
+        { id: 'arambol', label: 'Арамболь' },
+    ]},
+    { id: 'ab', label: 'Абхазия', flag: '🇬🇪', cities: [
+        { id: 'pitsunda', label: 'Пицунда' },
+    ]},
+];
+
 const TRANSLATIONS = {
     ru: {
         app_name: "Я САМ",
@@ -1125,8 +1145,7 @@ structure["Культурные и исторические маршруты"]["
 curatedRecommended = [tower];
 curatedExplore = [tower];
 curatedInteresting = [tower];
-}
- } else if (cityId === 'dortmund') {
+} else if (cityId === 'dortmund') {
     // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
     const dortmundFacts = { 
         name: "Факты о Дортмунде", 
@@ -1194,7 +1213,7 @@ curatedInteresting = [tower];
     structure["Тематические маршруты"]["Мифы и легенды"] = [dortmundFacts];
     structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [];
     structure["Тематические маршруты"]["Спортивные маршруты"] = [];
-}
+
 
     // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ДОРТМУНДА ===
     curatedRecommended = [dortmundFacts];
@@ -1203,7 +1222,7 @@ curatedInteresting = [tower];
 
     // --- ЗАПОЛНЕНИЕ КАТАЛОГА ДОРТМУНДА ---
     structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [dortmundFacts];
-}
+
 
 } else if (cityId === 'pitsunda') {
 // --- ПЕРЕМЕННЫЕ ПИЦУНДЫ ---
@@ -1428,6 +1447,121 @@ const SelectionModal = ({ show, onClose, title, items, onSelect, currentId, dark
                     ))}
                 </div>
                 <button onClick={onClose} style={{ marginTop: '1.5rem', width: '100%', padding: '0.75rem', background: 'none', border: 'none', color: C.textMuted, cursor: 'pointer' }}>{t('cancel') || "Cancel"}</button>
+            </div>
+        </div>
+    );
+};
+
+const CountryCityModal = ({ show, onClose, onSelectCity, currentCityId, darkMode, lang }) => {
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    if (!show) return null;
+
+    const t = (k) => TRANSLATIONS[lang]?.[k] || k;
+
+    const C = darkMode ? {
+        bg: 'rgba(0,0,0,0.6)', panel: '#0f172a', card: 'rgba(255,255,255,0.06)',
+        text: '#f8fafc', muted: '#94a3b8', border: 'rgba(255,255,255,0.08)',
+        accent: '#10b981', accentGlow: 'rgba(16,185,129,0.2)'
+    } : {
+        bg: 'rgba(0,0,0,0.4)', panel: '#ffffff', card: 'rgba(255,255,255,0.95)',
+        text: '#0f172a', muted: '#64748b', border: 'rgba(0,0,0,0.06)',
+        accent: '#10b981', accentGlow: 'rgba(16,185,129,0.1)'
+    };
+
+    const handleSelectCity = (cityId) => { onSelectCity(cityId); onClose(); };
+
+    return (
+        <div style={{
+            position: 'fixed', inset: 0, backgroundColor: C.bg, zIndex: 200,
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            backdropFilter: 'blur(6px)'
+        }} onClick={onClose}>
+            <div style={{
+                width: '100%', maxWidth: '480px', backgroundColor: C.panel,
+                borderRadius: '28px 28px 0 0', border: `1px solid ${C.border}`,
+                borderBottom: 'none', maxHeight: '85vh', display: 'flex', flexDirection: 'column',
+                boxShadow: darkMode ? '0 -10px 40px rgba(0,0,0,0.5)' : '0 -10px 40px rgba(0,0,0,0.15)'
+            }} onClick={e => e.stopPropagation()}>
+                
+                {/* Шапка */}
+                <div style={{ padding: '24px 24px 16px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                        <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: C.text }}>
+                            {selectedCountry ? t('city') : 'Выберите страну'}
+                        </h3>
+                        <p style={{ margin: '4px 0 0', fontSize: '13px', color: C.muted }}>
+                            {selectedCountry ? `${selectedCountry.flag} ${selectedCountry.label}` : 'Сначала страну, затем город'}
+                        </p>
+                    </div>
+                    <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, padding: '8px' }}>
+                        <XCircle size={24} />
+                    </button>
+                </div>
+
+                {/* Кнопка назад */}
+                {selectedCountry && (
+                    <button onClick={() => setSelectedCountry(null)} style={{
+                        display: 'flex', alignItems: 'center', gap: '6px', margin: '16px 24px 0',
+                        background: 'none', border: 'none', color: C.accent, fontWeight: 600, fontSize: '14px', cursor: 'pointer'
+                    }}>
+                        <ArrowLeft size={18} /> Назад к странам
+                    </button>
+                )}
+
+                {/* Контент */}
+                <div style={{ overflowY: 'auto', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {!selectedCountry ? (
+                        // --- СТРАНЫ ---
+                        COUNTRY_GROUPS.map(country => (
+                            <div key={country.id} onClick={() => setSelectedCountry(country)} style={{
+                                background: C.card, border: `1px solid ${C.border}`, borderRadius: '16px',
+                                padding: '16px 18px', display: 'flex', alignItems: 'center', gap: '14px',
+                                cursor: 'pointer'
+                            }}>
+                                <div style={{
+                                    width: '48px', height: '48px', borderRadius: '14px',
+                                    background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0
+                                }}>{country.flag}</div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontWeight: 700, fontSize: '16px', color: C.text }}>{country.label}</div>
+                                    <div style={{ fontSize: '13px', color: C.muted, marginTop: '2px' }}>{country.cities.length} {country.cities.length === 1 ? 'город' : 'города'}</div>
+                                </div>
+                                <div style={{ color: C.accent, fontSize: '20px', fontWeight: 700 }}>→</div>
+                            </div>
+                        ))
+                    ) : (
+                        // --- ГОРОДА ---
+                        selectedCountry.cities.map(city => {
+                            const isActive = currentCityId === city.id;
+                            return (
+                                <div key={city.id} onClick={() => handleSelectCity(city.id)} style={{
+                                    background: isActive ? C.accentGlow : C.card,
+                                    border: `1.5px solid ${isActive ? C.accent : C.border}`, borderRadius: '16px',
+                                    padding: '16px 18px', display: 'flex', alignItems: 'center', gap: '14px',
+                                    cursor: 'pointer'
+                                }}>
+                                    <div style={{
+                                        width: '42px', height: '42px', borderRadius: '12px',
+                                        background: isActive ? 'linear-gradient(135deg, #10B981, #059669)' : (darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)'),
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                                    }}>
+                                        <Building size={20} color={isActive ? '#fff' : C.muted} />
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ fontWeight: 700, fontSize: '16px', color: C.text }}>{city.label}</div>
+                                        <div style={{ fontSize: '12px', color: C.muted, marginTop: '2px' }}>{selectedCountry.label}</div>
+                                    </div>
+                                    {isActive && (
+                                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                            <CheckCircle size={16} color="#fff" />
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -3399,7 +3533,7 @@ case 'favorites': {
     return (<> <div style={containerStyle}>
         {!isMapTab && (<div ref={settingsRef} style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)', right: '1rem', zIndex: 110 }}> <button onClick={() => setSettingsOpen(!settingsOpen)} style={{ cursor: 'pointer', padding: '0.5rem', borderRadius: '9999px', color: C.textMuted, backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}`, position: 'relative' }}> <Settings style={{ width: '1.25rem', height: '1.25rem', color: C.text }} /> </button> {settingsOpen && (<div style={{ position: 'absolute', top: '3rem', right: 0, width: '16rem', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', borderRadius: '1rem', padding: '0.5rem', zIndex: 20, border: `1px solid ${C.cardBorder}`, backgroundColor: C.cardBg }}> {settingsItems.map((item, index) => { if (item.type === 'divider') return <hr key={`div-${index}`} style={{ border: 'none', borderTop: `1px solid ${C.cardBorder}`, margin: '0.5rem 0' }} />; return <button key={item.label} onClick={item.action} style={{ width: '100%', display: 'flex', alignItems: 'center', textAlign: 'left', padding: '0.75rem', borderRadius: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: C.text, transition: 'background 0.2s' }}>{item.icon}<span>{item.label}</span></button>; })} </div>)} </div>)} {renderCurrentView()} </div>
         <Modal show={showModal} message={modalMessage} onClose={() => setShowModal(false)} darkMode={darkMode} lang={currentLang} />
-        <SelectionModal show={showCityModal} onClose={() => setShowCityModal(false)} title={t('city')} items={CITIES} onSelect={setCurrentCity} currentId={currentCity} darkMode={darkMode} lang={currentLang} />
+       <CountryCityModal   show={showCityModal}   onClose={() => setShowCityModal(false)}    onSelectCity={setCurrentCity}    currentCityId={currentCity}    darkMode={darkMode}    lang={currentLang} />
         <SelectionModal show={showLangModal} onClose={() => setShowLangModal(false)} title={t('lang')} items={LANGUAGES} onSelect={setCurrentLang} currentId={currentLang} darkMode={darkMode} lang={currentLang} />
         <SearchModal show={showSearchModal} onClose={() => setShowSearchModal(false)} onNavigate={navigate} allRoutes={uniqueAllRoutes} darkMode={darkMode} lang={currentLang} />
         {currentPlayingRoute && <MiniAudioPlayer route={currentPlayingRoute} onClose={stopAudio} darkMode={darkMode} ref={audioPlayerRef} onAudioError={() => { stopAudio(); setModalMessage(t('audio_error')); setShowModal(true); }} />} 
