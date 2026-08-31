@@ -40,6 +40,18 @@ const saveUserDataToServer = async (hash, userData) => {
   }
   return null;
 };
+const loadUserDataFromServer = async (hash) => {
+  try {
+    const result = await apiCall('loadUserData', { hash });
+    if (result.success && result.data) {
+      return result.data;
+    }
+  } catch (e) {
+    console.log('Не удалось загрузить данные с сервера:', e);
+  }
+  return null;
+};
+
 
 const hashString = async (str) => {
     const msgBuffer = new TextEncoder().encode(str);
