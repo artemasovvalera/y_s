@@ -614,6 +614,7 @@ const CITIES = [
 { id: 'dusseldorf', lat: 51.2277, lon: 6.7735 },
 { id: 'arambol', lat: 15.6861, lon: 73.7144 },
 { id: 'pitsunda', lat: 43.165, lon: 40.335 },
+{ id: 'dortmund', lat: 51.5135, lon: 7.4658 },
 ];
 
 const TRANSLATIONS = {
@@ -635,7 +636,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Мы будем уведомлять вас о:\n• Интересных маршрутах поблизости\n• Новых аудиогидах\n• Обновлениях приложения\n\nЭто поможет не пропустить ничего важного!",
         notif_allow: "Разрешить",
         notif_later: "Позже",
-       city_kemerovo: "Кемерово", city_moscow: "Москва", city_yerevan: "Ереван", city_dusseldorf: "Дюссельдорф", city_arambol: "Арамболь", city_pitsunda: "Пицунда",
+       city_kemerovo: "Кемерово", city_moscow: "Москва", city_yerevan: "Ереван", city_dusseldorf: "Дюссельдорф", city_arambol: "Арамболь", city_pitsunda: "Пицунда", city_dortmund: "Дортмунд",
 
         "Культурные и исторические маршруты": "Культурные и исторические",
         "Природные и активные маршруты": "Природные и активные",
@@ -694,7 +695,7 @@ const TRANSLATIONS = {
         notif_allow: "Allow",
         notif_later: "Later",
     
-        city_kemerovo: "Kemerovo", city_moscow: "Moscow", city_yerevan: "Yerevan", city_dusseldorf: "Dusseldorf", city_arambol: "Arambol", city_pitsunda: "Pitsunda",
+        city_dortmund: "Dortmund", city_kemerovo: "Kemerovo", city_moscow: "Moscow", city_yerevan: "Yerevan", city_dusseldorf: "Dusseldorf", city_arambol: "Arambol", city_pitsunda: "Pitsunda",
 
         "Культурные и исторические маршруты": "Cultural & Historical",
         "Природные и активные маршруты": "Nature & Active",
@@ -751,7 +752,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Wir benachrichtigen Sie über:\n• Routen in der Nähe\n• Neue Audioguides\n• App-Updates\n\nVerpassen Sie nichts Wichtiges!",
         notif_allow: "Erlauben",
         notif_later: "Später",
-        city_kemerovo: "Kemerowo", city_moscow: "Moskau", city_yerevan: "Eriwan", city_dusseldorf: "Düsseldorf", city_arambol: "Arambol", city_pitsunda: "Pizunda",
+        city_dortmund: "Dortmund", city_kemerovo: "Kemerowo", city_moscow: "Moskau", city_yerevan: "Eriwan", city_dusseldorf: "Düsseldorf", city_arambol: "Arambol", city_pitsunda: "Pizunda",
 
         "Культурные и исторические маршруты": "Kultur & Geschichte",
         "Природные и активные маршруты": "Natur & Aktiv",
@@ -800,7 +801,7 @@ const TRANSLATIONS = {
         notif_permission_text: "Մենք կծանուցենք ձեզ՝\n• Մոտակա երթուղիների մասին\n• Նոր աուդիոուղեցույցների\n• Թարմացումների\n\nՄի՛ բաց թողեք կարևորը!",
         notif_allow: "Թույլատրել",
         notif_later: "Ավելի ուշ",
-        city_kemerovo: "Կեմերովո", city_moscow: "Մոսկվա", city_yerevan: "Երևան", city_dusseldorf: "Դյուսելդորֆ", city_arambol: "Արամբոլ", city_pitsunda: "Պիցունդա",
+        city_dortmund: "Դորտմունդ", city_kemerovo: "Կեմերովո", city_moscow: "Մոսկվա", city_yerevan: "Երևան", city_dusseldorf: "Դյուսելդորֆ", city_arambol: "Արամբոլ", city_pitsunda: "Պիցունդա",
 
         "Культурные и исторические маршруты": "Մշակութային",
         "Природные и активные маршруты": "Բնություն",
@@ -1124,6 +1125,85 @@ structure["Культурные и исторические маршруты"]["
 curatedRecommended = [tower];
 curatedExplore = [tower];
 curatedInteresting = [tower];
+
+} } else if (cityId === 'dortmund') {
+    // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
+    const dortmundFacts = { 
+        name: "Факты о Дортмунде", 
+        distance: 0.5, 
+        time: "10 мин", 
+        difficulty: "Лёгкая", 
+        videoUrl: "https://youtu.be/hyQI-2bwVcc", 
+        geoUrl: "https://maps.app.goo.gl/2JbtHoMVemLTwKjm7", 
+        audioUrl: "https://archive.org/download/dortmund_202608/dortmund.MP3", 
+        image: "https://archive.org/download/dortmund_202608/pexels-norbert-ueing-315693495-13612319.jpg", 
+        location: { lat: 51.513530856785906, lon: 7.46581642781496 }, 
+        descriptionShort: "Удивительные факты о Дортмунде, которые стоит узнать каждому.", 
+        subCategory: "Легенды и мифы города" 
+    };
+
+    // === КУРИРУЕМЫЕ РАЗДЕЛЫ (главный экран) ===
+    curatedRecommended = [dortmundFacts];
+    curatedExplore = [dortmundFacts];
+    curatedInteresting = [dortmundFacts];
+
+    // === КУЛЬТУРНЫЕ И ИСТОРИЧЕСКИЕ (8 подкатегорий) ===
+    structure["Культурные и исторические маршруты"]["Набережная"] = [];
+    structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [];
+    structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [];
+    structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [dortmundFacts];
+    structure["Культурные и исторические маршруты"]["Городские площади"] = [dortmundFacts];
+    structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [dortmundFacts];
+    structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [];
+    structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [dortmundFacts];
+
+    // === ПРИРОДНЫЕ И АКТИВНЫЕ (4 подкатегории) ===
+    structure["Природные и активные маршруты"]["Природные зоны и парки"] = [];
+    structure["Природные и активные маршруты"]["Горные и лесные маршруты"] = [];
+    structure["Природные и активные маршруты"]["Активный отдых у воды"] = [];
+    structure["Природные и активные маршруты"]["Спортивные площадки и фитнес-парки"] = [];
+
+    // === СОВРЕМЕННЫЕ И УРБАНИСТИЧЕСКИЕ (4 подкатегории) ===
+    structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [];
+    structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [];
+    structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [];
+    structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [];
+
+    // === ГАСТРОНОМИЧЕСКИЕ (4 подкатегории) ===
+    structure["Гастрономические маршруты"]["Кофе"] = [];
+    structure["Гастрономические маршруты"]["Уличная еда"] = [];
+    structure["Гастрономические маршруты"]["Традиционные рестораны"] = [];
+    structure["Гастрономические маршруты"]["Гастрономические мастер-классы"] = [];
+
+    // === СЕМЕЙНЫЕ (5 подкатегорий) ===
+    structure["Семейные маршруты"]["Парки аттракционы и детские площадки"] = [];
+    structure["Семейные маршруты"]["Зоопарки"] = [];
+    structure["Семейные маршруты"]["Музеи для детей"] = [];
+    structure["Семейные маршруты"]["Пикники на природе"] = [];
+    structure["Семейные маршруты"]["Игровые центры и развлекательные зоны"] = [];
+
+    // === АЛЬТЕРНАТИВНЫЕ (4 подкатегории) ===
+    structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [];
+    structure["Альтернативные маршруты"]["Урбанистические исследования"] = [dortmundFacts];
+    structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [];
+    structure["Альтернативные маршруты"]["Ночные экскурсии"] = [];
+
+    // === ТЕМАТИЧЕСКИЕ (5 подкатегорий) ===
+    structure["Тематические маршруты"]["Музыкальные маршруты"] = [];
+    structure["Тематические маршруты"]["Кино и телевидение"] = [];
+    structure["Тематические маршруты"]["Мифы и легенды"] = [dortmundFacts];
+    structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [];
+    structure["Тематические маршруты"]["Спортивные маршруты"] = [];
+}
+
+    // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ДОРТМУНДА ===
+    curatedRecommended = [dortmundFacts];
+    curatedExplore = [dortmundFacts];
+    curatedInteresting = [dortmundFacts];
+
+    // --- ЗАПОЛНЕНИЕ КАТАЛОГА ДОРТМУНДА ---
+    structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [dortmundFacts];
+}
 
 } else if (cityId === 'pitsunda') {
 // --- ПЕРЕМЕННЫЕ ПИЦУНДЫ ---
@@ -4041,7 +4121,7 @@ const interactionCountRef = useRef(0);
 const regPromptShownRef = useRef(false);
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
-    const buildInfo = { version: "3.2", date: "02.07.2026" }; 
+    const buildInfo = { version: "3.3", date: "03.09.2026" }; 
     const routeIcons = { 
         "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, 
         "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, 
