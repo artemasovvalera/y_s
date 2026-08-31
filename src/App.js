@@ -4283,6 +4283,16 @@ const logEvent = useCallback((type, data = {}) => {
     const newLog = [...prev, event];
     return newLog.length > 500 ? newLog.slice(-500) : newLog;
   });
+  // 2. Отправляем на сервер сразу (fire-and-forget)
+  if (currentUserHash) {
+    apiCall('logEvent', {
+      hash: currentUserHash,
+      event: event
+    }).catch(e => console.log('Аналитика не отправлена:', e));
+  }
+  }, [currentCity, currentLang, currentUserHash]);
+
+
 }, [currentCity, currentLang]);
 
 
