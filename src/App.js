@@ -1126,7 +1126,7 @@ curatedRecommended = [tower];
 curatedExplore = [tower];
 curatedInteresting = [tower];
 
-} } else if (cityId === 'dortmund') {
+ } else if (cityId === 'dortmund') {
     // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
     const dortmundFacts = { 
         name: "Факты о Дортмунде", 
