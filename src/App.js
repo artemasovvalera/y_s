@@ -1435,7 +1435,7 @@ const SelectionModal = ({ show, onClose, title, items, onSelect, currentId, dark
     const C = darkMode ? S.dark : S.light;
     const t = (key) => TRANSLATIONS[lang]?.[key] || key;
     return (
-        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: '1rem' }} onClick={onClose}>
+        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 250, padding: '1rem' }} onClick={onClose}>
             <div style={{ backgroundColor: C.cardBg, borderRadius: '1.5rem', width: '100%', maxWidth: '20rem', padding: '1.5rem', color: C.text, border: `1px solid ${C.cardBorder}` }} onClick={e => e.stopPropagation()}>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, textAlign: 'center', marginBottom: '1.5rem' }}>{title}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -1472,7 +1472,7 @@ const CountryCityModal = ({ show, onClose, onSelectCity, currentCityId, darkMode
 
     return (
         <div style={{
-            position: 'fixed', inset: 0, backgroundColor: C.bg, zIndex: 200,
+            position: 'fixed', inset: 0, backgroundColor: C.bg, zIndex: 250,
             display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
             backdropFilter: 'blur(6px)'
         }} onClick={onClose}>
