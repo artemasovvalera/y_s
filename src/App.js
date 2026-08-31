@@ -1256,7 +1256,7 @@ const ritsaLake = {
 
 const octopusStop = { 
         name: "Остановка Осминог", 
-        author: "Церителли",
+        author: "Церители",
         distance: 0.5, 
         time: "5 мин", 
         difficulty: "Лёгкая", 
