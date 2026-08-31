@@ -2357,7 +2357,7 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
     );
 };
 
-function MainRouteApp({ onExit, setAccount, ...props }) {
+function MainRouteApp({ onExit, setAccount, logEvent, ...props }) {
     const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
     
     // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
@@ -4266,7 +4266,6 @@ const [eventLog, setEventLog] = useState(() => {
   } catch { return []; }
 });
 
-// Функция записи события
 const logEvent = useCallback((type, data = {}) => {
   const event = {
     type,
@@ -4279,11 +4278,9 @@ const logEvent = useCallback((type, data = {}) => {
   };
   setEventLog(prev => {
     const newLog = [...prev, event];
-    // Храним максимум 500 последних событий, чтобы не раздувать localStorage
     return newLog.length > 500 ? newLog.slice(-500) : newLog;
   });
 }, [currentCity, currentLang]);
-
 
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
@@ -4808,6 +4805,7 @@ const toggleFavorite = useCallback((route) => {
                         isGuest={isGuest}
 currentUserHash={currentUserHash}
 onGoToRegister={handleGoToRegister}
+logEvent={logEvent}
                     />
                 );
 
