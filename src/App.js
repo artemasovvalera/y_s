@@ -2635,20 +2635,20 @@ useEffect(() => {
 }, [props.showSurvey, currentPlayingRoute, stopAudio]);
     const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
     const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
-   const playAudio = useCallback((route) => { 
-  if (route && route.audioUrl) { 
-    setCurrentPlayingRoute(route); 
-    
-    // 👇 ДОБАВЛЯЕМ ЭТУ ПРОВЕРКУ: считаем каждое успешное включение аудио
-    if (window.__trackAudioInteraction) {
-      window.__trackAudioInteraction();
+   const playAudio = useCallback((route) => {
+    if (route && route.audioUrl) {
+        setCurrentPlayingRoute(route);
+        // Записываем в аналитику: пользователь запустил аудиогид
+        logEvent('audio_play', { routeName: route.name, city: currentCity });
+        
+        if (window.__trackAudioInteraction) {
+          window.__trackAudioInteraction();
+        }
+    } else {
+        setModalMessage("Нет аудиогида");
+        setShowModal(true);
     }
-  } else { 
-    setModalMessage("Нет аудиогида"); 
-    setShowModal(true); 
-  } 
-}, []);
-
+}, [logEvent, currentCity]);
 
 const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId === 'catalog') { setNavigationStack([{ type: 'categories' }]); } else { setNavigationStack([{ type: 'home' }]); } }, []);
 
@@ -2714,7 +2714,12 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
     ];
     ;
 
-    const handleNavigateToDetails = useCallback((route) => { navigate('routeDetails', { route }); }, [navigate]);
+    const handleNavigateToDetails = useCallback((route) => { 
+    navigate('routeDetails', { route }); 
+    // Записываем в аналитику: пользователь открыл маршрут
+    logEvent('route_view', { routeName: route.name, city: currentCity });
+}, [navigate, logEvent, currentCity]);
+
     const renderCurrentView = () => {
     if (!currentView) return null;
     if (currentView.type === 'favorites') {
@@ -4250,9 +4255,36 @@ const [surveyCompleted, setSurveyCompleted] = useState(() => {
     } catch { return false; }
 });
 const audioGuideCountRef = useRef(0);
-
 const interactionCountRef = useRef(0);
 const regPromptShownRef = useRef(false);
+
+// === СИСТЕМА ТРЕКИНГА СОБЫТИЙ ДЛЯ АНАЛИТИКИ ===
+const [eventLog, setEventLog] = useState(() => {
+  try {
+    const saved = localStorage.getItem('app-eventLog');
+    return saved ? JSON.parse(saved) : [];
+  } catch { return []; }
+});
+
+// Функция записи события
+const logEvent = useCallback((type, data = {}) => {
+  const event = {
+    type,
+    timestamp: new Date().toISOString(),
+    date: new Date().toLocaleDateString('ru-RU'),
+    time: new Date().toLocaleTimeString('ru-RU'),
+    city: currentCity,
+    lang: currentLang,
+    ...data
+  };
+  setEventLog(prev => {
+    const newLog = [...prev, event];
+    // Храним максимум 500 последних событий, чтобы не раздувать localStorage
+    return newLog.length > 500 ? newLog.slice(-500) : newLog;
+  });
+}, [currentCity, currentLang]);
+
+
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
     const buildInfo = { version: "3.3", date: "03.09.2026" }; 
@@ -4553,6 +4585,15 @@ useEffect(() => {
     useEffect(() => { localStorage.setItem('app-lang', JSON.stringify(currentLang)); }, [currentLang]);
     useEffect(() => { localStorage.setItem('app-city', JSON.stringify(currentCity)); }, [currentCity]);
 
+
+// Сохраняем лог событий аналитики
+useEffect(() => {
+  if (eventLog.length > 0) {
+    localStorage.setItem('app-eventLog', JSON.stringify(eventLog));
+  }
+}, [eventLog]);
+
+
     // === УВЕДОМЛЕНИЯ ===
     useEffect(() => {
         const check = async () => {
@@ -4666,19 +4707,39 @@ const handleLogout = () => {
         setShowNotifPermissionModal(false);
         try { const result = await LocalNotifications.requestPermissions(); if (result.display === 'granted') alert('Уведомления включены! 🎉'); } catch (e) {}
     };
-    const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
+const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
 
-    const handleComplete = useCallback((route) => { 
-        if (isGuest) {
+// === ФУНКЦИЯ ОТПРАВКИ СОБЫТИЙ В АНАЛИТИКУ ===
+const logAnalyticsEvent = async (eventType, routeName = '') => {
+    if (!currentUserHash) return; // Не логируем гостей (или убери эту строку, если нужно логировать всех)
+    try {
+        await apiCall('logEvent', {
+            hash: currentUserHash,
+            eventType: eventType, // 'view', 'audio', 'complete'
+            routeName: routeName,
+            city: currentCity,
+            timestamp: new Date().toISOString()
+        });
+    } catch (e) {
+        console.log('Ошибка отправки аналитики:', e);
+    }
+};
+
+const handleComplete = useCallback((route) => { 
+    if (isGuest) {
         if (window.__showRegistrationPrompt) window.__showRegistrationPrompt();
         return;
     }
-        if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } 
-        const date = new Date(); 
-        const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; 
-        setCompleted(newCompleted); 
-        const newCount = newCompleted.length; 
-        setAccount(prevAccount => { 
+    if (completed.some(c => c.name === route.name)) { alert("Этот маршрут уже отмечен как пройденный."); return; } 
+    
+    // Записываем в аналитику: маршрут завершен
+    logEvent('route_completed', { routeName: route.name, city: currentCity });
+
+    const date = new Date(); 
+    const newCompleted = [...completed, { ...route, date: date.toLocaleDateString('ru-RU'), isoDate: date.toISOString() }]; 
+    setCompleted(newCompleted); 
+    const newCount = newCompleted.length; 
+    setAccount(prevAccount => { 
             const n = { ...prevAccount, completedRoutesCount: newCount }; 
             const tier = rewardTiers.find(t => t.count === newCount); 
             if (tier && !prevAccount.rewards.includes(tier.title)) { 
@@ -4688,20 +4749,26 @@ const handleLogout = () => {
             } 
             return n; 
         }); 
-    }, [completed, rewardTiers]);
+    }, [completed, rewardTiers, logEvent, currentCity]);
 
     const isFav = useCallback((route) => favs.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))), [favs, currentCity]);
-    const toggleFavorite = useCallback((route) => {
+const toggleFavorite = useCallback((route) => {
     if (isGuest) {
         if (window.__showRegistrationPrompt) window.__showRegistrationPrompt();
         return;
     }
+    
     setFavs(prev => { 
-        const is = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); 
-        if (is) return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); 
+        const isFav = prev.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))); 
+        
+        // Записываем в аналитику: добавление или удаление из избранного
+        logEvent(isFav ? 'favorite_removed' : 'favorite_added', { routeName: route.name, city: currentCity });
+
+        if (isFav) return prev.filter(f => !(f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo')))); 
         else return [...prev, { ...route, cityId: currentCity }]; 
     }); 
-}, [currentCity, isGuest]);
+}, [currentCity, isGuest, logEvent]); // <-- Добавили logEvent в зависимости
+
     const appRootStyle = { minHeight: '100vh', width: '100%', backgroundColor: darkMode ? S.dark.bg : S.light.bg, boxSizing: 'border-box' };
 
     const renderContent = () => {
