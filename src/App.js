@@ -1579,7 +1579,9 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isBuffering, setIsBuffering] = useState(false);
-    
+    const isBufferingRef = useRef(isBuffering);
+    useEffect(() => { isBufferingRef.current = isBuffering; }, [isBuffering]);
+
     const { name: title, image, subCategory: artist, audioUrl } = route;
 
     useEffect(() => {
@@ -1600,7 +1602,7 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
 
         const handleTimeUpdate = () => {
             setProgress(audioEl.currentTime);
-            if (isBuffering && audioEl.readyState >= 3) setIsBuffering(false);
+                        if (isBufferingRef.current && audioEl.readyState >= 3) setIsBuffering(false);
         };
         const handleLoadedMetadata = () => setDuration(audioEl.duration);
         const handleWaiting = () => setIsBuffering(true);
@@ -1655,7 +1657,7 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
             audioEl.removeEventListener("ended", handleEnded);
             audioEl.removeEventListener("error", handleError);
         };
-    }, [audioUrl, title, artist, image, ref]); // Removed onClose from dependency to prevent re-runs
+    }, [audioUrl, title, artist, image, ref, onClose]); // Removed onClose from dependency to prevent re-runs
 
     const toggle = () => {
         const el = ref.current;
@@ -2249,23 +2251,59 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
     // Храним ID последнего города, чтобы центрировать только при смене города
     const lastCityIdRef = useRef(null);
 
+    const centerCityRef = useRef(centerCity);
+    useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
+    const userLocationRef = useRef(userLocation);
+    useEffect(() => { userLocationRef.current = userLocation; }, [userLocation]);
+
+    const allRoutesRef = useRef(allRoutes);
+    useEffect(() => { allRoutesRef.current = allRoutes; }, [allRoutes]);
+    const completedRoutesRef = useRef(completedRoutes);
+    useEffect(() => { completedRoutesRef.current = completedRoutes; }, [completedRoutes]);
+    const onNavigateRef = useRef(onNavigate);
+    useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
+
+        const updateMarkers = useCallback((map) => {
+        const L = window.L;
+        const ul = userLocationRef.current;
+        const ar = allRoutesRef.current;
+        const cr = completedRoutesRef.current;
+        const onNav = onNavigateRef.current;
+        
+        if (ul) {
+            const userIcon = L.divIcon({ className: 'custom-icon', html: `<div style="background-color: #2563eb; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+            L.marker([ul.lat, ul.lon], { icon: userIcon }).addTo(map);
+        }
+        ar.forEach(route => {
+            if (!route.location) return;
+            const isCompleted = cr.some(c => c.name === route.name);
+            const style = getCategoryStyle(route.subCategory);
+            const color = isCompleted ? '#059669' : '#3b82f6';
+            const iconHtml = `<div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">${style.svgString}</div>`;
+            const routeIcon = L.divIcon({ className: 'route-icon', html: iconHtml, iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18] });
+            const marker = L.marker([route.location.lat, route.location.lon], { icon: routeIcon }).addTo(map);
+            marker.on('click', () => onNav(route));
+        });
+    }, []);
+
     useEffect(() => {
         if (!document.getElementById('leaflet-css')) { const link = document.createElement('link'); link.id = 'leaflet-css'; link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link); }
         if (!document.getElementById('leaflet-js')) { const script = document.createElement('script'); script.id = 'leaflet-js'; script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async = true; script.onload = () => initMap(); document.body.appendChild(script); } else { initMap(); }
         return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; } };
-    }, []);
+    }, [initMap]);
 
-    const initMap = () => {
+    const initMap = useCallback(() => {
         if (!window.L || mapInstanceRef.current) return;
-        const startLat = centerCity ? centerCity.lat : (userLocation ? userLocation.lat : 55.354);
-        const startLon = centerCity ? centerCity.lon : (userLocation ? userLocation.lon : 86.087);
-        
+        const cc = centerCityRef.current;
+        const ul = userLocationRef.current;
+        const startLat = cc ? cc.lat : (ul ? ul.lat : 55.354);
+        const startLon = cc ? cc.lon : (ul ? ul.lon : 86.087);
         const map = window.L.map(mapRef.current, { center: [startLat, startLon], zoom: 13, zoomControl: false });
         window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
         mapInstanceRef.current = map;
-        lastCityIdRef.current = centerCity ? centerCity.id : null;
+        lastCityIdRef.current = cc ? cc.id : null;
         updateMarkers(map);
-    };
+    }, [updateMarkers]);
 
     useEffect(() => {
         if (window.L && mapInstanceRef.current) {
@@ -2278,25 +2316,9 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
             mapInstanceRef.current.eachLayer((layer) => { if (layer instanceof window.L.Marker) { mapInstanceRef.current.removeLayer(layer); } });
             updateMarkers(mapInstanceRef.current);
         }
-    }, [userLocation, allRoutes, completedRoutes, centerCity]);
+    }, [userLocation, allRoutes, completedRoutes, centerCity, updateMarkers]);
 
-    const updateMarkers = (map) => {
-        const L = window.L;
-        if (userLocation) {
-            const userIcon = L.divIcon({ className: 'custom-icon', html: `<div style="background-color: #2563eb; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
-            L.marker([userLocation.lat, userLocation.lon], { icon: userIcon }).addTo(map);
-        }
-        allRoutes.forEach(route => {
-            if (!route.location) return;
-            const isCompleted = completedRoutes.some(c => c.name === route.name);
-            const style = getCategoryStyle(route.subCategory);
-            const color = isCompleted ? '#059669' : '#3b82f6';
-            const iconHtml = `<div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">${style.svgString}</div>`;
-            const routeIcon = L.divIcon({ className: 'route-icon', html: iconHtml, iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18] });
-            const marker = L.marker([route.location.lat, route.location.lon], { icon: routeIcon }).addTo(map);
-            marker.on('click', () => onNavigate(route));
-        });
-    };
+   
     return <div ref={mapRef} style={{ width: '100%', height: 'calc(100vh - 5rem)', zIndex: 1 }} />;
 };
 
@@ -2363,7 +2385,7 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
     );
 };
 
-function MainRouteApp({ onExit, setAccount, logEvent, ...props }) {
+function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, ...props }) {
     const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
     
     // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
@@ -2410,7 +2432,7 @@ function MainRouteApp({ onExit, setAccount, logEvent, ...props }) {
             } catch (e) { }
         };
         handleSystemChecks();
-    }, []);
+        }, [buildInfo.version]);
 
     const allRoutesFlatForSearch = useMemo(() => { return Object.values(activeRoutes).flatMap(cat => Object.values(cat).flat()); }, [activeRoutes]);
     const uniqueAllRoutes = useMemo(() => { const unique = new Map(); 
@@ -2612,7 +2634,7 @@ useEffect(() => {
             listener.remove();
         }
     };
-}, []);
+}, [navigate]);
 
     const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
 
@@ -2635,10 +2657,10 @@ useEffect(() => {
 
     // Пауза аудио при открытии опроса
 useEffect(() => {
-  if (props.showSurvey && currentPlayingRoute) {
+  if (showSurvey && currentPlayingRoute) {
     stopAudio();
   }
-}, [props.showSurvey, currentPlayingRoute, stopAudio]);
+}, [showSurvey, currentPlayingRoute, stopAudio]);
     const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
     const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
    const playAudio = useCallback((route) => {
@@ -2684,7 +2706,7 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
     }; 
 }, [navigationStack.length, goBack, onExit]);
     useEffect(() => { const handleClickOutside = (event) => { if (settingsRef.current && !settingsRef.current.contains(event.target)) { setSettingsOpen(false); } }; if (settingsOpen) { document.addEventListener("mousedown", handleClickOutside); } return () => { document.removeEventListener("mousedown", handleClickOutside); }; }, [settingsOpen]);
-    const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${t('dist')}`, [units, currentLang]);
+   const formatDistance = useCallback(km => units === 'mi' ? `${(km * 0.621371).toFixed(2)} mi` : `${km.toFixed(2)} ${TRANSLATIONS[currentLang]?.['dist'] || 'км'}`, [units, currentLang]);
 
       const settingsItems = [
         //{ label: t('completed'), action: () => { navigate('progress'); setSettingsOpen(false); }, icon: <CheckCircle style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> },
@@ -4324,13 +4346,14 @@ const saveUserDataToServer = async (hash, userData) => {
   }
 };
 
-const debouncedSaveToServer = (hash, userData) => {
+const debouncedSaveToServer = useCallback((hash, userData) => {
   if (!hash) return;
   if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
   saveTimeoutRef.current = setTimeout(() => {
     saveUserDataToServer(hash, userData);
   }, 2000);
-};
+}, []); // saveTimeoutRef — ref, saveUserDataToServer — вне компонента (стабильно)
+
 
     // Глобальный метод для показа дашборда из настроек
   
@@ -4431,7 +4454,8 @@ useEffect(() => {
   currentLang, 
   currentCity,
   surveyCompleted, 
-  currentUserHash
+  currentUserHash,
+  debouncedSaveToServer
 ]);
 //_______________________
     // === 3. ШАГОМЕР ===
@@ -4762,7 +4786,7 @@ const handleComplete = useCallback((route) => {
             } 
             return n; 
         }); 
-    }, [completed, rewardTiers, logEvent, currentCity]);
+    }, [completed, rewardTiers, logEvent, currentCity, isGuest]);
 
     const isFav = useCallback((route) => favs.some(f => f.name === route.name && (f.cityId === currentCity || (!f.cityId && currentCity === 'kemerovo'))), [favs, currentCity]);
 const toggleFavorite = useCallback((route) => {
