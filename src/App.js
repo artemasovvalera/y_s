@@ -2363,36 +2363,10 @@ function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister
         allRoutesFlatForSearch.forEach(r => { if (!unique.has(r.name)) unique.set(r.name, r); }); return Array.from(unique.values()); }, [allRoutesFlatForSearch]);
 // Запрос разрешений на уведомления
 // Запрос разрешений на уведомления
-useEffect(() => {
-    const checkPermissions = async () => {
-        const result = await LocalNotifications.checkPermissions();
-        
-        // Если уже разрешено — ничего не делаем
-        if (result.display === 'granted') return;
-        
-        // Если запрещено или не спрашивали — показываем модалку через 3 секунды
-        setTimeout(() => {
-            setShowNotifPermissionModal(true);
-        }, 3000);
-    };
-    checkPermissions();
-}, []);
+
 
 // Обработчики модалки разрешений
-const handleAllowNotifications = async () => {
-    setShowNotifPermissionModal(false);
-    const result = await LocalNotifications.requestPermissions();
-    if (result.display === 'granted') {
-        setModalMessage(t('notif_permission_title') + ' ✅');
-        setShowModal(true);
-    }
-};
 
-const handleLaterNotifications = () => {
-    setShowNotifPermissionModal(false);
-    // Запомним, что пользователь отложил (можно спросить через день)
-    localStorage.setItem('notifPermissionAskedAt', Date.now());
-};
     useEffect(() => {
     const geoSuccess = (position) => {
         const lat = position.coords.latitude; 
@@ -4050,7 +4024,7 @@ const [isGuest, setIsGuest] = useState(() => {
     const [rewardModal, setRewardModal] = useState(false);
     const [rewardMsg, setRewardMsg] = useState("");
     const [showContactModal, setShowContactModal] = useState(false);
-    const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
+    
 
     const [showSurvey, setShowSurvey] = useState(false);
 const [surveyCompleted, setSurveyCompleted] = useState(() => {
@@ -4399,19 +4373,7 @@ useEffect(() => {
 }, [eventLog]);
 
 
-    // === УВЕДОМЛЕНИЯ ===
-    useEffect(() => {
-        const check = async () => {
-            try {
-                const result = await LocalNotifications.checkPermissions();
-                if (result.display === 'granted') return;
-                const lastAsked = parseInt(localStorage.getItem('notifPermissionAskedAt') || '0');
-                if (Date.now() - lastAsked < 86400000) return;
-                setTimeout(() => setShowNotifPermissionModal(true), 3000);
-            } catch (e) {}
-        };
-        if (phase === 'mainApp') check();
-    }, [phase]);
+
 
     useEffect(() => { 
         const C = darkMode ? S.dark : S.light; 
@@ -4507,12 +4469,6 @@ const handleLogout = () => {
     setPhase('mainApp'); 
 };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
-
-    const handleAllowNotifications = async () => {
-        setShowNotifPermissionModal(false);
-        try { const result = await LocalNotifications.requestPermissions(); if (result.display === 'granted') alert('Уведомления включены! 🎉'); } catch (e) {}
-    };
-const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
 
 // === ФУНКЦИЯ ОТПРАВКИ СОБЫТИЙ В АНАЛИТИКУ ===
 const logAnalyticsEvent = async (eventType, routeName = '') => {
