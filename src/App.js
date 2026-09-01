@@ -1005,7 +1005,7 @@ curatedInteresting = [nabOgrazhdenie, reki, rampa];
 
         // --- ЗАПОЛНЕНИЕ КАТАЛОГА КЕМЕРОВО ---
         structure["Культурные и исторические маршруты"]["Набережная"] = [strahRoute, nabOgrazhdenie, rampa, bezdomniipec, nabIntro, reki, nabBridges, nabfonar, nabteremok, nabFences, nabCinema, nabHeart];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [filar, mmuz, kuzbassMuseum, artMuseum, artCenter, kubizm];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [krasnayaGorkaMuseum1, filar, mmuz, kuzbassMuseum, artMuseum, artCenter, kubizm];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [rampa, pushkinRoute, minerRoute, leninMemorialRoute, chas_usp, park_pobedi];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [filar, mmuz, mod, chas_usp, minerRoute, nabOgrazhdenie, pushkinRoute, leninMemorialRoute, oldestHouseRoute, olenLesnaya, kubizm];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [pushkinRoute, minerRoute, leninMemorialRoute, park_pobedi];
@@ -1681,7 +1681,7 @@ const MiniAudioPlayer = forwardRef(({ route, onClose, darkMode, onAudioError }, 
 
 const LiquidMenu = ({ activeTab, onTabChange, onSearchClick, darkMode, lang }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const C = darkMode ? S.dark : S.light;
+   
     const t = (k) => TRANSLATIONS[lang]?.[k] || k;
 
     const leftTabs = [
