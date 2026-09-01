@@ -2306,7 +2306,68 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
     return <div ref={mapRef} style={{ width: '100%', height: 'calc(100vh - 5rem)', zIndex: 1 }} />;
 };
 
-
+const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, lang }) => {
+    const distance = userLocation ? calculateDistance(userLocation.lat, userLocation.lon, route.location?.lat, route.location?.lon) : 0;
+    const steps = Math.floor(route.distance * 1250);
+    const t = (k) => TRANSLATIONS[lang]?.[k] || k;
+    
+    return (
+        <div onClick={() => onClick(route)} style={{ 
+            minWidth: '38%',
+            height: '9.5rem',
+            borderRadius: '1rem',
+            position: 'relative', 
+            overflow: 'hidden', 
+            cursor: 'pointer', 
+            boxShadow: C.cardShadow, 
+            border: `1px solid ${C.border}`,
+            flexShrink: 0,
+        }}>
+            <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ 
+                position: 'absolute', 
+                bottom: 0, 
+                left: 0, 
+                right: 0, 
+                background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)', 
+                padding: '0.5rem 0.6rem 0.5rem 0.6rem',
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'flex-end' 
+            }}>
+                <div style={{ 
+                    color: '#10B981', 
+                    fontWeight: 600, 
+                    fontSize: '0.6rem', 
+                    textTransform: 'uppercase', 
+                    marginBottom: '0.15rem',
+                    lineHeight: 1.1,
+                }}>{t(route.subCategory)}</div>
+                <h3 style={{ 
+                    color: 'white', 
+                    fontWeight: 700, 
+                    fontSize: '0.85rem', 
+                    margin: '0 0 0.2rem 0', 
+                    lineHeight: 1.15, 
+                    display: '-webkit-box', 
+                    WebkitLineClamp: 2, 
+                    WebkitBoxOrient: 'vertical', 
+                    overflow: 'hidden' 
+                }}>{route.name}</h3>
+                <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    color: 'rgba(255,255,255,0.85)', 
+                    fontSize: '0.7rem', 
+                    fontWeight: 500 
+                }}>
+                    <span>👣 {steps}</span>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister, ...props }) {
     const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
@@ -2320,8 +2381,8 @@ function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister
     const [navigationStack, setNavigationStack] = useState([{ type: 'home' }]);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
-  
-    
+    const [modalAction, setModalAction] = useState(null);
+    const [modalActionText, setModalActionText] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [currentPlayingRoute, setCurrentPlayingRoute] = useState(null);
     const [activeTab, setActiveTab] = useState('recommendations');
@@ -2331,7 +2392,7 @@ function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister
     const [showCityModal, setShowCityModal] = useState(false);
     const [notifiedRoutes, setNotifiedRoutes] = useState(new Set());
     const [appNotifications, setAppNotifications] = useState([]);
-   
+    const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
     const routesData = useMemo(() => getRoutesData(currentCity, currentLang), [currentCity, currentLang]);
     const activeRoutes = routesData.structure;
     const curatedRoutes = routesData.curated || { recommended: [], explore: [], interesting: [] };
@@ -3492,6 +3553,141 @@ case 'favorites': {
             <LiquidMenu activeTab={activeTab} onTabChange={handleTabChange} onSearchClick={() => setShowSearchModal(true)} darkMode={darkMode} lang={currentLang} />     </>);
 }
 
+const LoadingScreen = ({ darkMode, onComplete }) => {
+    const [showHint, setShowHint] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageError, setImageError] = useState(false);
+    
+    useEffect(() => {
+        // Показываем подсказку через 2 секунды
+        const timer = setTimeout(() => setShowHint(true), 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Предзагрузка изображения
+    useEffect(() => {
+        const img = new Image();
+        img.onload = () => setImageLoaded(true);
+        img.onerror = () => setImageError(true);
+        img.src = 'https://archive.org/download/logo_20260223/logo.jpg';
+    }, []);
+
+    // Клик по экрану = переход
+    const handleScreenClick = () => {
+        if (showHint && onComplete) {
+            onComplete();
+        }
+    };
+
+    const letters = ['Я', ' ', 'С', 'А', 'М'];
+    const C = darkMode ? S.dark : S.light;
+
+    return (
+        <div 
+            onClick={handleScreenClick}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: C.bg,
+                backgroundImage: imageLoaded && !imageError 
+                    ? 'url(https://archive.org/download/logo_20260223/logo.jpg)' 
+                    : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+                cursor: showHint ? 'pointer' : 'default',
+            }}
+        >
+            {/* Затемняющий оверлей */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: imageLoaded && !imageError
+                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5))'
+                    : 'transparent',
+            }} />
+
+            {/* Плывущие буквы "Я САМ" — менее прозрачные */}
+            <div style={{
+                position: 'relative',
+                zIndex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.3rem',
+            }}>
+                {letters.map((letter, i) => (
+                    <span 
+                        key={i}
+                        style={{
+                            fontSize: letter === ' ' ? '0.5rem' : '5rem',
+                            fontWeight: 900,
+                            color: imageLoaded && !imageError 
+                                ? 'rgba(255, 255, 255, 0.6)' 
+                                : S.emerald600,
+                            textShadow: imageLoaded && !imageError 
+                                ? '0 0 60px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.3)'
+                                : 'none',
+                            animation: `floatLetter 3s ease-in-out infinite`,
+                            animationDelay: `${i * 0.3}s`,
+                            letterSpacing: '0.05em',
+                        }}
+                    >
+                        {letter === ' ' ? '' : letter}
+                    </span>
+                ))}
+            </div>
+
+           
+            {/* CSS анимации */}
+            <style>{`
+                @keyframes floatLetter {
+                    0%, 100% { 
+                        transform: translateY(0) scale(1); 
+                        opacity: 0.5;
+                    }
+                    50% { 
+                        transform: translateY(-20px) scale(1.03); 
+                        opacity: 0.8;
+                    }
+                }
+                
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                @keyframes pulse {
+                    0%, 100% {
+                        opacity: 1;
+                    }
+                    50% {
+                        opacity: 0.7;
+                    }
+                }
+                
+                @keyframes bounce {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-10px);
+                    }
+                }
+            `}</style>
+        </div>
+    );
+};
 
 // ==========================================
 // ЭКРАН АВТОРИЗАЦИИ
