@@ -2385,7 +2385,7 @@ const RecommendationTile = ({ route, onClick, C, formatDistance, userLocation, l
     );
 };
 
-function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, ...props }) {
+function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister, ...props }) {
     const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
     
     // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
@@ -2644,8 +2644,8 @@ useEffect(() => {
     setModalMessage('Вам нравится приложение? 💚\nСоздайте аккаунт, чтобы сохранять маршруты в избранное, отмечать прогресс и синхронизировать данные между устройствами.');
     setModalActionText('Создать аккаунт');
     setModalAction(() => {
-        setShowModal(false); // Закрываем модалку
-        if (props.onGoToRegister) props.onGoToRegister(); // Вызываем переход из App
+        setShowModal(false);
+        if (onGoToRegister) onGoToRegister();
     });
     setShowModal(true);
 };
@@ -2653,7 +2653,7 @@ useEffect(() => {
   return () => {
     delete window.__showRegistrationPrompt;
   };
-}, []);
+}, [onGoToRegister]);
 
     // Пауза аудио при открытии опроса
 useEffect(() => {
