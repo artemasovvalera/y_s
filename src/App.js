@@ -2230,7 +2230,29 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
     const lastCityIdRef = useRef(null);
 
     
-    
+    const updateMarkers = useCallback((map) => {
+        const L = window.L;
+        const ul = userLocationRef.current;
+        const ar = allRoutesRef.current;
+        const cr = completedRoutesRef.current;
+        const onNav = onNavigateRef.current;
+        
+        if (ul) {
+            const userIcon = L.divIcon({ className: 'custom-icon', html: `<div style="background-color: #2563eb; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+            L.marker([ul.lat, ul.lon], { icon: userIcon }).addTo(map);
+        }
+        ar.forEach(route => {
+            if (!route.location) return;
+            const isCompleted = cr.some(c => c.name === route.name);
+            const style = getCategoryStyle(route.subCategory);
+            const color = isCompleted ? '#059669' : '#3b82f6';
+            const iconHtml = `<div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">${style.svgString}</div>`;
+            const routeIcon = L.divIcon({ className: 'route-icon', html: iconHtml, iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18] });
+            const marker = L.marker([route.location.lat, route.location.lon], { icon: routeIcon }).addTo(map);
+            marker.on('click', () => onNav(route));
+        });
+    }, []);
+
     const centerCityRef = useRef(centerCity);
     useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
     const userLocationRef = useRef(userLocation);
@@ -2255,28 +2277,7 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
         lastCityIdRef.current = cc ? cc.id : null;
         updateMarkers(map);
     }, [updateMarkers]);
-   const updateMarkers = useCallback((map) => {
-        const L = window.L;
-        const ul = userLocationRef.current;
-        const ar = allRoutesRef.current;
-        const cr = completedRoutesRef.current;
-        const onNav = onNavigateRef.current;
-        
-        if (ul) {
-            const userIcon = L.divIcon({ className: 'custom-icon', html: `<div style="background-color: #2563eb; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
-            L.marker([ul.lat, ul.lon], { icon: userIcon }).addTo(map);
-        }
-        ar.forEach(route => {
-            if (!route.location) return;
-            const isCompleted = cr.some(c => c.name === route.name);
-            const style = getCategoryStyle(route.subCategory);
-            const color = isCompleted ? '#059669' : '#3b82f6';
-            const iconHtml = `<div style="background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">${style.svgString}</div>`;
-            const routeIcon = L.divIcon({ className: 'route-icon', html: iconHtml, iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18] });
-            const marker = L.marker([route.location.lat, route.location.lon], { icon: routeIcon }).addTo(map);
-            marker.on('click', () => onNav(route));
-        });
-    }, []);
+   
 
 
 
