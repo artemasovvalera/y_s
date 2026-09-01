@@ -1153,24 +1153,12 @@ curatedExplore = [tower];
 curatedInteresting = [tower];
 } else if (cityId === 'dortmund') {
     // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
-    const dortmundFacts = { 
-        name: "Факты о Дортмунде", 
-        distance: 0.5, 
-        time: "10 мин", 
-        difficulty: "Лёгкая", 
-        videoUrl: "https://youtu.be/hyQI-2bwVcc", 
-        geoUrl: "https://maps.app.goo.gl/2JbtHoMVemLTwKjm7", 
-        audioUrl: "https://archive.org/download/dortmund_202608/dortmund.MP3", 
-        image: "https://archive.org/download/dortmund_202608/pexels-norbert-ueing-315693495-13612319.jpg", 
-        location: { lat: 51.513530856785906, lon: 7.46581642781496 }, 
-        descriptionShort: "Удивительные факты о Дортмунде, которые стоит узнать каждому.", 
-        subCategory: "Легенды и мифы города" 
-    };
-
+    const dortmundFacts = {  name: "Факты о Дортмунде",    distance: 0.5,         time: "10 мин",         difficulty: "Лёгкая",         videoUrl: "https://youtu.be/hyQI-2bwVcc",         geoUrl: "https://maps.app.goo.gl/2JbtHoMVemLTwKjm7",         audioUrl: "https://archive.org/download/dortmund_202608/dortmund.MP3",         image: "https://archive.org/download/dortmund_202608/pexels-norbert-ueing-315693495-13612319.jpg",         location: { lat: 51.513530856785906, lon: 7.46581642781496 },         descriptionShort: "Удивительные факты о Дортмунде, которые стоит узнать каждому.",         subCategory: "Легенды и мифы города"     };
+const florianturm = { name: "Флориантурм — первая вращающаяся башня в мире", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/florianturm/Florianturm_bei_Nacht.jpg", audioUrl: "https://archive.org/download/florianturm/florianturm.MP3", videoUrl: "https://youtu.be/-OSFfi_quDU", geoUrl: "https://maps.app.goo.gl/tjYL8ZVwsDpgx7zW6", location: { lat: 51.496278, lon: 7.476722 }, descriptionShort: "Флориантурм — телебашня высотой 211 метров и символ Дортмунда. Построена за неполный год в 1959 году. Первая в мире телебашня с вращающимся рестораном. Со смотровой площадки на высоте 142 метров открывается панорама всего Рурского региона.", subCategory: "Дортмунд" };
     // === КУРИРУЕМЫЕ РАЗДЕЛЫ (главный экран) ===
-    curatedRecommended = [dortmundFacts];
+    curatedRecommended = [florianturm, dortmundFacts];
     curatedExplore = [dortmundFacts];
-    curatedInteresting = [dortmundFacts];
+    curatedInteresting = [florianturm];
 
     // === КУЛЬТУРНЫЕ И ИСТОРИЧЕСКИЕ (8 подкатегорий) ===
     structure["Культурные и исторические маршруты"]["Набережная"] = [];
@@ -2251,7 +2239,33 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
     // Храним ID последнего города, чтобы центрировать только при смене города
     const lastCityIdRef = useRef(null);
 
-       const updateMarkers = useCallback((map) => {
+    
+    
+    const centerCityRef = useRef(centerCity);
+    useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
+    const userLocationRef = useRef(userLocation);
+    useEffect(() => { userLocationRef.current = userLocation; }, [userLocation]);
+
+    const allRoutesRef = useRef(allRoutes);
+    useEffect(() => { allRoutesRef.current = allRoutes; }, [allRoutes]);
+    const completedRoutesRef = useRef(completedRoutes);
+    useEffect(() => { completedRoutesRef.current = completedRoutes; }, [completedRoutes]);
+    const onNavigateRef = useRef(onNavigate);
+    useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
+
+     const initMap = useCallback(() => {
+        if (!window.L || mapInstanceRef.current) return;
+        const cc = centerCityRef.current;
+        const ul = userLocationRef.current;
+        const startLat = cc ? cc.lat : (ul ? ul.lat : 55.354);
+        const startLon = cc ? cc.lon : (ul ? ul.lon : 86.087);
+        const map = window.L.map(mapRef.current, { center: [startLat, startLon], zoom: 13, zoomControl: false });
+        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+        mapInstanceRef.current = map;
+        lastCityIdRef.current = cc ? cc.id : null;
+        updateMarkers(map);
+    }, [updateMarkers]);
+   const updateMarkers = useCallback((map) => {
         const L = window.L;
         const ul = userLocationRef.current;
         const ar = allRoutesRef.current;
@@ -2273,33 +2287,8 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
             marker.on('click', () => onNav(route));
         });
     }, []);
-    const initMap = useCallback(() => {
-        if (!window.L || mapInstanceRef.current) return;
-        const cc = centerCityRef.current;
-        const ul = userLocationRef.current;
-        const startLat = cc ? cc.lat : (ul ? ul.lat : 55.354);
-        const startLon = cc ? cc.lon : (ul ? ul.lon : 86.087);
-        const map = window.L.map(mapRef.current, { center: [startLat, startLon], zoom: 13, zoomControl: false });
-        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
-        mapInstanceRef.current = map;
-        lastCityIdRef.current = cc ? cc.id : null;
-        updateMarkers(map);
-    }, [updateMarkers]);
 
-    
-    const centerCityRef = useRef(centerCity);
-    useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
-    const userLocationRef = useRef(userLocation);
-    useEffect(() => { userLocationRef.current = userLocation; }, [userLocation]);
 
-    const allRoutesRef = useRef(allRoutes);
-    useEffect(() => { allRoutesRef.current = allRoutes; }, [allRoutes]);
-    const completedRoutesRef = useRef(completedRoutes);
-    useEffect(() => { completedRoutesRef.current = completedRoutes; }, [completedRoutes]);
-    const onNavigateRef = useRef(onNavigate);
-    useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
-
- 
 
     useEffect(() => {
         if (!document.getElementById('leaflet-css')) { const link = document.createElement('link'); link.id = 'leaflet-css'; link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link); }
@@ -2613,23 +2602,11 @@ if (nearbyRoutes.length > 0) {
         return (curatedRoutes.interesting || []).filter(r => !nearbyAndExploreNames.has(r.name));
     }, [curatedRoutes.interesting, nearbyAndExploreNames]);
 
+
 const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
 const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
 const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
-const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route);
-   
-   
-    // Записываем в аналитику: пользователь запустил аудиогид
-        logEvent('audio_play', { routeName: route.name, city: currentCity });
-        
-        if (window.__trackAudioInteraction) {
-          window.__trackAudioInteraction();
-        }
-    } else {
-        setModalMessage("Нет аудиогида");
-        setShowModal(true);
-    }
-}, [logEvent, currentCity]);
+const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route);   logEvent('audio_play', { routeName: route.name, city: currentCity });                if (window.__trackAudioInteraction) {          window.__trackAudioInteraction();        }    } else {        setModalMessage("Нет аудиогида");        setShowModal(true);    }}, [logEvent, currentCity]);
 
 
 
