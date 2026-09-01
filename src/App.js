@@ -32,17 +32,7 @@ const apiCall = async (action, params) => {
 
 
 // === СИНХРОНИЗАЦИЯ ДАННЫХ С СЕРВЕРОМ ===
-const saveUserDataToServer = async (hash, userData) => {
-  try {
-    const result = await apiCall('loadUserData', { hash });
-    if (result.success && result.data) {
-      return result.data;
-    }
-  } catch (e) {
-    console.log('Не удалось загрузить данные с сервера:', e);
-  }
-  return null;
-};
+
 const loadUserDataFromServer = async (hash) => {
   try {
     const result = await apiCall('loadUserData', { hash });
@@ -2145,7 +2135,7 @@ const AccountPage = ({ account, onBack, darkMode, setAccount, lang, completedRou
             cursor: isGuest ? 'not-allowed' : 'pointer',
             width: '100%', padding: '16px', borderRadius: '16px', border: 'none', 
             background: 'linear-gradient(135deg, #3B82F6, #2563EB)', color: 'white', 
-            fontSize: '15px', fontWeight: 700, cursor: 'pointer', marginTop: '8px',
+            fontSize: '15px', fontWeight: 700, marginTop: '8px',
             boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
           }}
         >
@@ -3214,8 +3204,7 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
         accent: '#10B981', accentGlow: 'rgba(16, 185, 129, 0.15)',
     };
 
-   const partnerRouteRec = allRoutesFlat.find(r => r.name === "Лучшее Кафе - Парадная");
-
+  
     return (
         <div style={{ margin: '-1rem', padding: '0', backgroundColor: recColors.bg, minHeight: '100vh' }}>
             
@@ -3727,7 +3716,7 @@ const [showLicense, setShowLicense] = useState(false);
         if (password.length < 6) { setError('Пароль минимум 6 символов'); return; }
         setLoading(true); setError('');
         const emailHash = await hashString(email.toLowerCase().trim());
-        const passHash = await hashString(password + emailHash);
+       
         const result = await apiCall('register', {
             email: email.toLowerCase().trim(),
             password: password,
@@ -4122,8 +4111,7 @@ if (step === -1) return (
     </div>
 );
 
-    const totalAnswered = Object.values(answers).filter(v => v !== '').length;
-
+  
     const handleSelect = (value) => {
         const newAnswers = { ...answers, [current.key]: value };
         setAnswers(newAnswers);
@@ -4198,11 +4186,7 @@ if (step === -1) return (
     );
 };
 
-const AgreementScreen = ({ onAccept, darkMode }) => {
-    const [isChecked, setIsChecked] = useState(false);
-    const C = darkMode ? S.dark : S.light;
-    return (<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', backgroundColor: C.bg, color: C.text, boxSizing: 'border-box' }}> <div style={{ padding: '2rem', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)', width: '100%', maxWidth: '30rem', backgroundColor: C.cardBg, border: `1px solid ${C.cardBorder}` }}> <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>Лицензионное соглашение</h2> <div style={{ height: '50vh', overflowY: 'auto', border: `1px solid ${C.cardBorder}`, padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}> <p><strong>1. Общие положения</strong></p><p>1.1. Используя Приложение, вы принимаете условия настоящего Соглашения.</p> <p><strong>2. Геолокация и Уведомления</strong></p><p>2.1. Приложение использует данные о вашем местоположении для уведомления о близости достопримечательностей (в радиусе 20 метров).</p><p>2.2. Данные обрабатываются локально на устройстве.</p><p>2.3. Приложение может отправлять уведомления об обновлениях и интересных местах.</p> <p><strong>3. Ответственность</strong></p><p>3.1. Разработчик не несет ответственности за актуальность маршрутов.</p> </div> <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}> <input type="checkbox" id="agreement-checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.75rem' }} /> <label htmlFor="agreement-checkbox" style={{ fontSize: '0.875rem' }}>Я принимаю условия соглашения и политику конфиденциальности.</label> </div> <button onClick={onAccept} disabled={!isChecked} style={{ width: '100%', backgroundColor: S.emerald600, color: 'white', fontWeight: 600, padding: '0.75rem 0', borderRadius: '0.75rem', border: 'none', cursor: 'pointer', fontSize: '1rem', opacity: isChecked ? 1 : 0.5, transition: 'opacity 0.2s' }}>Принять и продолжить</button> </div> </div>);
-};
+
 export default function App() {
     
     // Добавьте рядом с другими useState
