@@ -2309,7 +2309,7 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
 
 
 function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister, ...props }) {
-    const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
+    const { favoriteRoutes, completedRoutes, handleRouteCompletionGlobal, isRouteInFavorites, toggleFavorite, account, darkMode, setDarkMode, units, setUnits, routeIcons, buildInfo, setShowContactModal, currentLang, setCurrentLang, currentCity, setCurrentCity, isGuest, currentUserHash } = props;
     
     // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
     // Проверяем, запущено ли приложение как нативное (Capacitor на Android/iOS)
@@ -2363,10 +2363,36 @@ function MainRouteApp({ onExit, setAccount, logEvent, showSurvey, onGoToRegister
         allRoutesFlatForSearch.forEach(r => { if (!unique.has(r.name)) unique.set(r.name, r); }); return Array.from(unique.values()); }, [allRoutesFlatForSearch]);
 // Запрос разрешений на уведомления
 // Запрос разрешений на уведомления
-
+useEffect(() => {
+    const checkPermissions = async () => {
+        const result = await LocalNotifications.checkPermissions();
+        
+        // Если уже разрешено — ничего не делаем
+        if (result.display === 'granted') return;
+        
+        // Если запрещено или не спрашивали — показываем модалку через 3 секунды
+        setTimeout(() => {
+            setShowNotifPermissionModal(true);
+        }, 3000);
+    };
+    checkPermissions();
+}, []);
 
 // Обработчики модалки разрешений
+const handleAllowNotifications = async () => {
+    setShowNotifPermissionModal(false);
+    const result = await LocalNotifications.requestPermissions();
+    if (result.display === 'granted') {
+        setModalMessage(t('notif_permission_title') + ' ✅');
+        setShowModal(true);
+    }
+};
 
+const handleLaterNotifications = () => {
+    setShowNotifPermissionModal(false);
+    // Запомним, что пользователь отложил (можно спросить через день)
+    localStorage.setItem('notifPermissionAskedAt', Date.now());
+};
     useEffect(() => {
     const geoSuccess = (position) => {
         const lat = position.coords.latitude; 
@@ -2552,8 +2578,11 @@ useEffect(() => {
 useEffect(() => {
  window.__showRegistrationPrompt = () => {
     setModalMessage('Вам нравится приложение? 💚\nСоздайте аккаунт, чтобы сохранять маршруты в избранное, отмечать прогресс и синхронизировать данные между устройствами.');
-   
-    
+    setModalActionText('Создать аккаунт');
+    setModalAction(() => {
+        setShowModal(false);
+        if (onGoToRegister) onGoToRegister();
+    });
     setShowModal(true);
 };
   
@@ -4024,7 +4053,7 @@ const [isGuest, setIsGuest] = useState(() => {
     const [rewardModal, setRewardModal] = useState(false);
     const [rewardMsg, setRewardMsg] = useState("");
     const [showContactModal, setShowContactModal] = useState(false);
-    
+    const [showNotifPermissionModal, setShowNotifPermissionModal] = useState(false);
 
     const [showSurvey, setShowSurvey] = useState(false);
 const [surveyCompleted, setSurveyCompleted] = useState(() => {
@@ -4073,7 +4102,15 @@ const logEvent = useCallback((type, data = {}) => {
 
     const rewardTiers = [{ count: 1, title: "Начинающий" }, { count: 3, title: "Исследователь" }, { count: 5, title: "Магистр" }];
     const buildInfo = { version: "3.3", date: "03.09.2026" }; 
-   
+    const routeIcons = { 
+        "Культурные и исторические маршруты": <Landmark style={{ color: S.orange500, width: '1.25rem', height: '1.25rem' }} />, 
+        "Природные и активные маршруты": <Leaf style={{ color: S.emerald600, width: '1.25rem', height: '1.25rem' }} />, 
+        "Семейные маршруты": <Heart style={{ color: S.red500, width: '1.25rem', height: '1.25rem' }} />, 
+        "Альтернативные маршруты": <Compass style={{ color: S.sky600, width: '1.25rem', height: '1.25rem' }} />, 
+        "Гастрономические маршруты": <MapPin style={{ color: '#a855f7', width: '1.25rem', height: '1.25rem' }} />, 
+        "Тематические маршруты": <Activity style={{ color: S.emerald700, width: '1.25rem', height: '1.25rem' }} />, 
+        "Современные и урбанистические маршруты": <Monitor style={{ color: S.dark.textMuted, width: '1.25rem', height: '1.25rem' }} /> 
+    };
 
 // === 1. ССЫЛКА НА ТАЙМЕР (чтобы он не сбрасывался при перерисовке) ===
 const saveTimeoutRef = useRef(null);
@@ -4373,7 +4410,19 @@ useEffect(() => {
 }, [eventLog]);
 
 
-
+    // === УВЕДОМЛЕНИЯ ===
+    useEffect(() => {
+        const check = async () => {
+            try {
+                const result = await LocalNotifications.checkPermissions();
+                if (result.display === 'granted') return;
+                const lastAsked = parseInt(localStorage.getItem('notifPermissionAskedAt') || '0');
+                if (Date.now() - lastAsked < 86400000) return;
+                setTimeout(() => setShowNotifPermissionModal(true), 3000);
+            } catch (e) {}
+        };
+        if (phase === 'mainApp') check();
+    }, [phase]);
 
     useEffect(() => { 
         const C = darkMode ? S.dark : S.light; 
@@ -4470,6 +4519,12 @@ const handleLogout = () => {
 };
     const handleExitApp = () => { CapacitorApp.exitApp(); };
 
+    const handleAllowNotifications = async () => {
+        setShowNotifPermissionModal(false);
+        try { const result = await LocalNotifications.requestPermissions(); if (result.display === 'granted') alert('Уведомления включены! 🎉'); } catch (e) {}
+    };
+const handleLaterNotifications = () => { setShowNotifPermissionModal(false); localStorage.setItem('notifPermissionAskedAt', Date.now().toString()); };
+
 // === ФУНКЦИЯ ОТПРАВКИ СОБЫТИЙ В АНАЛИТИКУ ===
 const logAnalyticsEvent = async (eventType, routeName = '') => {
     if (!currentUserHash) return; // Не логируем гостей (или убери эту строку, если нужно логировать всех)
@@ -4562,7 +4617,7 @@ const toggleFavorite = useCallback((route) => {
                         handleRouteCompletionGlobal={handleComplete} 
                         isRouteInFavorites={isFav} toggleFavorite={toggleFavorite} 
                         account={account} darkMode={darkMode} setDarkMode={setDarkMode} 
-                        units={units} setUnits={setUnits} 
+                        units={units} setUnits={setUnits} routeIcons={routeIcons} 
                         buildInfo={buildInfo} setShowContactModal={setShowContactModal} 
                         setAccount={setAccount} currentLang={currentLang} setCurrentLang={setCurrentLang} 
                         currentCity={currentCity} setCurrentCity={setCurrentCity} 
