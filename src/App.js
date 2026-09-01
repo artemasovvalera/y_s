@@ -2251,19 +2251,7 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
     // Храним ID последнего города, чтобы центрировать только при смене города
     const lastCityIdRef = useRef(null);
 
-    const centerCityRef = useRef(centerCity);
-    useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
-    const userLocationRef = useRef(userLocation);
-    useEffect(() => { userLocationRef.current = userLocation; }, [userLocation]);
-
-    const allRoutesRef = useRef(allRoutes);
-    useEffect(() => { allRoutesRef.current = allRoutes; }, [allRoutes]);
-    const completedRoutesRef = useRef(completedRoutes);
-    useEffect(() => { completedRoutesRef.current = completedRoutes; }, [completedRoutes]);
-    const onNavigateRef = useRef(onNavigate);
-    useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
-
-        const updateMarkers = useCallback((map) => {
+       const updateMarkers = useCallback((map) => {
         const L = window.L;
         const ul = userLocationRef.current;
         const ar = allRoutesRef.current;
@@ -2285,13 +2273,6 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
             marker.on('click', () => onNav(route));
         });
     }, []);
-
-    useEffect(() => {
-        if (!document.getElementById('leaflet-css')) { const link = document.createElement('link'); link.id = 'leaflet-css'; link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link); }
-        if (!document.getElementById('leaflet-js')) { const script = document.createElement('script'); script.id = 'leaflet-js'; script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async = true; script.onload = () => initMap(); document.body.appendChild(script); } else { initMap(); }
-        return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; } };
-    }, [initMap]);
-
     const initMap = useCallback(() => {
         if (!window.L || mapInstanceRef.current) return;
         const cc = centerCityRef.current;
@@ -2304,6 +2285,29 @@ const MapPage = ({ userLocation, allRoutes, completedRoutes, onNavigate, darkMod
         lastCityIdRef.current = cc ? cc.id : null;
         updateMarkers(map);
     }, [updateMarkers]);
+
+    
+    const centerCityRef = useRef(centerCity);
+    useEffect(() => { centerCityRef.current = centerCity; }, [centerCity]);
+    const userLocationRef = useRef(userLocation);
+    useEffect(() => { userLocationRef.current = userLocation; }, [userLocation]);
+
+    const allRoutesRef = useRef(allRoutes);
+    useEffect(() => { allRoutesRef.current = allRoutes; }, [allRoutes]);
+    const completedRoutesRef = useRef(completedRoutes);
+    useEffect(() => { completedRoutesRef.current = completedRoutes; }, [completedRoutes]);
+    const onNavigateRef = useRef(onNavigate);
+    useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
+
+ 
+
+    useEffect(() => {
+        if (!document.getElementById('leaflet-css')) { const link = document.createElement('link'); link.id = 'leaflet-css'; link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link); }
+        if (!document.getElementById('leaflet-js')) { const script = document.createElement('script'); script.id = 'leaflet-js'; script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async = true; script.onload = () => initMap(); document.body.appendChild(script); } else { initMap(); }
+        return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; } };
+    }, [initMap]);
+
+
 
     useEffect(() => {
         if (window.L && mapInstanceRef.current) {
@@ -2602,8 +2606,34 @@ if (nearbyRoutes.length > 0) {
 
     // 4. ИНТЕРЕСНОЕ (исключаем те, что уже в "Рядом" и "Исследуй")
     const interestingCurated = useMemo(() => {
+
+
+
+
         return (curatedRoutes.interesting || []).filter(r => !nearbyAndExploreNames.has(r.name));
     }, [curatedRoutes.interesting, nearbyAndExploreNames]);
+
+const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
+const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
+const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
+const playAudio = useCallback((route) => { if (route && route.audioUrl) { setCurrentPlayingRoute(route);
+   
+   
+    // Записываем в аналитику: пользователь запустил аудиогид
+        logEvent('audio_play', { routeName: route.name, city: currentCity });
+        
+        if (window.__trackAudioInteraction) {
+          window.__trackAudioInteraction();
+        }
+    } else {
+        setModalMessage("Нет аудиогида");
+        setShowModal(true);
+    }
+}, [logEvent, currentCity]);
+
+
+
+
 // Обработка нажатия на уведомление
 useEffect(() => {
     let listener = null;
@@ -2636,8 +2666,7 @@ useEffect(() => {
     };
 }, [navigate]);
 
-    const stopAudio = useCallback(() => { if (audioPlayerRef.current) { audioPlayerRef.current.pause(); } setCurrentPlayingRoute(null); }, []);
-
+    
 // Глобальный метод для показа промпта регистрации
 useEffect(() => {
  window.__showRegistrationPrompt = () => {
@@ -2661,23 +2690,7 @@ useEffect(() => {
     stopAudio();
   }
 }, [showSurvey, currentPlayingRoute, stopAudio]);
-    const goBack = useCallback(() => { setNavigationStack(prev => (prev.length > 1 ? prev.slice(0, -1) : prev)); }, []);
-    const navigate = useCallback((type, data = {}) => { if (type === 'routeDetails') { stopAudio(); } setNavigationStack(prev => [...prev, { type, ...data }]); }, [stopAudio]);
-   const playAudio = useCallback((route) => {
-    if (route && route.audioUrl) {
-        setCurrentPlayingRoute(route);
-        // Записываем в аналитику: пользователь запустил аудиогид
-        logEvent('audio_play', { routeName: route.name, city: currentCity });
-        
-        if (window.__trackAudioInteraction) {
-          window.__trackAudioInteraction();
-        }
-    } else {
-        setModalMessage("Нет аудиогида");
-        setShowModal(true);
-    }
-}, [logEvent, currentCity]);
-
+   
 const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId === 'catalog') { setNavigationStack([{ type: 'categories' }]); } else { setNavigationStack([{ type: 'home' }]); } }, []);
 
     useEffect(() => { 
