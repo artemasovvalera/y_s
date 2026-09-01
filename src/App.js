@@ -4271,28 +4271,31 @@ const [eventLog, setEventLog] = useState(() => {
 
 const logEvent = useCallback((type, data = {}) => {
     console.log('🔥 logEvent called:', type, data);
-  const event = {
-    type,
-    timestamp: new Date().toISOString(),
-    date: new Date().toLocaleDateString('ru-RU'),
-    time: new Date().toLocaleTimeString('ru-RU'),
-    city: currentCity,
-    lang: currentLang,
-    ...data
-  };
-  setEventLog(prev => {
-    const newLog = [...prev, event];
-    return newLog.length > 500 ? newLog.slice(-500) : newLog;
-  });
-  // 2. Отправляем на сервер сразу (fire-and-forget)
-  if (currentUserHash) {
-    apiCall('logEvent', {
-      hash: currentUserHash,
-      event: event
-    }).catch(e => console.log('Аналитика не отправлена:', e));
-  }
-  }, [currentCity, currentLang, currentUserHash]);
+    const event = {
+        type,
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleDateString('ru-RU'),
+        time: new Date().toLocaleTimeString('ru-RU'),
+        city: currentCity,
+        lang: currentLang,
+        userName: account.name, // 👈 ДОБАВЛЕНО: Берем имя из аккаунта
+        ...data
+    };
+    
+    setEventLog(prev => {
+        const newLog = [...prev, event];
+        return newLog.length > 500 ? newLog.slice(-500) : newLog;
+    });
 
+    // 2. Отправляем на сервер сразу (fire-and-forget)
+    if (currentUserHash) {
+        apiCall('logEvent', {
+            hash: currentUserHash,
+            event: event,
+            userName: account.name // 👈 ДОБАВЛЕНО: Дублируем на верхний уровень для подстраховки
+        }).catch(e => console.log('Аналитика не отправлена:', e));
+    }
+}, [currentCity, currentLang, currentUserHash, account.name]); // 👈 ВАЖНО: Добавили account.name в зависимости useCallback!
 
 
 
@@ -4723,12 +4726,13 @@ const handleLaterNotifications = () => { setShowNotifPermissionModal(false); loc
 
 // === ФУНКЦИЯ ОТПРАВКИ СОБЫТИЙ В АНАЛИТИКУ ===
 const logAnalyticsEvent = async (eventType, routeName = '') => {
-    if (!currentUserHash) return; // Не логируем гостей (или убери эту строку, если нужно логировать всех)
+   // if (!currentUserHash) return; // Не логируем гостей (или убери эту строку, если нужно логировать всех)
     try {
         await apiCall('logEvent', {
             hash: currentUserHash,
             eventType: eventType, // 'view', 'audio', 'complete'
             routeName: routeName,
+            userName: account.name,
             city: currentCity,
             timestamp: new Date().toISOString()
         });
