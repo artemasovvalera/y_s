@@ -217,11 +217,10 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
             boxSizing: 'border-box', overflowX: 'hidden',
         }}>
             {/* HEADER */}
-            <div style={{
-                background: darkMode 
-                    ? 'linear-gradient(135deg, #064E3B 0%, #0A0E1A 60%)' 
-                    : 'linear-gradient(135deg, #D1FAE5 0%, #F0F4F8 60%)',
-                padding: '50px 24px 40px 24px',
+                    {/* HEADER */}
+         <div style={{
+             background: getTimeOfDayGradient(darkMode),
+             padding: '50px 24px 40px 24px',
                 borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
                 position: 'relative', overflow: 'hidden',
             }}>
@@ -3210,11 +3209,10 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
         <div style={{ margin: '-1rem', padding: '0', backgroundColor: recColors.bg, minHeight: '100vh' }}>
             
             {/* HEADER с градиентом — как на дашборде */}
-            <div style={{
-                background: darkMode
-                    ? 'linear-gradient(135deg, #064E3B 0%, #0A0E1A 60%)'
-                    : 'linear-gradient(135deg, #D1FAE5 0%, #F0F4F8 60%)',
-                padding: '50px 24px 32px 24px',
+                     {/* HEADER с градиентом — как на дашборде */}
+         <div style={{
+             background: getTimeOfDayGradient(darkMode),
+             padding: '50px 24px 32px 24px',
                 borderBottomLeftRadius: '32px', borderBottomRightRadius: '32px',
                 position: 'relative', overflow: 'hidden',
             }}>
@@ -4185,6 +4183,35 @@ if (step === -1) return (
             </div>
         </div>
     );
+};
+
+
+// === ФУНКЦИЯ ЖИВЫХ ГРАДИЕНТОВ ПО ВРЕМЕНИ СУТОК ===
+const getTimeOfDayGradient = (isDark) => {
+  const hour = new Date().getHours();
+  let timePeriod = 'day';
+  
+  if (hour >= 5 && hour < 11) timePeriod = 'morning';
+  else if (hour >= 11 && hour < 17) timePeriod = 'day';
+  else if (hour >= 17 && hour < 22) timePeriod = 'evening';
+  else timePeriod = 'night';
+  
+  const gradients = {
+    light: {
+      morning: 'linear-gradient(135deg, #FEF3C7 0%, #DBEAFE 100%)', // Утро: персиковый -> голубой
+      day: 'linear-gradient(135deg, #D1FAE5 0%, #BFDBFE 100%)',     // День: мятный -> небесный
+      evening: 'linear-gradient(135deg, #FED7AA 0%, #FBCFE8 100%)', // Вечер: закатный -> розовый
+      night: 'linear-gradient(135deg, #E0E7FF 0%, #F3F4F6 100%)'    // Ночь: лавандовый
+    },
+    dark: {
+      morning: 'linear-gradient(135deg, #7C2D12 0%, #1E3A5F 100%)', // Утро: глубокий оранжевый -> синий
+      day: 'linear-gradient(135deg, #064E3B 0%, #1E3A5F 100%)',     // День: изумрудный -> индиго
+      evening: 'linear-gradient(135deg, #7C2D12 0%, #831843 100%)', // Вечер: терракотовый -> пурпурный
+      night: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)'    // Ночь: глубокий ночной
+    }
+  };
+  
+  return gradients[isDark ? 'dark' : 'light'][timePeriod];
 };
 
 
