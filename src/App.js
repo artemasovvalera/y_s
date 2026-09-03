@@ -423,18 +423,14 @@ const cardStyle = {
 };
 
 // --- ФУНКЦИЯ ПОЛУЧЕНИЯ СТИЛЕЙ КАТЕГОРИЙ (ИКОНКИ) ---
-// --- ФУНКЦИЯ ПОЛУЧЕНИЯ СТИЛЕЙ КАТЕГОРИЙ (ИКОНКИ) ---
 const getCategoryStyle = (subCategoryName) => {
-    // 1. Дефолтный стиль (если иконка не найдена)
     const defaultStyle = {
         iconComp: <MapPin size={20} color="#6B7280" />,
         svgString: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>'
     };
-
-    // 2. Хелпер для SVG (для маркеров на карте)
+    
     const createSvg = (color, path) => `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
-
-    // 3. СЛОВАРЬ СТИЛЕЙ (Все 34 категории из CATALOG_STRUCTURE)
+    
     const styles = {
         // === КУЛЬТУРНЫЕ И ИСТОРИЧЕСКИЕ ===
         "Набережная": {
@@ -450,11 +446,11 @@ const getCategoryStyle = (subCategoryName) => {
             svgString: createSvg('#ef4444', '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>')
         },
         "Архитектурные достопримечательности": {
-            iconComp: <Building size={20} color="#f97316" />,
-            svgString: createSvg('#f97316', '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="22"/><line x1="15" y1="22" x2="15" y2="22"/>')
+            iconComp: <Building2 size={20} color="#f97316" />,  // ← Building2 вместо Building!
+            svgString: createSvg('#f97316', '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>')
         },
         "Городские площади": {
-            iconComp: <MapIcon size={20} color="#ef4444" />,
+            iconComp: <MapPin size={20} color="#ef4444" />,
             svgString: createSvg('#ef4444', '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>')
         },
         "Исторические кварталы": {
@@ -462,14 +458,13 @@ const getCategoryStyle = (subCategoryName) => {
             svgString: createSvg('#92400e', '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/>')
         },
         "Церкви и храмы": {
-            iconComp: <Sun size={20} color="#eab308" />,
-            svgString: createSvg('#eab308', '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>')
+            iconComp: <Church size={20} color="#eab308" />,  // ← Новая иконка Church!
+            svgString: createSvg('#eab308', '<path d="M12 2v20"/><path d="M12 6a4 4 0 0 0-4 4v2H6v10h12V12h-2v-2a4 4 0 0 0-4-4Z"/><path d="m8 6 4-4 4 4"/>')
         },
         "Легенды и мифы города": {
             iconComp: <BookOpen size={20} color="#8b5cf6" />,
             svgString: createSvg('#8b5cf6', '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>')
         },
-
         // === ПРИРОДНЫЕ И АКТИВНЫЕ ===
         "Природные зоны и парки": {
             iconComp: <Trees size={20} color="#16a34a" />,
@@ -487,43 +482,40 @@ const getCategoryStyle = (subCategoryName) => {
             iconComp: <Activity size={20} color="#dc2626" />,
             svgString: createSvg('#dc2626', '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>')
         },
-
         // === СОВРЕМЕННЫЕ И УРБАНИСТИЧЕСКИЕ ===
         "Скульптуры и уличное искусство": {
-            iconComp: <Smile size={20} color="#f59e0b" />,
+            iconComp: <Palette size={20} color="#f59e0b" />,  // ← Palette вместо Smile!
             svgString: createSvg('#f59e0b', '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>')
         },
         "Современная архитектура": {
-            iconComp: <Building size={20} color="#60a5fa" />,
-            svgString: createSvg('#60a5fa', '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/>')
+            iconComp: <Building2 size={20} color="#60a5fa" />,
+            svgString: createSvg('#60a5fa', '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>')
         },
         "Городские лаборатории": {
-            iconComp: <Monitor size={20} color="#6b7280" />,
-            svgString: createSvg('#6b7280', '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>')
+            iconComp: <FlaskConical size={20} color="#6b7280" />,  // ← Новая иконка!
+            svgString: createSvg('#6b7280', '<path d="M8.5 2h7"/><path d="M12 2v7.5"/><path d="m6 20 2.5-7.5L12 12l3.5-2.5L18 20"/><path d="M6 20h12"/><path d="M8.5 2 6 9.5"/><path d="M15.5 2 18 9.5"/>')
         },
         "Реставрации и обновления": {
-            iconComp: <Settings size={20} color="#9ca3af" />,
-            svgString: createSvg('#9ca3af', '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>')
+            iconComp: <Hammer size={20} color="#9ca3af" />,  // ← Новая иконка!
+            svgString: createSvg('#9ca3af', '<path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25V7.86c0-.55-.45-1-1-1H16.5c-.85 0-1.65-.33-2.25-.93L13 4.72"/><path d="M16 16l-3-3"/><path d="M13 13l-3-3"/><path d="M10 10 7 7"/>')
         },
-
         // === ГАСТРОНОМИЧЕСКИЕ ===
         "Кофе": {
             iconComp: <Coffee size={20} color="#854d0e" />,
             svgString: createSvg('#854d0e', '<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>')
         },
         "Уличная еда": {
-            iconComp: <Coffee size={20} color="#d97706" />,
-            svgString: createSvg('#d97706', '<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>')
+            iconComp: <Utensils size={20} color="#d97706" />,  // ← Utensils вместо Coffee!
+            svgString: createSvg('#d97706', '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>')
         },
         "Традиционные рестораны": {
-            iconComp: <Coffee size={20} color="#dc2626" />,
-            svgString: createSvg('#dc2626', '<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>')
+            iconComp: <ChefHat size={20} color="#dc2626" />,  // ← ChefHat!
+            svgString: createSvg('#dc2626', '<path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/>')
         },
         "Гастрономические мастер-классы": {
             iconComp: <Star size={20} color="#eab308" />,
             svgString: createSvg('#eab308', '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>')
         },
-
         // === СЕМЕЙНЫЕ ===
         "Парки аттракционы и детские площадки": {
             iconComp: <Smile size={20} color="#ec4899" />,
@@ -534,22 +526,21 @@ const getCategoryStyle = (subCategoryName) => {
             svgString: createSvg('#15803d', '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>')
         },
         "Музеи для детей": {
-            iconComp: <Smile size={20} color="#3b82f6" />,
-            svgString: createSvg('#3b82f6', '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/>')
+            iconComp: <ToyBrick size={20} color="#3b82f6" />,  // ← ToyBrick!
+            svgString: createSvg('#3b82f6', '<rect x="2" y="2" width="20" height="20" rx="2"/><path d="M6 6h4v4H6z"/><path d="M14 6h4v4h-4z"/><path d="M6 14h4v4H6z"/><path d="M14 14h4v4h-4z"/>')
         },
         "Пикники на природе": {
             iconComp: <Sun size={20} color="#f59e0b" />,
-            svgString: createSvg('#f59e0b', '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>')
+            svgString: createSvg('#f59e0b', '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>')
         },
         "Игровые центры и развлекательные зоны": {
-            iconComp: <Clapperboard size={20} color="#8b5cf6" />,
-            svgString: createSvg('#8b5cf6', '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>')
+            iconComp: <Gamepad2 size={20} color="#8b5cf6" />,  // ← Gamepad2!
+            svgString: createSvg('#8b5cf6', '<line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="2"/>')
         },
-
         // === АЛЬТЕРНАТИВНЫЕ ===
         "Заброшенные здания и территории": {
-            iconComp: <Building size={20} color="#9ca3af" />,
-            svgString: createSvg('#9ca3af', '<rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>')
+            iconComp: <Building2 size={20} color="#9ca3af" />,
+            svgString: createSvg('#9ca3af', '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>')
         },
         "Урбанистические исследования": {
             iconComp: <Search size={20} color="#4b5563" />,
@@ -563,30 +554,29 @@ const getCategoryStyle = (subCategoryName) => {
             iconComp: <Moon size={20} color="#7c3aed" />,
             svgString: createSvg('#7c3aed', '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>')
         },
-
         // === ТЕМАТИЧЕСКИЕ ===
         "Музыкальные маршруты": {
             iconComp: <Music size={20} color="#ec4899" />,
             svgString: createSvg('#ec4899', '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>')
         },
         "Кино и телевидение": {
-            iconComp: <Clapperboard size={20} color="#ef4444" />,
+            iconComp: <Film size={20} color="#ef4444" />,  // ← Film вместо Clapperboard!
             svgString: createSvg('#ef4444', '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>')
         },
-        "Мифы и легенды": { // Дублирование, но для другого ключа (без "города")
-            iconComp: <BookOpen size={20} color="#8b5cf6" />,
-            svgString: createSvg('#8b5cf6', '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>')
+        "Мифы и легенды": {
+            iconComp: <Scroll size={20} color="#8b5cf6" />,  // ← Scroll!
+            svgString: createSvg('#8b5cf6', '<path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2Z"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 10h2"/><path d="M20 10h2"/><path d="m19 6-2 2"/><path d="m19 14-2-2"/><path d="m5 6 2 2"/><path d="m5 14 2-2"/>')
         },
         "Технические и инновационные маршруты": {
-            iconComp: <Monitor size={20} color="#6b7280" />,
-            svgString: createSvg('#6b7280', '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>')
+            iconComp: <Cpu size={20} color="#6b7280" />,  // ← Cpu!
+            svgString: createSvg('#6b7280', '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>')
         },
         "Спортивные маршруты": {
             iconComp: <Bike size={20} color="#f59e0b" />,
             svgString: createSvg('#f59e0b', '<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/>')
         }
     };
-
+    
     return styles[subCategoryName] || defaultStyle;
 };
 
