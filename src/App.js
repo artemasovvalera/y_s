@@ -120,32 +120,32 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
         return 'Добрый вечер';
     };
 
-    const t = {
-        ru: {
-            greeting: getGreeting(), subtitle: "Ваш день в движении",
-            steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
-            forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
-            weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
-            meters: "м", km: "км", btn: "Начать исследовать",
-            noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
-        },
-        en: {
-            greeting: getGreeting(), subtitle: "Your day in motion",
-            steps: "Steps", calories: "Calories", of: "of", kcal: "kcal", goal: "goal",
-            forecast: "Today's forecast", forecastSteps: "steps by end of day",
-            weatherTitle: "Weather now", nearbyTitle: "Interesting nearby",
-            meters: "m", km: "km", btn: "Start exploring",
-            noData: "Start walking — data will appear", loading: "Finding your location..."
-        },
-        de: {
-            greeting: getGreeting(), subtitle: "Ihr Tag in Bewegung",
-            steps: "Schritte", calories: "Kalorien", of: "von", kcal: "kcal", goal: "Ziel",
-            forecast: "Tagesprognose", forecastSteps: "Schritte bis Tagesende",
-            weatherTitle: "Wetter jetzt", nearbyTitle: "Interessantes in der Nähe",
-            meters: "m", km: "km", btn: "Erkunden starten",
-            noData: "Beginnen Sie zu gehen", loading: "Standort wird ermittelt..."
-        },
-             hy: {
+     const t = {
+     ru: {
+         greeting: getGreeting(), subtitle: "Ваш день в движении",
+         steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
+         forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
+         weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
+         meters: "м", km: "км", btn: "Начать исследовать",
+         noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
+     },
+     en: {
+         greeting: getGreeting(), subtitle: "Your day in motion",
+         steps: "Steps", calories: "Calories", of: "of", kcal: "kcal", goal: "goal",
+         forecast: "Today's forecast", forecastSteps: "steps by end of day",
+         weatherTitle: "Weather now", nearbyTitle: "Interesting nearby",
+         meters: "m", km: "km", btn: "Start exploring",
+         noData: "Start walking — data will appear", loading: "Finding your location..."
+     },
+     de: {
+         greeting: getGreeting(), subtitle: "Ihr Tag in Bewegung",
+         steps: "Schritte", calories: "Kalorien", of: "von", kcal: "kcal", goal: "Ziel",
+         forecast: "Tagesprognose", forecastSteps: "Schritte bis Tagesende",
+         weatherTitle: "Wetter jetzt", nearbyTitle: "Interessantes in der Nähe",
+         meters: "m", km: "km", btn: "Erkunden starten",
+         noData: "Beginnen Sie zu gehen", loading: "Standort wird ermittelt..."
+     },
+     hy: {
          greeting: getGreeting(), subtitle: "Ձեր օրը շարժման մեջ",
          steps: "Քայլեր", calories: "Կալորիաներ", of: "ից", kcal: "կկալ", goal: "նպատակ",
          forecast: "Օրվա կանխատեսում", forecastSteps: "քայլ օրվա վերջում",
@@ -161,7 +161,14 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
          meters: "मीटर", km: "किमी", btn: "खोजना शुरू करें",
          noData: "चलना शुरू करें — डेटा दिखाई देगा", loading: "आपका स्थान खोज रहे हैं..."
      }
-        }
+ }[lang] || {
+     greeting: getGreeting(), subtitle: "Ваш день в движении",
+     steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
+     forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
+     weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
+     meters: "м", km: "км", btn: "Начать исследовать",
+     noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
+ };
     }[lang] || {
         greeting: getGreeting(), subtitle: "Ваш день в движении",
         steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
@@ -1074,7 +1081,7 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const kondQuarter = { name: "Конд — армянская фавела которой 300 лет", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20260903_20260903_0348/2122.png", audioUrl: "https://archive.org/download/20260903_20260903_0348/%D0%BA%D0%BE%D0%BD%D0%B4.MP3", videoUrl: "https://youtu.be/CkrxX7f3Frc", geoUrl: "https://maps.app.goo.gl/cS2kQBo3efnqEMfj8", location: { lat: 40.182314, lon: 44.502297 }, descriptionShort: "Конд — самый старый квартал Еревана, которому больше трёхсот лет. Узкие переулки, дома с граффити, церковь Святого Ованеса 1710 года и руины мечети Тапабаши XVII века. Живой район где история не в музее — а прямо за каждым углом.", subCategory: "Исторические кварталы" };
         const levonCave = { name: "Пещера дедушки Левона — храм вырубленный руками за 23 года", distance: null, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pesLevon/00001.jpg", audioUrl: "https://archive.org/download/pesLevon/pesLevon.MP3", videoUrl: "https://youtu.be/evBzjdNbETc", geoUrl: "https://maps.app.goo.gl/p4N8tR1yoCXqZPe3A", location: { lat: 40.2201, lon: 44.5789 }, descriptionShort: "Под обычным домом в селе Ариндж — семиуровневый подземный храм глубиной 21 метр. Один человек, молоток и зубило, двадцать три года. Левон Аракелян начал копать погреб для картошки — и создал одно из самых удивительных мест Армении.", subCategory: "Архитектурные достопримечательности" };
 
-curatedRecommended = [kondQuarter, khorVirap, erevFountains];
+curatedRecommended = [levonCave, kondQuarter, khorVirap, erevFountains];
 curatedExplore = [erevFountainRepublic, erebuniFortress];
 curatedInteresting = [levonCave];
 
