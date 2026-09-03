@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect, forwardRef, useCallback, useMemo } from "react";
 import { App as CapacitorApp } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
+
 import {
-    Settings, Home, ArrowLeft, Clock, MapPin, Leaf, Activity, Landmark, ChevronDown,
-    XCircle, Star, Heart, CheckCircle, Navigation, PlayCircle,
-    Pause, Monitor, Award, Compass, Mail, Bell, Search, Send, Clapperboard,
-    Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
-    Music, BookOpen, Smile, Bike, Globe, Building, Download, Loader
+  Settings, Home, ArrowLeft, Clock, MapPin, Leaf, Activity, Landmark, ChevronDown,
+  XCircle, Star, Heart, CheckCircle, Navigation, PlayCircle,
+  Pause, Monitor, Award, Compass, Mail, Bell, Search, Send, Clapperboard,
+  Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
+  Music, BookOpen, Smile, Bike, Globe, Building, Building2, Download, Loader,
+  Church, Palette, FlaskConical, Hammer, Utensils, ChefHat, ToyBrick, Gamepad2, Film, Scroll, Cpu
 } from "lucide-react";
 
 // ==========================================
