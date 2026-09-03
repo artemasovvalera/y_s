@@ -169,15 +169,7 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
      meters: "м", km: "км", btn: "Начать исследовать",
      noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
  };
-
-}[lang] || {
-        greeting: getGreeting(), subtitle: "Ваш день в движении",
-        steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
-        forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
-        weatherTitle: "Погода сейчас", nearbyTitle: "Интересное рядом",
-        meters: "м", km: "км", btn: "Начать исследовать",
-        noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
-    };
+    
 
     const colors = darkMode ? {
         bg: '#0A0E1A', surface: 'rgba(255,255,255,0.06)', glass: 'rgba(255,255,255,0.08)',
