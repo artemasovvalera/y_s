@@ -120,7 +120,7 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
         return 'Добрый вечер';
     };
 
-     const t = {
+ const t = {
      ru: {
          greeting: getGreeting(), subtitle: "Ваш день в движении",
          steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
@@ -169,7 +169,8 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
      meters: "м", km: "км", btn: "Начать исследовать",
      noData: "Начните ходить — данные появятся", loading: "Определяем ваше местоположение..."
  };
-    }[lang] || {
+
+}[lang] || {
         greeting: getGreeting(), subtitle: "Ваш день в движении",
         steps: "Шаги", calories: "Калории", of: "из", kcal: "ккал", goal: "цель",
         forecast: "Прогноз на день", forecastSteps: "шагов к концу дня",
