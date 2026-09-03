@@ -145,21 +145,22 @@ const HealthDashboardScreen = ({ darkMode, onComplete, lang = 'ru', locations = 
             meters: "m", km: "km", btn: "Erkunden starten",
             noData: "Beginnen Sie zu gehen", loading: "Standort wird ermittelt..."
         },
-        hy: {
-            greeting: getGreeting(), subtitle: "Ձեր օրը շարժման մdelays",
-            steps: "Քայլեր", calories: "Կdelays", of: "ից", kcal: " delays", goal: "նdelays",
-            forecast: "Delays", forecastSteps: "delays",
-            weatherTitle: "Delays", nearbyTitle: "Delays մdelays",
-            meters: "մ", km: "delays", btn: "Delays",
-            noData: "Delays", loading: "Delays..."
-        },
-        hi: {
-            greeting: getGreeting(), subtitle: "आपका दिन गति में",
-            steps: "कदम", calories: "कैलdelay", of: "में से", kcal: "delay", goal: "लdelays",
-            forecast: "Delays", forecastSteps: "delays",
-            weatherTitle: "Delays", nearbyTitle: "Delays",
-            meters: "मीdelay", km: "किdelay", btn: "Delays शुरू करें",
-            noData: "Delays", loading: "Delays..."
+             hy: {
+         greeting: getGreeting(), subtitle: "Ձեր օրը շարժման մեջ",
+         steps: "Քայլեր", calories: "Կալորիաներ", of: "ից", kcal: "կկալ", goal: "նպատակ",
+         forecast: "Օրվա կանխատեսում", forecastSteps: "քայլ օրվա վերջում",
+         weatherTitle: "Եղանակը հիմա", nearbyTitle: "Հետաքրքիր մոտակայքում",
+         meters: "մ", km: "կմ", btn: "Սկսել ուսումնասիրել",
+         noData: "Սկսեք քայլել — տվյալները կհայտնվեն", loading: "Որոշվում է ձեր գտնվելու վայրը..."
+     },
+     hi: {
+         greeting: getGreeting(), subtitle: "आपका दिन गति में",
+         steps: "कदम", calories: "कैलोरी", of: "में से", kcal: "कैलोरी", goal: "लक्ष्य",
+         forecast: "आज का अनुमान", forecastSteps: "दिन के अंत तक कदम",
+         weatherTitle: "अभी मौसम", nearbyTitle: "आसपास की दिलचस्प जगहें",
+         meters: "मीटर", km: "किमी", btn: "खोजना शुरू करें",
+         noData: "चलना शुरू करें — डेटा दिखाई देगा", loading: "आपका स्थान खोज रहे हैं..."
+     }
         }
     }[lang] || {
         greeting: getGreeting(), subtitle: "Ваш день в движении",
@@ -1071,22 +1072,23 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const erebuniFortress = { name: "Крепость Эребуни", distance: 1, time: "60 мин", difficulty: "Лёгкая", image: "https://archive.org/download/202606041245-1-2/Erebuni_Fortress_21.jpg", audioUrl: "https://archive.org/download/202606041245-1-2/202606041245-_1_.mp3", location: { lat: 40.1406, lon: 44.5381 }, videoUrl: "https://archive.org/download/202606041245-1-2/202606041245%20%281%29%20%282%29.mp4", geoUrl: "https://maps.app.goo.gl/F4aR2Vk22L5HpP9n6", descriptionShort: "Урартская крепость 782 года до н.э. — именно отсюда пошло название Ереван. Основана царём Аргишти I и служила форпостом в Араратской долине.", subCategory: "Архитектурные достопримечательности" };
         const khorVirap = {  name: "Хор Вирап — древний монастырь с видом на Арарат",  distance: 40,   time: "40 мин",   difficulty: "Средняя",   image: "https://archive.org/download/202607011908/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-07-02%20%D0%B2%2017.11.36.png",   audioUrl: "https://archive.org/download/202607011908/202607011908.mp3",   videoUrl: "https://youtu.be/IDGqDOTTmo4",   geoUrl: "https://maps.app.goo.gl/kXHjT9GScBkZ165Y9",   location: { lat: 39.8782917, lon: 44.5764714 },   descriptionShort: "Древний монастырь в 40 км к югу от Еревана у границы с Турцией. Стоит на холме у горы Арарат с лучшим видом на святыню. Название переводится как «глубокая темница». Поездка занимает около 40 минут.",   subCategory: "Церкви и храмы",  explicitDate: "2026-07-02"};
         const kondQuarter = { name: "Конд — армянская фавела которой 300 лет", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20260903_20260903_0348/2122.png", audioUrl: "https://archive.org/download/20260903_20260903_0348/%D0%BA%D0%BE%D0%BD%D0%B4.MP3", videoUrl: "https://youtu.be/CkrxX7f3Frc", geoUrl: "https://maps.app.goo.gl/cS2kQBo3efnqEMfj8", location: { lat: 40.182314, lon: 44.502297 }, descriptionShort: "Конд — самый старый квартал Еревана, которому больше трёхсот лет. Узкие переулки, дома с граффити, церковь Святого Ованеса 1710 года и руины мечети Тапабаши XVII века. Живой район где история не в музее — а прямо за каждым углом.", subCategory: "Исторические кварталы" };
+        const levonCave = { name: "Пещера дедушки Левона — храм вырубленный руками за 23 года", distance: null, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pesLevon/00001.jpg", audioUrl: "https://archive.org/download/pesLevon/pesLevon.MP3", videoUrl: "https://youtu.be/evBzjdNbETc", geoUrl: "https://maps.app.goo.gl/p4N8tR1yoCXqZPe3A", location: { lat: 40.2201, lon: 44.5789 }, descriptionShort: "Под обычным домом в селе Ариндж — семиуровневый подземный храм глубиной 21 метр. Один человек, молоток и зубило, двадцать три года. Левон Аракелян начал копать погреб для картошки — и создал одно из самых удивительных мест Армении.", subCategory: "Архитектурные достопримечательности" };
 
 curatedRecommended = [kondQuarter, khorVirap, erevFountains];
 curatedExplore = [erevFountainRepublic, erebuniFortress];
-curatedInteresting = [cascadeRoute];
+curatedInteresting = [levonCave];
 
 
 
         // === Культурные и исторические маршруты ===
         structure["Культурные и исторические маршруты"]["Набережная"] = [kondQuarter, erebuniFortress, erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [erevFountains, cascadeRoute, levonCave];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [kondQuarter, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [kondQuarter, levonCave, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [kondQuarter, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [khorVirap, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [kondQuarter, khorVirap, erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [khorVirap, cascadeRoute, levonCave];
+        structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [kondQuarter, khorVirap, erevFountains, cascadeRoute, levonCave];
 
         // === Природные и активные маршруты ===
         structure["Природные и активные маршруты"]["Природные зоны и парки"] = [khorVirap, erebuniFortress, cascadeRoute];
@@ -1115,14 +1117,14 @@ curatedInteresting = [cascadeRoute];
 
         // === Альтернативные маршруты ===
         structure["Альтернативные маршруты"]["Заброшенные здания и территории"] = [erebuniFortress, cascadeRoute];
-        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [kondQuarter, cascadeRoute];
+        structure["Альтернативные маршруты"]["Урбанистические исследования"] = [kondQuarter, cascadeRoute, levonCave];
         structure["Альтернативные маршруты"]["Тайные и мистические маршруты"] = [cascadeRoute];
         structure["Альтернативные маршруты"]["Ночные экскурсии"] = [cascadeRoute];
 
         // === Тематические маршруты ===
         structure["Тематические маршруты"]["Музыкальные маршруты"] = [erevFountainRepublic, cascadeRoute];
         structure["Тематические маршруты"]["Кино и телевидение"] = [cascadeRoute];
-        structure["Тематические маршруты"]["Мифы и легенды"] = [khorVirap, erevFountains, cascadeRoute];
+        structure["Тематические маршруты"]["Мифы и легенды"] = [khorVirap, erevFountains, cascadeRoute, levonCave];
         structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [erevFountainRepublic, cascadeRoute];
         structure["Тематические маршруты"]["Спортивные маршруты"] = [cascadeRoute];
      
