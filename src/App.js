@@ -1052,7 +1052,6 @@ curatedInteresting = [nabOgrazhdenie, reki, rampa];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [baba];
         structure["Семейные маршруты"]["Пикники на природе"] = [arambolBeach, rocks];
 
-// === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ АРАМБОЛЯ ===
 curatedRecommended = [arambolBeach]; // ← Замени на свои переменные
 curatedExplore = [baba, rocks];                 // ← Замени на свои переменные
 curatedInteresting = [baba];               // ← Замени на свои переменные
@@ -1069,6 +1068,10 @@ curatedRecommended = [redSquare, zaryadye]; // ← Замени на свои п
 curatedExplore = [zaryadye];        // ← Замени на свои переменные
 curatedInteresting = [zaryadye]; // ← Замени на свои переменные
 
+
+
+// === КУРИРУЕМЫЕ РАЗДЕЛЫ ДЛЯ ЕРЕВАНА ===
+// Просто добавляй сюда имена переменных маршрутов через запятую
        } else if (cityId === 'yerevan') {
         const cascadeRoute = { name: "Каскад — самостоятельная прогулка с аудиогидом", distance: 1.2, time: "40 мин", difficulty: "Средняя", image: "https://archive.org/download/kaskad/photo_2026-05-21_01-55-03%20%282%29.jpg", audioUrl: "https://archive.org/download/kaskad/kaskad.MP3", videoUrl: "https://rutube.ru/video/3e9045ab4ca1d7ace838324c173e2b98/", geoUrl: "https://yandex.ru/maps/-/CCUiaMXrtB", location: { lat: 40.1919, lon: 44.5153 }, descriptionShort: "Каскад — монументальная лестница из белого туфа с фонтанами, скульптурами и смотровыми площадками. Внутри — Центр искусств Гафесчяна с коллекцией современного искусства. С вершины открывается панорама Еревана и вид на Арарат.", subCategory: "Архитектурные достопримечательности" };
         const erevFountains = { name: "Питьевые фонтанчики", distance: 0.1, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_pu/1212111.png", audioUrl: "https://archive.org/download/er_pu/er_pu.MP3", location: { lat: 40.16119950780383, lon: 44.51159737974957 }, videoUrl: "https://youtu.be/P9JKqs3vl7o", geoUrl: "https://maps.app.goo.gl/pCFG6dqXqrH1xNF9A", descriptionShort: "Питьевые фонтанчики Еревана — маленькая традиция большого города.", subCategory: "Скульптуры и уличное искусство" };
@@ -1077,8 +1080,6 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const khorVirap = {  name: "Хор Вирап — древний монастырь с видом на Арарат",  distance: 40,   time: "40 мин",   difficulty: "Средняя",   image: "https://archive.org/download/202607011908/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-07-02%20%D0%B2%2017.11.36.png",   audioUrl: "https://archive.org/download/202607011908/202607011908.mp3",   videoUrl: "https://youtu.be/IDGqDOTTmo4",   geoUrl: "https://maps.app.goo.gl/kXHjT9GScBkZ165Y9",   location: { lat: 39.8782917, lon: 44.5764714 },   descriptionShort: "Древний монастырь в 40 км к югу от Еревана у границы с Турцией. Стоит на холме у горы Арарат с лучшим видом на святыню. Название переводится как «глубокая темница». Поездка занимает около 40 минут.",   subCategory: "Церкви и храмы",  explicitDate: "2026-07-02"};
         const kondQuarter = { name: "Конд — армянская фавела которой 300 лет", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20260903_20260903_0348/2122.png", audioUrl: "https://archive.org/download/20260903_20260903_0348/%D0%BA%D0%BE%D0%BD%D0%B4.MP3", videoUrl: "https://youtu.be/CkrxX7f3Frc", geoUrl: "https://maps.app.goo.gl/cS2kQBo3efnqEMfj8", location: { lat: 40.182314, lon: 44.502297 }, descriptionShort: "Конд — самый старый квартал Еревана, которому больше трёхсот лет. Узкие переулки, дома с граффити, церковь Святого Ованеса 1710 года и руины мечети Тапабаши XVII века. Живой район где история не в музее — а прямо за каждым углом.", subCategory: "Исторические кварталы" };
 
-// === КУРИРУЕМЫЕ РАЗДЕЛЫ ДЛЯ ЕРЕВАНА ===
-// Просто добавляй сюда имена переменных маршрутов через запятую
 curatedRecommended = [kondQuarter, khorVirap, erevFountains];
 curatedExplore = [erevFountainRepublic, erebuniFortress];
 curatedInteresting = [cascadeRoute];
@@ -1143,12 +1144,9 @@ curatedExplore = [tower];
 curatedInteresting = [tower];
 } else if (cityId === 'dortmund') {
     // --- ПЕРЕМЕННЫЕ ДОРТМУНДА ---
-    const dortmundFacts = {  name: "Факты о Дортмунде",    distance: 0.5,         time: "10 мин",         difficulty: "Лёгкая",         videoUrl: "https://youtu.be/hyQI-2bwVcc",         geoUrl: "https://maps.app.goo.gl/2JbtHoMVemLTwKjm7",         audioUrl: "https://archive.org/download/dortmund_202608/dortmund.MP3",         image: "https://archive.org/download/dortmund_202608/pexels-norbert-ueing-315693495-13612319.jpg",         location: { lat: 51.513530856785906, lon: 7.46581642781496 },         descriptionShort: "Удивительные факты о Дортмунде, которые стоит узнать каждому.",         subCategory: "Легенды и мифы города"     };
+const dortmundFacts = {  name: "Факты о Дортмунде",    distance: 0.5,         time: "10 мин",         difficulty: "Лёгкая",         videoUrl: "https://youtu.be/hyQI-2bwVcc",         geoUrl: "https://maps.app.goo.gl/2JbtHoMVemLTwKjm7",         audioUrl: "https://archive.org/download/dortmund_202608/dortmund.MP3",         image: "https://archive.org/download/dortmund_202608/pexels-norbert-ueing-315693495-13612319.jpg",         location: { lat: 51.513530856785906, lon: 7.46581642781496 },         descriptionShort: "Удивительные факты о Дортмунде, которые стоит узнать каждому.",         subCategory: "Легенды и мифы города"     };
 const florianturm = { name: "Флориантурм — первая вращающаяся башня в мире", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/florianturm/Florianturm_bei_Nacht.jpg", audioUrl: "https://archive.org/download/florianturm/florianturm.MP3", videoUrl: "https://youtu.be/-OSFfi_quDU", geoUrl: "https://maps.app.goo.gl/tjYL8ZVwsDpgx7zW6", location: { lat: 51.496278, lon: 7.476722 }, descriptionShort: "Флориантурм — телебашня высотой 211 метров и символ Дортмунда. Построена за неполный год в 1959 году. Первая в мире телебашня с вращающимся рестораном. Со смотровой площадки на высоте 142 метров открывается панорама всего Рурского региона.", subCategory: "Архитектурные достопримечательности" };
-    // === КУРИРУЕМЫЕ РАЗДЕЛЫ (главный экран) ===
-    curatedRecommended = [florianturm, dortmundFacts];
-    curatedExplore = [dortmundFacts];
-    curatedInteresting = [florianturm];
+   
 
     // === КУЛЬТУРНЫЕ И ИСТОРИЧЕСКИЕ (8 подкатегорий) ===
     structure["Культурные и исторические маршруты"]["Набережная"] = [];
@@ -1198,14 +1196,13 @@ const florianturm = { name: "Флориантурм — первая враща�
     structure["Тематические маршруты"]["Технические и инновационные маршруты"] = [];
     structure["Тематические маршруты"]["Спортивные маршруты"] = [];
 
+    // --- ЗАПОЛНЕНИЕ КАТАЛОГА ДОРТМУНДА ---
+    structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [dortmundFacts];
 
     // === НАПОЛНЕНИЕ РАЗДЕЛОВ ДЛЯ ДОРТМУНДА ===
     curatedRecommended = [florianturm, dortmundFacts];
     curatedExplore = [dortmundFacts];
     curatedInteresting = [florianturm];
-
-    // --- ЗАПОЛНЕНИЕ КАТАЛОГА ДОРТМУНДА ---
-    structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [dortmundFacts];
 
 
 } else if (cityId === 'pitsunda') {
