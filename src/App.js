@@ -1133,9 +1133,9 @@ curatedInteresting = [levonCave];
 // Просто добавляй сюда имена переменных маршрутов через запятую
        } else if (cityId === 'bremen') {
         const br_m = { name: "Бременские музыканты", distance: 0.1, time: "5 минут", difficulty: "Легкая", videoUrl: "https://www.youtube.com/watch?v=FeshGwbxR94", geoUrl: "https://maps.app.goo.gl/Sjn6gNNaPeKRqhGv8", audioUrl: "https://archive.org/download/br_m_20260907/br_m.MP3", image: "https://archive.org/download/br_m_20260907/a1.png", location: { lat: 53.0762, lon: 8.8072 }, descriptionShort: "Самый фотографируемый памятник Германии у западной стены ратуши. Добрые герои сказки братьев Гримм, где сбываются мечты.", subCategory: "" };
-curatedRecommended = [levonCave, kondQuarter, khorVirap, erevFountains];
-curatedExplore = [erevFountainRepublic, erebuniFortress];
-curatedInteresting = [levonCave];
+curatedRecommended = [br_m ];
+curatedExplore = [br_m ];
+curatedInteresting = [br_m ];
 
 
 
