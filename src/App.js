@@ -1074,20 +1074,21 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const khorVirap = {  name: "Хор Вирап — древний монастырь с видом на Арарат",  distance: 40,   time: "40 мин",   difficulty: "Средняя",   image: "https://archive.org/download/202607011908/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-07-02%20%D0%B2%2017.11.36.png",   audioUrl: "https://archive.org/download/202607011908/202607011908.mp3",   videoUrl: "https://youtu.be/IDGqDOTTmo4",   geoUrl: "https://maps.app.goo.gl/kXHjT9GScBkZ165Y9",   location: { lat: 39.8782917, lon: 44.5764714 },   descriptionShort: "Древний монастырь в 40 км к югу от Еревана у границы с Турцией. Стоит на холме у горы Арарат с лучшим видом на святыню. Название переводится как «глубокая темница». Поездка занимает около 40 минут.",   subCategory: "Церкви и храмы",  explicitDate: "2026-07-02"};
         const kondQuarter = { name: "Конд — армянская фавела которой 300 лет", distance: null, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20260903_20260903_0348/2122.png", audioUrl: "https://archive.org/download/20260903_20260903_0348/%D0%BA%D0%BE%D0%BD%D0%B4.MP3", videoUrl: "https://youtu.be/CkrxX7f3Frc", geoUrl: "https://maps.app.goo.gl/cS2kQBo3efnqEMfj8", location: { lat: 40.182314, lon: 44.502297 }, descriptionShort: "Конд — самый старый квартал Еревана, которому больше трёхсот лет. Узкие переулки, дома с граффити, церковь Святого Ованеса 1710 года и руины мечети Тапабаши XVII века. Живой район где история не в музее — а прямо за каждым углом.", subCategory: "Исторические кварталы" };
         const levonCave = { name: "Пещера дедушки Левона — храм вырубленный руками за 23 года", distance: null, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pesLevon/00001.jpg", audioUrl: "https://archive.org/download/pesLevon/pesLevon.MP3", videoUrl: "https://youtu.be/evBzjdNbETc", geoUrl: "https://maps.app.goo.gl/p4N8tR1yoCXqZPe3A", location: { lat: 40.2201, lon: 44.5789 }, descriptionShort: "Под обычным домом в селе Ариндж — семиуровневый подземный храм глубиной 21 метр. Один человек, молоток и зубило, двадцать три года. Левон Аракелян начал копать погреб для картошки — и создал одно из самых удивительных мест Армении.", subCategory: "Архитектурные достопримечательности" };
+        const mayrHayastanRoute = { name: "Мать-Армения — самостоятельная прогулка с аудиогидом", distance: 0.5, time: "7 мин", difficulty: "Средняя", image: "https://archive.org/download/mayr-hayastan-5/Mayr_Hayastan_%285%29.jpg", audioUrl: "https://archive.org/download/mayr-hayastan-5/mama-a.MP3", videoUrl: "https://youtu.be/yZlSi_kmOKM", geoUrl: "https://maps.app.goo.gl/ycr3LFGaHpXtMyVf8", location: { lat: 40.1951, lon: 44.5246 }, descriptionShort: "Мать-Армения — монумент в честь победы в Великой Отечественной войне, символ Еревана. 22-метровая статуя на пьедестале из чёрного туфа, внутри — Военный музей. Смотровая площадка с панорамой города и Арарата.", subCategory: "Монументы и памятники" };
         const erFactsYerevan = { name: "Факты о столице Армении", distance: null, time: "8 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_fact/b44.webp", audioUrl: "https://archive.org/download/er_fact/er_fact.MP3", videoUrl: "https://youtu.be/M_uQr0nR8WY", geoUrl: "https://maps.app.goo.gl/FNF61JCXRXcA3qQEA", location: { lat: 40.15272, lon: 44.39805 }, descriptionShort: "Ереван основан в 782 году до нашей эры — он старше Рима. Тринадцатая столица Армении, город из розового туфа, уличные собаки с жёлтыми бирками и кофе на горячем песке. Всё что нужно знать о городе прежде чем выйти на его улицы.", subCategory: "Городские площади" };
 
 curatedRecommended = [levonCave, kondQuarter, khorVirap, erevFountains];
 curatedExplore = [erevFountainRepublic, erebuniFortress];
-curatedInteresting = [erFactsYerevan];
+curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
 
 
 
         // === Культурные и исторические маршруты ===
         structure["Культурные и исторические маршруты"]["Набережная"] = [kondQuarter, erebuniFortress, erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [erevFountains, cascadeRoute, levonCave];
-        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [kondQuarter, levonCave, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Городские площади"] = [cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [mayrHayastanRoute, erevFountains, cascadeRoute, levonCave];
+        structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [mayrHayastanRoute, erevFountains, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mayrHayastanRoute, kondQuarter, levonCave, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Городские площади"] = [mayrHayastanRoute, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [kondQuarter, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [khorVirap, cascadeRoute, levonCave];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [erFactsYerevan, kondQuarter, khorVirap, erevFountains, cascadeRoute, levonCave];
@@ -1102,7 +1103,7 @@ curatedInteresting = [erFactsYerevan];
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [kondQuarter, erevFountains, erevFountainRepublic, cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [kondQuarter, cascadeRoute];
-        structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [mayrHayastanRoute, cascadeRoute];
 
         // === Гастрономические маршруты ===
         structure["Гастрономические маршруты"]["Кофе"] = [cascadeRoute];
