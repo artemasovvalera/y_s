@@ -1076,9 +1076,10 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const levonCave = { name: "Пещера дедушки Левона — храм вырубленный руками за 23 года", distance: null, time: "30 мин", difficulty: "Лёгкая", image: "https://archive.org/download/pesLevon/00001.jpg", audioUrl: "https://archive.org/download/pesLevon/pesLevon.MP3", videoUrl: "https://youtu.be/evBzjdNbETc", geoUrl: "https://maps.app.goo.gl/p4N8tR1yoCXqZPe3A", location: { lat: 40.2201, lon: 44.5789 }, descriptionShort: "Под обычным домом в селе Ариндж — семиуровневый подземный храм глубиной 21 метр. Один человек, молоток и зубило, двадцать три года. Левон Аракелян начал копать погреб для картошки — и создал одно из самых удивительных мест Армении.", subCategory: "Архитектурные достопримечательности" };
         const mayrHayastanRoute = { name: "Мать-Армения — самостоятельная прогулка с аудиогидом", distance: 0.5, time: "7 мин", difficulty: "Средняя", image: "https://archive.org/download/mayr-hayastan-5/Mayr_Hayastan_%285%29.jpg", audioUrl: "https://archive.org/download/mayr-hayastan-5/mama-a.MP3", videoUrl: "https://youtu.be/yZlSi_kmOKM", geoUrl: "https://maps.app.goo.gl/ycr3LFGaHpXtMyVf8", location: { lat: 40.1951, lon: 44.5246 }, descriptionShort: "Мать-Армения — монумент в честь победы в Великой Отечественной войне, символ Еревана. 22-метровая статуя на пьедестале из чёрного туфа, внутри — Военный музей. Смотровая площадка с панорамой города и Арарата.", subCategory: "Монументы и памятники" };
         const erFactsYerevan = { name: "Факты о столице Армении", distance: null, time: "8 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_fact/b44.webp", audioUrl: "https://archive.org/download/er_fact/er_fact.MP3", videoUrl: "https://youtu.be/M_uQr0nR8WY", geoUrl: "https://maps.app.goo.gl/FNF61JCXRXcA3qQEA", location: { lat: 40.15272, lon: 44.39805 }, descriptionShort: "Ереван основан в 782 году до нашей эры — он старше Рима. Тринадцатая столица Армении, город из розового туфа, уличные собаки с жёлтыми бирками и кофе на горячем песке. Всё что нужно знать о городе прежде чем выйти на его улицы.", subCategory: "Городские площади" };
+        const stGregoryRoute = { name: "Собор Святого Григория Просветителя", distance: 0.5, time: "8 минут", difficulty: "Средняя", videoUrl: "https://youtu.be/UZQOdC-s38c", geoUrl: "https://maps.app.goo.gl/svLcorkjprQJbEkq8", audioUrl: "https://archive.org/download/123454654/arm_h.MP3", image: "https://archive.org/download/123454654/123454654.jpeg", location: { lat: 40.172, lon: 44.5162 }, descriptionShort: "Величие первой христианской державы. Несокрушимый духовный щит Армении, где хранится великая святыня и звучат швейцарские колокола.", subCategory: "Архитектурные достопримечательности" };
 
 curatedRecommended = [levonCave, kondQuarter, khorVirap, erevFountains];
-curatedExplore = [erevFountainRepublic, erebuniFortress];
+curatedExplore = [stGregoryRoute, erevFountainRepublic, erebuniFortress];
 curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
 
 
@@ -1087,10 +1088,10 @@ curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
         structure["Культурные и исторические маршруты"]["Набережная"] = [kondQuarter, erebuniFortress, erevFountains, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [mayrHayastanRoute, erevFountains, cascadeRoute, levonCave];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [mayrHayastanRoute, erevFountains, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [mayrHayastanRoute, kondQuarter, levonCave, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
+        structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [stGregoryRoute, mayrHayastanRoute, kondQuarter, levonCave, erebuniFortress, erevFountains, erevFountainRepublic, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Городские площади"] = [mayrHayastanRoute, cascadeRoute];
         structure["Культурные и исторические маршруты"]["Исторические кварталы"] = [kondQuarter, cascadeRoute];
-        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [khorVirap, cascadeRoute, levonCave];
+        structure["Культурные и исторические маршруты"]["Церкви и храмы"] = [stGregoryRoute, khorVirap, cascadeRoute, levonCave];
         structure["Культурные и исторические маршруты"]["Легенды и мифы города"] = [erFactsYerevan, kondQuarter, khorVirap, erevFountains, cascadeRoute, levonCave];
 
         // === Природные и активные маршруты ===
@@ -1101,7 +1102,7 @@ curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
 
         // === Современные и урбанистические маршруты ===
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [kondQuarter, erevFountains, erevFountainRepublic, cascadeRoute];
-        structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [cascadeRoute];
+        structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [stGregoryRoute, cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [kondQuarter, cascadeRoute];
         structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [mayrHayastanRoute, cascadeRoute];
 
