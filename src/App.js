@@ -1081,7 +1081,7 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
 
 curatedRecommended = [kondQuarter, khorVirap, erevFountains, levonCave];
 curatedExplore = [stGregoryRoute, erevFountainRepublic, erebuniFortress];
-curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
+curatedInteresting = [cascadeRoute, mayrHayastanRoute, erFactsYerevan];
 
 
 
