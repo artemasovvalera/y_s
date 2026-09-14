@@ -8,7 +8,8 @@ import {
   Pause, Monitor, Award, Compass, Mail, Bell, Search, Send, Clapperboard,
   Sun, Moon, User, Map as MapIcon, Coffee, Waves, Trees, Mountain,
   Music, BookOpen, Smile, Bike, Globe, Building, Building2, Download, Loader,
-  Church, Palette, FlaskConical, Hammer, Utensils, ChefHat, ToyBrick, Gamepad2, Film, Scroll, Cpu
+  Church, Palette, FlaskConical, Hammer, Utensils, ChefHat, ToyBrick, Gamepad2, Film, Scroll, Cpu,
+  ChevronRight
 } from "lucide-react";
 
 // ==========================================
@@ -3306,39 +3307,40 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
             <div style={{ padding: '20px 20px 120px 20px' }}>
 
                 {/* 1. РЯДОМ С ВАМИ */}
-                {nearbyRoutesForHome.length > 0 && (
-                    <div style={{ marginBottom: '24px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #10B981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>📍</div>
-                            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>{t('near')}</h2>
+              {nearbyRoutesForHome.length > 0 && (
+    <div style={{ marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #10B981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>📍</div>
+            <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>{t('near')}</h2>
+        </div>
+        <HorizontalScroll darkMode={darkMode}>
+            {nearbyRoutesForHome.map((route, idx) => (
+                <div key={`rec-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
+                    minWidth: '120px', height: '150px', borderRadius: '20px',
+                    position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    scrollSnapAlign: 'start',
+                }}>
+                    <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)' }} />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
+                        <div style={{ color: '#10B981', fontWeight: 700, fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                            {t(route.subCategory) || route.subCategory}
                         </div>
-                        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
-                            {nearbyRoutesForHome.map((route, idx) => (
-                                <div key={`rec-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
-                                    minWidth: '120px', height: '150px', borderRadius: '20px',
-                                    position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
-                                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                                }}>
-                                    <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)' }} />
-                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px' }}>
-                                        <div style={{ color: '#10B981', fontWeight: 700, fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                            {t(route.subCategory) || route.subCategory}
-                                        </div>
-                                        <div style={{ color: 'white', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                                            {route.name}
-                                        </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <div style={{ background: 'rgba(16, 185, 129, 0.3)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '20px', fontSize: '10px', color: 'white', fontWeight: 600 }}>
-                                                👣 {Math.floor(route.distance * 1250)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                        <div style={{ color: 'white', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            {route.name}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={{ background: 'rgba(16, 185, 129, 0.3)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '20px', fontSize: '10px', color: 'white', fontWeight: 600 }}>
+                                👣 {Math.floor(route.distance * 1250)}
+                            </div>
                         </div>
                     </div>
-                )}
+                </div>
+            ))}
+        </HorizontalScroll>
+    </div>
+)}
 
 {/* 2. РЕКОМЕНДУЕМ (КРУПНЫЕ КАРТОЧКИ КАК В "РЯДОМ С ВАМИ") */}
 {recommendedCurated.length > 0 && (
@@ -3347,12 +3349,13 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
       <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>⭐</div>
       <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, color: recColors.text }}>Рекомендуем</h2>
     </div>
-    <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
+    <HorizontalScroll darkMode={darkMode}>
       {recommendedCurated.map((route, idx) => (
         <div key={`rec-large-${idx}`} onClick={() => handleNavigateToDetails(route)} style={{
           minWidth: '240px', height: '200px', borderRadius: '20px',
           position: 'relative', overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          scrollSnapAlign: 'start',
         }}>
           <img src={route.image} alt={route.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)' }} />
@@ -3371,7 +3374,7 @@ const handleTabChange = useCallback((tabId) => { setActiveTab(tabId); if (tabId 
           </div>
         </div>
       ))}
-    </div>
+    </HorizontalScroll>
   </div>
 )}
 
@@ -4267,6 +4270,104 @@ const getTimeOfDayGradient = (isDark) => {
   };
   
   return gradients[isDark ? 'dark' : 'light'][timePeriod];
+};
+
+// ==========================================
+// ГОРИЗОНТАЛЬНАЯ ПРОКРУТКА СО СТРЕЛКОЙ
+// ==========================================
+const HorizontalScroll = ({ children, darkMode }) => {
+  const scrollRef = useRef(null);
+  const [hasMore, setHasMore] = useState(false);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setHasMore(el.scrollLeft + el.clientWidth < el.scrollWidth - 5);
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', checkScroll, { passive: true });
+    window.addEventListener('resize', checkScroll);
+    const t = setTimeout(checkScroll, 150);
+    return () => {
+      el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+      clearTimeout(t);
+    };
+  }, [children]);
+
+  const scrollNext = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: el.clientWidth * 0.85, behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ position: 'relative', marginRight: '-20px' }}>
+      <div
+        ref={scrollRef}
+        className="hide-scrollbar"
+        style={{
+          display: 'flex',
+          gap: '12px',
+          overflowX: 'auto',
+          paddingBottom: '8px',
+          paddingRight: '55px',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch',
+          maskImage: hasMore
+            ? 'linear-gradient(to right, #000 0, #000 calc(100% - 55px), transparent calc(100% - 55px))'
+            : 'none',
+          WebkitMaskImage: hasMore
+            ? 'linear-gradient(to right, #000 0, #000 calc(100% - 55px), transparent calc(100% - 55px))'
+            : 'none',
+        }}
+      >
+        {children}
+      </div>
+
+      {hasMore && (
+        <button
+          onClick={scrollNext}
+          aria-label="Прокрутить вправо"
+          style={{
+            position: 'absolute',
+            right: '4px',
+            top: '50%',
+            marginTop: '-18px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            border: 'none',
+            background: 'linear-gradient(135deg, #10B981, #059669)',
+            boxShadow: '0 4px 14px rgba(16,185,129,0.5), 0 0 24px rgba(16,185,129,0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 2,
+            padding: 0,
+            animation: 'arrowFloat 1.5s ease-in-out infinite',
+          }}
+        >
+          <ChevronRight size={22} color="white" strokeWidth={2.5} />
+        </button>
+      )}
+
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        @keyframes arrowFloat {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(5px); }
+        }
+      `}</style>
+    </div>
+  );
 };
 
 
