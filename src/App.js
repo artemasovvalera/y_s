@@ -1079,7 +1079,7 @@ curatedInteresting = [zaryadye]; // ← Замени на свои переме�
         const erFactsYerevan = { name: "Факты о столице Армении", distance: null, time: "8 мин", difficulty: "Лёгкая", image: "https://archive.org/download/er_fact/b44.webp", audioUrl: "https://archive.org/download/er_fact/er_fact.MP3", videoUrl: "https://youtu.be/M_uQr0nR8WY", geoUrl: "https://maps.app.goo.gl/FNF61JCXRXcA3qQEA", location: { lat: 40.15272, lon: 44.39805 }, descriptionShort: "Ереван основан в 782 году до нашей эры — он старше Рима. Тринадцатая столица Армении, город из розового туфа, уличные собаки с жёлтыми бирками и кофе на горячем песке. Всё что нужно знать о городе прежде чем выйти на его улицы.", subCategory: "Городские площади" };
         const stGregoryRoute = { name: "Собор Святого Григория Просветителя", distance: 0.5, time: "8 минут", difficulty: "Средняя", videoUrl: "https://youtu.be/UZQOdC-s38c", geoUrl: "https://maps.app.goo.gl/svLcorkjprQJbEkq8", audioUrl: "https://archive.org/download/123454654/arm_h.MP3", image: "https://archive.org/download/123454654/123454654.jpeg", location: { lat: 40.172, lon: 44.5162 }, descriptionShort: "Величие первой христианской державы. Несокрушимый духовный щит Армении, где хранится великая святыня и звучат швейцарские колокола.", subCategory: "Архитектурные достопримечательности" };
 
-curatedRecommended = [levonCave, kondQuarter, khorVirap, erevFountains];
+curatedRecommended = [kondQuarter, khorVirap, erevFountains, levonCave];
 curatedExplore = [stGregoryRoute, erevFountainRepublic, erebuniFortress];
 curatedInteresting = [mayrHayastanRoute, erFactsYerevan];
 
