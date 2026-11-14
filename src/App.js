@@ -1137,15 +1137,16 @@ curatedInteresting = [cascadeRoute, mayrHayastanRoute, erFactsYerevan];
 // Просто добавляй сюда имена переменных маршрутов через запятую
        } else if (cityId === 'bremen') {
         const vege = { name: "Набережная Фегезак и челюсть кита", distance: 0.8, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/20261104\_20261104\_1840/1793801872632-2f956c3a-de3c-4aa8-bd3e-384fa74c461d-01a1a6eb-415b-7175-a20d-3e2cdd68dddb.webp", audioUrl: "https://archive.org/download/20261104\_20261104\_1840/%D0%A4%D0%95%D0%93%D0%95%D0%97%D0%90%D0%9A.MP3", videoUrl: "https://youtu.be/XpJbahLWGM4", geoUrl: "https://maps.app.goo.gl/srT3CVRjFc7udYPh6", location: { lat: 53.168275, lon: 8.623334 }, descriptionShort: "Арка из пятиметровых челюстей 80-тонного гренландского кита, история первого рукотворного порта Германии 1619 года и живописная прогулка вдоль реки Везер.", subCategory: "Набережная" };
+        const lurssen = { name: "Верфь Люрссен и секреты мегаяхт", distance: 1.0, time: "5 мин", difficulty: "Лёгкая", image: "https://archive.org/download/lursen/1794653059974-bdd9b618-580f-4d62-8b0d-dd70b177c4a7-01a1d9a7-fdc3-799b-953a-9be8a9caad69.png", audioUrl: "https://archive.org/download/lursen/lursen.MP3", videoUrl: "https://youtu.be/XgsvGX6phFw", geoUrl: "[suspicious link removed]", location: { lat: 53.1708, lon: 8.6268 }, descriptionShort: "Родина самых дорогих и секретных мегаяхт мира: от первого моторного катера 1886 года до 180-метрового океанского гиганта Azzam.", subCategory: "Набережная" };
         const br_m = { name: "Бременские музыканты", distance: 0.1, time: "5 минут", difficulty: "Легкая", videoUrl: "https://www.youtube.com/watch?v=FeshGwbxR94", geoUrl: "https://maps.app.goo.gl/BrSbQfgQo5sDHqHs8", audioUrl: "https://archive.org/download/br_m_20260907/br_m.MP3", image: "https://archive.org/download/br_m_20260907/a1.png", location: { lat: 53.0762, lon: 8.8072 }, descriptionShort: "Самый фотографируемый памятник Германии у западной стены ратуши. Добрые герои сказки братьев Гримм, где сбываются мечты.", subCategory: "" };
 curatedRecommended = [br_m, vege];
 curatedExplore = [vege, br_m ];
-curatedInteresting = [br_m ];
+curatedInteresting = [lurssen, br_m ];
 
 
 
         // === Культурные и исторические маршруты ===
-        structure["Культурные и исторические маршруты"]["Набережная"] = [vege, br_m];
+        structure["Культурные и исторические маршруты"]["Набережная"] = [lurssen, vege, br_m];
         structure["Культурные и исторические маршруты"]["Музеи и выставки"] = [br_m];
         structure["Культурные и исторические маршруты"]["Памятники и мемориалы"] = [vege, br_m];
         structure["Культурные и исторические маршруты"]["Архитектурные достопримечательности"] = [br_m];
@@ -1163,7 +1164,7 @@ curatedInteresting = [br_m ];
         // === Современные и урбанистические маршруты ===
         structure["Современные и урбанистические маршруты"]["Скульптуры и уличное искусство"] = [vege, br_m];
         structure["Современные и урбанистические маршруты"]["Современная архитектура"] = [br_m];
-        structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [br_m];
+        structure["Современные и урбанистические маршруты"]["Городские лаборатории"] = [lurssen, br_m];
         structure["Современные и урбанистические маршруты"]["Реставрации и обновления"] = [br_m];
 
         // === Гастрономические маршруты ===
